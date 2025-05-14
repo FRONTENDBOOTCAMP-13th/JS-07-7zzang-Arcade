@@ -1,5 +1,6 @@
 import '../../style.css';
 import './space.css';
+import * as SAT from 'sat';
 
 // ─── 캔버스 & 컨텍스트 ─────────────────────────────────────────
 const canvas = document.getElementById('gameCanvas') as HTMLCanvasElement;
@@ -45,6 +46,10 @@ interface IEnemyConfig {
 interface IBullet extends IGameObject {
   speedY: number;
   sprite: HTMLImageElement;
+  hitboxWidth: number;
+  hitboxHeight: number;
+  hitboxOffsetX: number;
+  hitboxOffsetY: number;
 }
 
 // ─── 객체 정의 ────────────────────────────────────────────────────
@@ -54,7 +59,7 @@ const Player: IPlayer = {
   y: 0,
   width: 70,
   height: 60,
-  speed: 4,
+  speed: 2.5,
   sprite: new Image(),
   bullets: [],
 
@@ -78,7 +83,7 @@ const Player: IPlayer = {
     // 1. 총알 좌표 잡기
     // x 좌표는 플레이어의 딱 중간 위치 따라서 width / 2 절반
     // y 좌표는 플레이어의 머리 위치 y
-    const bulletX = this.x + this.width / 2 - 10;
+    const bulletX = this.x + this.width / 2 - 5;
     const bulletY = this.y;
 
     // 2. 총알 생성하기 x좌표, y좌표, 넓이, 높이, 스피드, 이미지, update, draw
@@ -87,8 +92,15 @@ const Player: IPlayer = {
       y: bulletY,
       width: 20,
       height: 20,
-      speedY: 3,
+      speedY: 2.5,
       sprite: bulletImg,
+
+      // 히트박스 지정
+      hitboxWidth: 2, // 실제 충돌로 감지할 폭
+      hitboxHeight: 2, // 실제 충돌로 감지할 높이
+      hitboxOffsetX: 10,
+      hitboxOffsetY: 10,
+
       // update 함수에는 총알이 이동하는 모습을 구현
       update() {
         // 현재 y 위치에서 스피드 만큼 빼서 위로 올라가도록 구현
@@ -115,7 +127,7 @@ const EnemyManager = {
   configs: {
     1: { rows: 3, cols: 7, spriteSrc: '../../assets/images/space-img/enemy1.png', paddingX: 30, paddingY: 20, offsetX: 0, offsetY: 0, descentY: 40 },
     2: { rows: 3, cols: 7, spriteSrc: '../../assets/images/space-img/enemy2.png', paddingX: 30, paddingY: 20, offsetX: 0, offsetY: 0, descentY: 40 },
-    3: { rows: 3, cols: 6, spriteSrc: '../../assets/images/space-img/enemy3.png', paddingX: 50, paddingY: 40, offsetX: 0, offsetY: 0, descentY: 60 },
+    3: { rows: 3, cols: 6, spriteSrc: '../../assets/images/space-img/enemy3.png', paddingX: 50, paddingY: 40, offsetX: 0, offsetY: 0, descentY: 50 },
   } as Record<number, IEnemyConfig>,
 
   spawn(cfg: IEnemyConfig) {
@@ -126,12 +138,12 @@ const EnemyManager = {
     for (let r = 0; r < cfg.rows; r++) {
       for (let c = 0; c < cfg.cols; c++) {
         this.enemies.push({
-          x: cfg.offsetX + c * (cfg.paddingX + 30),
-          y: cfg.offsetY + r * (cfg.paddingY + 20),
+          x: cfg.offsetX + c * (cfg.paddingX + 40),
+          y: cfg.offsetY + r * (cfg.paddingY + 30),
           width: 80,
           height: 80,
           sprite: img,
-          speedX: 1,
+          speedX: 2,
           descentY: cfg.descentY,
           direction: 1,
 
@@ -175,17 +187,29 @@ const EnemyManager = {
 };
 
 // ─── 에셋 로딩 & 키 바인딩 ──────────────────────────────────────
+// 플레이어 이미지 생성
 const playerImg = new Image();
 playerImg.src = '../../assets/images/space-img/player.png';
 Player.sprite = playerImg;
 
+// 총알 이미지 생성
 const bulletImg = new Image();
 bulletImg.src = '../../assets/images/space-img/player-bullet.png';
 
+// 배경 이미지 생성
 const backgroundImg = new Image();
 backgroundImg.src = '../../assets/images/space-img/background.png';
 
-const keys: Record<'ArrowLeft' | 'ArrowRight', boolean> = { ArrowLeft: false, ArrowRight: false };
+// 폭발 이미지 생성
+const explosionImg = new Image();
+explosionImg.src = '../../assets/images/space-img/explosion.png';
+
+// 키버튼
+const keys = {
+  ArrowLeft: false,
+  ArrowRight: false,
+};
+
 document.addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') keys[e.key] = true;
   if (e.code === 'Space') {
@@ -197,11 +221,24 @@ document.addEventListener('keyup', e => {
 });
 
 let loaded = 0;
-[playerImg, backgroundImg].forEach(img => {
+const assets = [playerImg, backgroundImg, bulletImg, explosionImg];
+assets.forEach(img => {
   img.onload = () => {
-    if (++loaded === 2) init();
+    if (++loaded === assets.length) init();
   };
 });
+
+// ─── 총알 대 적 전용 충돌 체크 ────────────────────────────────────
+function isBulletColliding(b: IBullet, e: IEnemy): boolean {
+  // 1) Bullet 히트박스 → SAT.Box → toPolygon()
+  const bulletPoly = new SAT.Box(new SAT.Vector(b.x + b.hitboxOffsetX, b.y + b.hitboxOffsetY), b.hitboxWidth, b.hitboxHeight).toPolygon();
+
+  // 2) Enemy 전체 박스 → SAT.Box → toPolygon()
+  const enemyPoly = new SAT.Box(new SAT.Vector(e.x, e.y), e.width, e.height).toPolygon();
+
+  // 3) 충돌 검사
+  return SAT.testPolygonPolygon(bulletPoly, enemyPoly);
+}
 
 // ─── 초기화 & 루프 ───────────────────────────────────────────────
 function init() {
@@ -212,15 +249,29 @@ function init() {
 }
 
 function gameLoop() {
+  //  ───배경 그리기 ───────────────────────────────────────────────────
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
 
+  //  ───업데이트 ───────────────────────────────────────────────────────
   Player.update();
-  Player.draw(ctx);
   EnemyManager.updateAll();
+
+  // ───충돌 처리 <gpt code> (적·총알 모두 제거) ─────────────────────────
+  // 원본 적 배열 복사
+  const originalEnemies = EnemyManager.enemies.slice();
+
+  // 적들 중, 어떤 총알에도 맞지 않은 적만 남김
+  EnemyManager.enemies = originalEnemies.filter(enemy => !Player.bullets.some(bullet => isBulletColliding(bullet, enemy)));
+
+  // 복사한 원본 적 배열을 기준으로 총알 걸러내기
+  Player.bullets = Player.bullets.filter(bullet => !originalEnemies.some(enemy => isBulletColliding(bullet, enemy)));
+
+  // ───렌더링 ─────────────────────────────────────────────────────────
+  Player.draw(ctx);
   EnemyManager.drawAll(ctx);
 
-  // 라운드 전환
+  // ───라운드 전환 ─────────────────────────────────────────────────────
   if (EnemyManager.enemies.length === 0) {
     const next = ++EnemyManager.round;
     if (EnemyManager.configs[next]) {
