@@ -1,0 +1,149 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #7c7c7c; /* 임시 */
+}
+
+/* intro */
+/* 추천 색상 받아서 변경하기 */
+.intro-container {
+  position: relative;
+  width: 920px;
+  height: 600px;
+  margin: auto;
+  background-color: #cbeeff;
+  overflow: hidden;
+}
+
+.intro-header {
+  position: absolute;
+  top: 10%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-inline: 32px;
+}
+
+/* 이미지 쓸거면 교체 필요함(현재 텍스트) */
+.intro-title {
+  font-size: 50px;
+  font-weight: bold;
+  text-align: center;
+  flex-grow: 1;
+  color: #333;
+}
+
+.intro-button {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.chick-idle-front {
+  position: absolute;
+  z-index: 1;
+  bottom: 15%;
+  left: 50%;
+  width: 90px;
+  height: 110px;
+  transform: translateX(-50%);
+}
+
+.intro-grass {
+  position: absolute;
+  bottom: 0;
+  width: 920px;
+  height: 160px;
+}
+
+/* START GAME 텍스트(임시) */
+.start-text {
+  position: absolute;
+  bottom: 3%;
+  z-index: 1;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 70px;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 1px 1px 2px #333;
+  animation: blink 1.2s infinite;
+  cursor: pointer;
+}
+
+/* START GAME 텍스트 깜빡임 효과(디테일 수정 필요) */
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+/* 병아리 캐릭터의 미묘한 위아래 움직임(임시) */
+/* .chick-idle-front {
+  animation: chick-bounce 2.5s ease-in-out infinite;
+}
+
+@keyframes chick-bounce {
+  0%,
+  100% {
+    transform: translate(-50%, 0);
+  }
+  50% {
+    transform: translate(-50%, -6px);
+  }
+} */
+
+/* Score 팝업 나중에 수정하기 */
+.score-popup {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  padding: 20px;
+  width: 300px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+.score-popup.hidden {
+  display: none;
+}
+
+.score-popup h2 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.score-popup ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.score-popup li {
+  text-align: center;
+  padding: 4px 0;
+}
+
+/* play */
+.hidden {
+  display: none;
+}
+
+.game-container {
+  position: relative;
+  width: 920px;
+  height: 600px;
+  background-color: #cbeeff; /* 초기 낮 배경 */
+  margin: auto;
+  overflow: hidden;
+}
