@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ko-KR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>출동! 동물특공대</title>
+    <script type="module" src="./animal.ts"></script>
+    <link rel="preload" as="font" href="/public/fonts/DungGeunMo.woff" />
+    <link rel="preload" as="font" href="/public/fonts/DungGeunMo.woff2" />
+  </head>
+  <body class="DungGeunMo">
+    <!-- 인트로 화면 -->
+    <div id="intro" class="intro-container">
+      <!-- 헤더 -->
+      <div class="intro-header">
+        <img src="/src/assets/icons/home.png" class="intro-button home-button" alt="홈" />
+        <!-- 제목 텍스트 or img -->
+        <h1 class="intro-title">출동! 동물특공대</h1>
+        <img src="/src/assets/icons/trophy.png" class="intro-button trophy-button" alt="트로피" />
+      </div>
+      <!-- 메인 캐릭터 -->
+      <div>
+        <img src="/src/assets/images/animal-img/chick-idle-front.png" class="chick-idle-front" alt="병아리 캐릭터" />
+      </div>
+      <!-- START GAME 텍스트 -->
+      <div class="start-text">START GAME</div>
+      <!-- 잔디 -->
+      <div>
+        <img src="/src/assets/images/animal-img/bg-grass1.png" class="intro-grass" alt="잔디" />
+      </div>
+      <!-- 트로피 팝업 -->
+      <div id="scorePopup" class="score-popup hidden">
+        <div class="popup-content">
+          <h2>BEST SCORE</h2>
+          <ul id="scoreList"></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 게임 화면 -->
+    <div id="game" class="game-container hidden">
+      <canvas id="gameCanvas" width="920" height="600"></canvas>
+    </div>
+  </body>
+</html>
