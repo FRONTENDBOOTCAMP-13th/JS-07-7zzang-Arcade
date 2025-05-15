@@ -24,6 +24,7 @@ interface IPlayer extends IGameObject {
   isAlive: boolean;
   isInvincible: boolean;
   invincibleTime: number;
+  canShoot: boolean;
   shoot(): void;
   updateBullets(): void;
   explode(): void;
@@ -101,6 +102,7 @@ const Player: IPlayer = {
   speed: 2.5,
   invincibleTime: 0,
   isAlive: true,
+  canShoot: true,
   isInvincible: false,
   sprite: new Image(),
   bullets: [],
@@ -110,6 +112,7 @@ const Player: IPlayer = {
     if (!this.isAlive) return;
     if (keys.ArrowLeft && this.x > 0) this.x -= this.speed;
     if (keys.ArrowRight && this.x + this.width < canvas.width) this.x += this.speed;
+    if (keys.Space) this.shoot();
     this.updateBullets();
   },
 
@@ -133,6 +136,8 @@ const Player: IPlayer = {
 
   // ── 총알 발사 함수 ──────────────────────────────────────────────
   shoot() {
+    if (!this.canShoot) return;
+
     const bx = this.x + this.width / 2 - 10;
     const by = this.y;
     const bullet = createBullet({
@@ -148,6 +153,11 @@ const Player: IPlayer = {
       hitboxOffsetY: 5,
     });
     this.bullets.push(bullet);
+
+    this.canShoot = false;
+    setTimeout(() => {
+      this.canShoot = true;
+    }, 800);
   },
 
   // ── 폭발 함수 ─────────────────────────────────────────────────────
@@ -438,13 +448,13 @@ const explosionEnemy = new Image();
 explosionEnemy.src = '../../assets/images/space-img/explosion-enemy.png';
 
 // ─── 키버튼
-const keys = { ArrowLeft: false, ArrowRight: false };
+const keys = { ArrowLeft: false, ArrowRight: false, Space: false };
 document.addEventListener('keydown', e => {
-  if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') keys[e.key] = true;
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Space') keys[e.key] = true;
   if (e.code === 'Space') Player.shoot();
 });
 document.addEventListener('keyup', e => {
-  if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') keys[e.key] = false;
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Space') keys[e.key] = false;
 });
 
 // ─── 초기화 & 게임 루프 ───────────────────────────────────────────
