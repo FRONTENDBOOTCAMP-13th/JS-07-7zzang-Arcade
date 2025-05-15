@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const numHeight = canvas.height / rows;
 
   const currTimeBar = document.querySelector('.curr') as HTMLDivElement;
-  const timeLimit = 10;
+  const timeLimit = 120;
   let timeLeft = timeLimit;
 
   const tomatoImage = new Image();
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const timer = setInterval(() => {
       timeLeft--;
 
-      const per = (timeLeft / timeLimit) * 70;
+      const per = (timeLeft / timeLimit) * 66;
       currTimeBar.style.height = `${per}%`;
 
       if (timeLeft <= 0) {
@@ -54,6 +54,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }, 1000);
   }
+
+  startTimer();
 
   // 개임 오버
   function gameOver() {
@@ -83,5 +85,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     isVisible = !isVisible;
   }
-  startTimer();
+
+  // 다시하기
+  const restart = document.querySelector('.retry');
+  restart?.addEventListener('click', () => {
+    location.reload();
+  });
+
+  // 취소
+  const cancel = document.querySelector('.cancel');
+  cancel?.addEventListener('click', () => {
+    const savePopup = document.querySelector('.savescore');
+
+    if (savePopup?.classList.contains('show')) {
+      savePopup.classList.remove('show');
+      savePopup.classList.add('hide');
+    }
+  });
 });
