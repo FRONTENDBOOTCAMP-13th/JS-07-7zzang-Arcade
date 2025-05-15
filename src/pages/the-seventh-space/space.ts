@@ -86,6 +86,8 @@ interface BulletOptions {
 // ─── 전역 상태 ──────────────────────────────────────────────────
 const enemyBullets: IBullet[] = [];
 const Explosions: IExplosion[] = [];
+let bgOffset = 0;
+const bgSpeed = 1.5; // 원하는 스크롤 속도
 
 // ─── 플레이어 정의 ──────────────────────────────────────────────
 const Player: IPlayer = {
@@ -289,18 +291,18 @@ function spawnExplosion(x: number, y: number, sprite: HTMLImageElement, duration
 }
 
 // ─── 총알 생성 함수 ───────────────────────────────────────────────────
-function createBullet(opts: BulletOptions): IBullet {
+function createBullet(bullet: BulletOptions): IBullet {
   return {
-    x: opts.x,
-    y: opts.y,
-    width: opts.width,
-    height: opts.height,
-    speedY: opts.speedY,
-    sprite: opts.sprite,
-    hitboxWidth: opts.hitboxWidth,
-    hitboxHeight: opts.hitboxHeight,
-    hitboxOffsetX: opts.hitboxOffsetX,
-    hitboxOffsetY: opts.hitboxOffsetY,
+    x: bullet.x,
+    y: bullet.y,
+    width: bullet.width,
+    height: bullet.height,
+    speedY: bullet.speedY,
+    sprite: bullet.sprite,
+    hitboxWidth: bullet.hitboxWidth,
+    hitboxHeight: bullet.hitboxHeight,
+    hitboxOffsetX: bullet.hitboxOffsetX,
+    hitboxOffsetY: bullet.hitboxOffsetY,
     update() {
       this.y += this.speedY;
     },
@@ -438,11 +440,15 @@ function gameLoop(ts: number) {
   const delta = ts - lastTs;
   lastTs = ts;
 
-  // ─── 배경
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
+  // ─── 배경 업데이트 & 렌더링 ─────────────────────────────────────────
+  bgOffset = (bgOffset + bgSpeed) % canvas.height;
 
-  // ─── 상태 업데이트
+  // 배경 그리기
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(backgroundImg, 0, bgOffset, canvas.width, canvas.height);
+  ctx.drawImage(backgroundImg, 0, bgOffset - canvas.height, canvas.width, canvas.height);
+
+  // ─── 상태 업데이트 & 나머지 렌더링 ───────────────────────────────────
   Player.update();
   EnemyManager.updateAll(delta);
 
