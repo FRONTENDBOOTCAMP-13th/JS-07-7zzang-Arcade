@@ -1,0 +1,74 @@
+.bg {
+  display: flex;
+  align-items: center; /* 수직 중앙 */
+  justify-content: center; /* 수평 중앙 */
+  height: 100vh; /* 전체 화면 높이 */
+  background-color: #f8f8f8; /* 배경색은 네 마음대로 */
+}
+
+.wrap {
+  width: 920px;
+  height: 600px;
+  display: flex;
+  position: relative;
+  justify-content: center;
+}
+
+.top {
+  display: flex;
+  position: absolute;
+  width: 920px;
+  height: 41px;
+  justify-content: space-between;
+}
+
+.home img,
+.trophy img,
+.start img {
+  cursor: pointer;
+}
+
+.home {
+  padding-left: 30px;
+  padding-top: 13px;
+}
+
+.trophy {
+  padding-right: 20px;
+  padding-top: 13px;
+}
+
+.start {
+  display: flex;
+  position: absolute;
+  bottom: 0;
+  margin-bottom: 25px;
+}
+
+.bestscore {
+  width: 665px;
+  height: 555px;
+  background: url('/src/assets/images/tomato-img/best-socre.png') no-repeat;
+  background-size: cover;
+  position: absolute;
+  top: 51%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.bestscore.show {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.bestscore.hide {
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  pointer-events: none;
+}
