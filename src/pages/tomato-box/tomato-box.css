@@ -37,7 +37,9 @@ body {
 
 .home img,
 .trophy img,
-.start img {
+.start img,
+.savebtn img,
+.retry img {
   cursor: pointer;
 }
 
@@ -81,6 +83,95 @@ body {
 }
 
 .bestscore.hide {
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.result > .timer > .curr {
+  display: block;
+  width: 4%;
+  height: 70%;
+  background: #f7bed1;
+  position: absolute;
+  right: 47px;
+  bottom: 60px;
+  transition: height 1s linear;
+}
+
+.gameover {
+  width: 423px;
+  height: 423px;
+  background: url('/src/assets/images/tomato-img/tomato-gameover.png');
+  background-size: cover;
+  position: absolute;
+  top: 56%;
+  left: 44%;
+  transform: translate(-50%, -50%) scale(0);
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.gameover.show {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.gameover.hide {
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.score {
+  display: flex;
+  position: absolute;
+  top: 11px;
+  left: 200px;
+  font-size: 64px;
+  color: #f2af00;
+  text-shadow: 2px 5px #611107;
+
+  /* -webkit-text-stroke: #611107 1px; */
+}
+
+.gameover-buttons {
+  display: flex;
+  position: absolute;
+  gap: 23px;
+  left: 120px;
+  bottom: 41px;
+}
+
+.savescore {
+  width: 423px;
+  height: 423px;
+  background: url('/src/assets/images/tomato-img/tomato-nickname.png') no-repeat;
+  background-size: cover;
+  position: absolute;
+  top: 56%;
+  left: 44%;
+  transform: translate(-50%, -50%) scale(0);
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 30;
+}
+
+.savescore.show {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.savescore.hide {
   transform: translate(-50%, -50%) scale(0);
   opacity: 0;
   pointer-events: none;
