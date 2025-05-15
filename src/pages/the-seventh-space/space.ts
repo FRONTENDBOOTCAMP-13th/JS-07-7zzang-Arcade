@@ -22,10 +22,13 @@ interface IPlayer extends IGameObject {
   sprite: HTMLImageElement;
   bullets: IBullet[];
   isAlive: boolean;
+  isInvincible: boolean;
+  invincibleTime: number;
   shoot(): void;
   updateBullets(): void;
   explode(): void;
   respawn(): void;
+  invincibility(duration: number): void;
 }
 
 interface IEnemy extends IGameObject {
@@ -96,7 +99,9 @@ const Player: IPlayer = {
   width: 70,
   height: 60,
   speed: 2.5,
+  invincibleTime: 0,
   isAlive: true,
+  isInvincible: false,
   sprite: new Image(),
   bullets: [],
 
@@ -110,9 +115,19 @@ const Player: IPlayer = {
 
   // ── 화면 그리기 ────────────────────────────────────────────────
   draw(ctx) {
-    if (this.isAlive) {
-      ctx.drawImage(this.sprite, this.x, this.y, this.width, this.height);
+    if (!this.isAlive) return;
+
+    ctx.save();
+
+    // 무적 중일 때 200ms 주기로 반투명 ↔ 불투명 토글 (gpt code)
+    if (this.isInvincible) {
+      const invinciMotion = performance.now() % 200;
+      ctx.globalAlpha = invinciMotion < 100 ? 0.5 : 1;
     }
+
+    ctx.drawImage(this.sprite, this.x, this.y, this.width, this.height);
+    ctx.restore();
+
     this.bullets.forEach(b => b.draw(ctx));
   },
 
@@ -140,7 +155,10 @@ const Player: IPlayer = {
     spawnExplosion(this.x + this.width / 2, this.y + this.height / 2, explosionPlayer, 2000, 48);
     this.isAlive = false;
     this.bullets = [];
-    setTimeout(() => this.respawn(), 3000);
+    setTimeout(() => {
+      this.respawn();
+      this.invincibility(2000);
+    }, 2000);
   },
 
   // ── 부활 함수 ──────────────────────────────────────────────────────
@@ -156,6 +174,14 @@ const Player: IPlayer = {
     this.bullets.forEach(b => b.update());
     // 밖으로 나간 총알 제거
     this.bullets = this.bullets.filter(b => b.y + b.height > 0);
+  },
+
+  // ── 부활 후 무적 ───────────────────────────────────────────────────
+  invincibility(duration) {
+    this.isInvincible = true;
+    setTimeout(() => {
+      this.isInvincible = false;
+    }, duration);
   },
 };
 
@@ -241,7 +267,9 @@ const EnemyManager = {
 
     // 화면 밖으로 나간 총알 제거 (canvas.height 보다 작아지면 삭제)
     for (let i = enemyBullets.length - 1; i >= 0; i--) {
-      if (enemyBullets[i].y > canvas.height) enemyBullets.splice(i, 1);
+      if (enemyBullets[i].y > canvas.height) {
+        enemyBullets.splice(i, 1);
+      }
     }
   },
 
@@ -342,7 +370,7 @@ function handleCollisions() {
   });
 
   // 플레이어가 살아있는지 먼저 검사, 이후 플레이어의 이미지를 크기로 박스를 만들고 적과 충돌 시 explode() 호출
-  if (Player.isAlive) {
+  if (Player.isAlive && !Player.isInvincible) {
     const pPoly = new SAT.Box(new SAT.Vector(Player.x, Player.y), Player.width, Player.height).toPolygon();
     EnemyManager.enemies.forEach(enemy => {
       const ePoly = new SAT.Box(new SAT.Vector(enemy.x, enemy.y), enemy.width, enemy.height).toPolygon();
@@ -365,6 +393,7 @@ function handleEnemyBulletCollisions() {
 
   // 총알 검사하기 ( - 순환 splice로 잘랐을 때 인덱스가 안꼬이도록 )
   for (let i = enemyBullets.length - 1; i >= 0; i--) {
+    if (Player.isInvincible) break;
     const b = enemyBullets[i];
     // 적 총알 히트박스 (b.x b.y) -> 이미지 위치, (bw, bh)히트박스 시작 위치(좌상단)
     const bx = b.x + b.hitboxOffsetX;
