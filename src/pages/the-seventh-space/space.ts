@@ -514,6 +514,9 @@ function gameLoop(ts: number) {
 
   // ─── 라운드 전환
   if (EnemyManager.enemies.length === 0) {
+    Player.bullets = [];
+    enemyBullets.length = 0;
+
     const next = ++EnemyManager.round;
     if (EnemyManager.configs[next]) EnemyManager.spawn(EnemyManager.configs[next]);
     else console.log('게임 클리어!');
