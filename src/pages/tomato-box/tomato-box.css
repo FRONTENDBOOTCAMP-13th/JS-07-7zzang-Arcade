@@ -1,3 +1,16 @@
+@font-face {
+  font-family: 'DungGeunMo';
+  src:
+    url('/public/fonts/DungGeunMo.woff2') format('woff2'),
+    url('/public/fonts/DungGeunMo.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: 'DungGeunMo';
+}
+
 .bg {
   display: flex;
   align-items: center; /* 수직 중앙 */
@@ -71,4 +84,12 @@
   transform: translate(-50%, -50%) scale(0);
   opacity: 0;
   pointer-events: none;
+}
+
+canvas {
+  position: absolute;
+  left: 44.3%;
+  top: 56%;
+  z-index: 10;
+  transform: translate(-50%, -50%);
 }

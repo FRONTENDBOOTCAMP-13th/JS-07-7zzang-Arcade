@@ -15,7 +15,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   startBtn?.addEventListener('click', () => {
-    window.location.href = '/tomato-play.html';
+    window.location.href = '/src/pages/tomato-box/tomato-play.html';
   });
 
   function ScoreToggle(scoreEl: HTMLElement) {
