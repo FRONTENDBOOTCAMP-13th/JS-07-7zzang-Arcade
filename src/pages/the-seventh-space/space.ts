@@ -37,6 +37,7 @@ interface IEnemy extends IGameObject {
   speedX: number;
   descentY: number;
   direction: 1 | -1;
+  scoreValue: number;
   moveX(): void;
   explode(): void;
 }
@@ -48,6 +49,17 @@ interface IBullet extends IGameObject {
   hitboxHeight: number;
   hitboxOffsetX: number;
   hitboxOffsetY: number;
+}
+
+interface ILife {
+  lives: number;
+  icon: HTMLImageElement;
+  draw(ctx: CanvasRenderingContext2D): void;
+}
+
+interface IScore {
+  score: number;
+  draw(ctx: CanvasRenderingContext2D): void;
 }
 
 interface IEnemyConfig {
@@ -85,6 +97,7 @@ interface BulletOptions {
   hitboxOffsetX: number;
   hitboxOffsetY: number;
 }
+
 // ─── 인터페이스 정의 ────────────────────────────────────────────
 
 // ─── 전역 상태 ──────────────────────────────────────────────────
@@ -92,6 +105,38 @@ const enemyBullets: IBullet[] = [];
 const Explosions: IExplosion[] = [];
 let bgOffset = 0;
 const bgSpeed = 1.5; // 원하는 스크롤 속도
+let lives = 3;
+let score = 0;
+
+// ─── 라이프 정의 ─────────────────────────────────────────────
+const Life: ILife = {
+  lives,
+  icon: new Image(),
+
+  draw(ctx) {
+    const iconSize = 35;
+    const padding = 15;
+    for (let i = 0; i < this.lives; i++) {
+      ctx.drawImage(lifeIcon, padding + i * (iconSize + padding / 2), padding, iconSize, iconSize);
+    }
+  },
+};
+
+// ─── 스코어 정의 ─────────────────────────────────────────────
+const Score: IScore = {
+  score,
+  draw(ctx) {
+    const padding = 20;
+    ctx.save();
+    ctx.fillStyle = 'yellow';
+    ctx.font = '25px DungGeunMo, sans-serif';
+    const text = `Score: ${this.score}`;
+    const textWidth = ctx.measureText(text).width + 20;
+
+    ctx.fillText(text, canvas.width - textWidth - padding, padding + 20);
+    ctx.restore();
+  },
+};
 
 // ─── 플레이어 정의 ──────────────────────────────────────────────
 const Player: IPlayer = {
@@ -157,11 +202,12 @@ const Player: IPlayer = {
     this.canShoot = false;
     setTimeout(() => {
       this.canShoot = true;
-    }, 800);
+    }, 700);
   },
 
   // ── 폭발 함수 ─────────────────────────────────────────────────────
   explode() {
+    lives--;
     spawnExplosion(this.x + this.width / 2, this.y + this.height / 2, explosionPlayer, 2000, 48);
     this.isAlive = false;
     this.bullets = [];
@@ -203,9 +249,9 @@ const EnemyManager = {
   fireInterval: 1000,
 
   configs: {
-    1: { rows: 3, cols: 7, spriteSrc: '../../assets/images/space-img/enemy1.png', paddingX: 30, paddingY: 20, offsetX: 0, offsetY: 0, descentY: 40 },
-    2: { rows: 3, cols: 7, spriteSrc: '../../assets/images/space-img/enemy2.png', paddingX: 30, paddingY: 20, offsetX: 0, offsetY: 0, descentY: 40 },
-    3: { rows: 3, cols: 6, spriteSrc: '../../assets/images/space-img/enemy3.png', paddingX: 50, paddingY: 40, offsetX: 0, offsetY: 0, descentY: 50 },
+    1: { rows: 3, cols: 7, spriteSrc: '../../assets/images/space-img/enemy1.png', paddingX: 20, paddingY: 10, offsetX: 0, offsetY: 30, descentY: 60 },
+    2: { rows: 3, cols: 7, spriteSrc: '../../assets/images/space-img/enemy2.png', paddingX: 30, paddingY: 20, offsetX: 0, offsetY: 30, descentY: 70 },
+    3: { rows: 3, cols: 6, spriteSrc: '../../assets/images/space-img/enemy3.png', paddingX: 40, paddingY: 30, offsetX: 0, offsetY: 35, descentY: 80 },
   } as Record<number, IEnemyConfig>,
 
   // ── 적 스폰 함수(gpt code) ────────────────────────────────────────────
@@ -223,6 +269,7 @@ const EnemyManager = {
           sprite: img,
           speedX: 2,
           descentY: cfg.descentY,
+          scoreValue: 5 * this.round,
           direction: 1,
           update() {
             // 비워둔 이유는 update() 내에서는 this.enemies 사용이 불가 난 사용해야해..
@@ -379,6 +426,11 @@ function handleCollisions() {
     });
   });
 
+  // 몬스터 기본 점수
+  enemyHit.forEach(enemy => {
+    score += enemy.scoreValue;
+  });
+
   // 플레이어가 살아있는지 먼저 검사, 이후 플레이어의 이미지를 크기로 박스를 만들고 적과 충돌 시 explode() 호출
   if (Player.isAlive && !Player.isInvincible) {
     const pPoly = new SAT.Box(new SAT.Vector(Player.x, Player.y), Player.width, Player.height).toPolygon();
@@ -447,6 +499,10 @@ explosionPlayer.src = '../../assets/images/space-img/explosion-player.png';
 const explosionEnemy = new Image();
 explosionEnemy.src = '../../assets/images/space-img/explosion-enemy.png';
 
+// ─── 생명 이미지 생성
+const lifeIcon = new Image();
+lifeIcon.src = '../../assets/images/space-img/heart.png';
+
 // ─── 키버튼
 const keys = { ArrowLeft: false, ArrowRight: false, Space: false };
 document.addEventListener('keydown', e => {
@@ -460,7 +516,7 @@ document.addEventListener('keyup', e => {
 // ─── 초기화 & 게임 루프 ───────────────────────────────────────────
 let loaded = 0,
   lastTs = 0;
-const assets = [playerImg, bulletImg, enemyBulletImg, backgroundImg, explosionPlayer, explosionEnemy];
+const assets = [playerImg, bulletImg, enemyBulletImg, backgroundImg, explosionPlayer, explosionEnemy, lifeIcon];
 assets.forEach(
   img =>
     (img.onload = () => {
@@ -471,11 +527,12 @@ assets.forEach(
 function init() {
   Player.x = (canvas.width - Player.width) / 2;
   Player.y = canvas.height - Player.height - 20;
-  EnemyManager.spawn(EnemyManager.configs[1]);
+  EnemyManager.spawn(EnemyManager.configs[EnemyManager.round]);
   requestAnimationFrame(gameLoop);
 }
 
 function gameLoop(ts: number) {
+  if (lives <= 0) return;
   const delta = ts - lastTs;
   lastTs = ts;
 
@@ -495,9 +552,17 @@ function gameLoop(ts: number) {
   handleCollisions();
   handleEnemyBulletCollisions();
 
-  // ─── 렌더링
+  // ─── 플레이어
   Player.draw(ctx);
   enemyBullets.forEach(b => b.draw(ctx));
+
+  // ─── 라이프
+  Life.lives = lives; // 전역 lives 값과 동기화
+  Life.draw(ctx);
+
+  // ─── SCORE
+  Score.score = score; // 전역 score 변수를 사용 중이라면 이렇게 동기화
+  Score.draw(ctx);
 
   // ─── 폭발 이펙트
   for (const ex of Explosions) {
@@ -514,12 +579,13 @@ function gameLoop(ts: number) {
 
   // ─── 라운드 전환
   if (EnemyManager.enemies.length === 0) {
+    score += 15;
     Player.bullets = [];
     enemyBullets.length = 0;
 
     const next = ++EnemyManager.round;
     if (EnemyManager.configs[next]) EnemyManager.spawn(EnemyManager.configs[next]);
-    else console.log('게임 클리어!');
+    else return;
   }
 
   requestAnimationFrame(gameLoop);
