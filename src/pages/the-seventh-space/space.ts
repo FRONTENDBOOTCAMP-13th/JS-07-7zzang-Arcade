@@ -50,6 +50,17 @@ interface IBullet extends IGameObject {
   hitboxOffsetY: number;
 }
 
+interface ILife {
+  lives: number;
+  icon: HTMLImageElement;
+  draw(ctx: CanvasRenderingContext2D): void;
+}
+
+interface IScore {
+  score: number;
+  draw(ctx: CanvasRenderingContext2D): void;
+}
+
 interface IEnemyConfig {
   rows: number;
   cols: number;
@@ -85,6 +96,7 @@ interface BulletOptions {
   hitboxOffsetX: number;
   hitboxOffsetY: number;
 }
+
 // ─── 인터페이스 정의 ────────────────────────────────────────────
 
 // ─── 전역 상태 ──────────────────────────────────────────────────
@@ -92,6 +104,39 @@ const enemyBullets: IBullet[] = [];
 const Explosions: IExplosion[] = [];
 let bgOffset = 0;
 const bgSpeed = 1.5; // 원하는 스크롤 속도
+let lives = 3;
+let score = 0;
+
+// ─── 라이프 정의 ─────────────────────────────────────────────
+const Life: ILife = {
+  lives,
+  icon: new Image(),
+
+  draw(ctx) {
+    const iconSize = 35;
+    const padding = 15;
+    for (let i = 0; i < this.lives; i++) {
+      ctx.drawImage(lifeIcon, padding + i * (iconSize + padding / 2), padding, iconSize, iconSize);
+    }
+  },
+};
+
+// ─── 스코어 정의 ─────────────────────────────────────────────
+const Score: IScore = {
+  score,
+  draw(ctx) {
+    const padding = 20;
+    ctx.save();
+    ctx.fillStyle = 'yellow';
+    ctx.font = '25px DungGeunMo, sans-serif';
+
+    const text = `Score: ${this.score}`;
+    const textWidth = ctx.measureText(text).width + 20;
+
+    ctx.fillText(text, canvas.width - textWidth - padding, padding + 20);
+    ctx.restore();
+  },
+};
 
 // ─── 플레이어 정의 ──────────────────────────────────────────────
 const Player: IPlayer = {
@@ -203,9 +248,9 @@ const EnemyManager = {
   fireInterval: 1000,
 
   configs: {
-    1: { rows: 3, cols: 7, spriteSrc: '../../assets/images/space-img/enemy1.png', paddingX: 30, paddingY: 20, offsetX: 0, offsetY: 0, descentY: 40 },
-    2: { rows: 3, cols: 7, spriteSrc: '../../assets/images/space-img/enemy2.png', paddingX: 30, paddingY: 20, offsetX: 0, offsetY: 0, descentY: 40 },
-    3: { rows: 3, cols: 6, spriteSrc: '../../assets/images/space-img/enemy3.png', paddingX: 50, paddingY: 40, offsetX: 0, offsetY: 0, descentY: 50 },
+    1: { rows: 3, cols: 7, spriteSrc: '../../assets/images/space-img/enemy1.png', paddingX: 20, paddingY: 10, offsetX: 0, offsetY: 30, descentY: 60 },
+    2: { rows: 3, cols: 7, spriteSrc: '../../assets/images/space-img/enemy2.png', paddingX: 30, paddingY: 20, offsetX: 0, offsetY: 30, descentY: 70 },
+    3: { rows: 3, cols: 6, spriteSrc: '../../assets/images/space-img/enemy3.png', paddingX: 40, paddingY: 30, offsetX: 0, offsetY: 35, descentY: 80 },
   } as Record<number, IEnemyConfig>,
 
   // ── 적 스폰 함수(gpt code) ────────────────────────────────────────────
@@ -447,6 +492,10 @@ explosionPlayer.src = '../../assets/images/space-img/explosion-player.png';
 const explosionEnemy = new Image();
 explosionEnemy.src = '../../assets/images/space-img/explosion-enemy.png';
 
+// ─── 생명 이미지 생성
+const lifeIcon = new Image();
+lifeIcon.src = '../../assets/images/space-img/heart.png';
+
 // ─── 키버튼
 const keys = { ArrowLeft: false, ArrowRight: false, Space: false };
 document.addEventListener('keydown', e => {
@@ -460,7 +509,7 @@ document.addEventListener('keyup', e => {
 // ─── 초기화 & 게임 루프 ───────────────────────────────────────────
 let loaded = 0,
   lastTs = 0;
-const assets = [playerImg, bulletImg, enemyBulletImg, backgroundImg, explosionPlayer, explosionEnemy];
+const assets = [playerImg, bulletImg, enemyBulletImg, backgroundImg, explosionPlayer, explosionEnemy, lifeIcon];
 assets.forEach(
   img =>
     (img.onload = () => {
@@ -471,7 +520,7 @@ assets.forEach(
 function init() {
   Player.x = (canvas.width - Player.width) / 2;
   Player.y = canvas.height - Player.height - 20;
-  EnemyManager.spawn(EnemyManager.configs[1]);
+  EnemyManager.spawn(EnemyManager.configs[EnemyManager.round]);
   requestAnimationFrame(gameLoop);
 }
 
@@ -495,9 +544,17 @@ function gameLoop(ts: number) {
   handleCollisions();
   handleEnemyBulletCollisions();
 
-  // ─── 렌더링
+  // ─── 플레이어
   Player.draw(ctx);
   enemyBullets.forEach(b => b.draw(ctx));
+
+  // ─── 라이프
+  Life.lives = lives; // 전역 lives 값과 동기화
+  Life.draw(ctx);
+
+  // ─── SCORE
+  Score.score = score; // 전역 score 변수를 사용 중이라면 이렇게 동기화
+  Score.draw(ctx);
 
   // ─── 폭발 이펙트
   for (const ex of Explosions) {
