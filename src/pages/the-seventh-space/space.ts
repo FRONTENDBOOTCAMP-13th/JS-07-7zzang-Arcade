@@ -37,6 +37,7 @@ interface IEnemy extends IGameObject {
   speedX: number;
   descentY: number;
   direction: 1 | -1;
+  scoreValue: number;
   moveX(): void;
   explode(): void;
 }
@@ -129,7 +130,6 @@ const Score: IScore = {
     ctx.save();
     ctx.fillStyle = 'yellow';
     ctx.font = '25px DungGeunMo, sans-serif';
-
     const text = `Score: ${this.score}`;
     const textWidth = ctx.measureText(text).width + 20;
 
@@ -202,15 +202,12 @@ const Player: IPlayer = {
     this.canShoot = false;
     setTimeout(() => {
       this.canShoot = true;
-    }, 800);
+    }, 700);
   },
 
   // ── 폭발 함수 ─────────────────────────────────────────────────────
   explode() {
     lives--;
-    if (lives <= 0) {
-      console.log('게임 오버');
-    }
     spawnExplosion(this.x + this.width / 2, this.y + this.height / 2, explosionPlayer, 2000, 48);
     this.isAlive = false;
     this.bullets = [];
@@ -272,6 +269,7 @@ const EnemyManager = {
           sprite: img,
           speedX: 2,
           descentY: cfg.descentY,
+          scoreValue: 5 * this.round,
           direction: 1,
           update() {
             // 비워둔 이유는 update() 내에서는 this.enemies 사용이 불가 난 사용해야해..
@@ -428,6 +426,11 @@ function handleCollisions() {
     });
   });
 
+  // 몬스터 기본 점수
+  enemyHit.forEach(enemy => {
+    score += enemy.scoreValue;
+  });
+
   // 플레이어가 살아있는지 먼저 검사, 이후 플레이어의 이미지를 크기로 박스를 만들고 적과 충돌 시 explode() 호출
   if (Player.isAlive && !Player.isInvincible) {
     const pPoly = new SAT.Box(new SAT.Vector(Player.x, Player.y), Player.width, Player.height).toPolygon();
@@ -576,12 +579,13 @@ function gameLoop(ts: number) {
 
   // ─── 라운드 전환
   if (EnemyManager.enemies.length === 0) {
+    score += 15;
     Player.bullets = [];
     enemyBullets.length = 0;
 
     const next = ++EnemyManager.round;
     if (EnemyManager.configs[next]) EnemyManager.spawn(EnemyManager.configs[next]);
-    else console.log('게임 클리어!');
+    else return;
   }
 
   requestAnimationFrame(gameLoop);
