@@ -207,6 +207,10 @@ const Player: IPlayer = {
 
   // ── 폭발 함수 ─────────────────────────────────────────────────────
   explode() {
+    lives--;
+    if (lives <= 0) {
+      console.log('게임 오버');
+    }
     spawnExplosion(this.x + this.width / 2, this.y + this.height / 2, explosionPlayer, 2000, 48);
     this.isAlive = false;
     this.bullets = [];
@@ -525,6 +529,7 @@ function init() {
 }
 
 function gameLoop(ts: number) {
+  if (lives <= 0) return;
   const delta = ts - lastTs;
   lastTs = ts;
 
