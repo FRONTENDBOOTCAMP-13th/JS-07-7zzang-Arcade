@@ -102,7 +102,10 @@ interface BulletOptions {
 
 // ─── 전역 상태 ──────────────────────────────────────────────────
 const enemyBullets: IBullet[] = [];
+const bossBullets: IBullet[] = [];
 const Explosions: IExplosion[] = [];
+let roundPoint = false; // 이번 라운드 클리어 보너스 지급 여부
+let bossPhase = false; // 보스 전투 중인지
 let bgOffset = 0;
 const bgSpeed = 1.5; // 원하는 스크롤 속도
 let lives = 3;
@@ -152,7 +155,7 @@ const Player: IPlayer = {
   sprite: new Image(),
   bullets: [],
 
-  // ── 화면 업데이트 ──────────────────────────────────────────────
+  // ── 화면 업데이트 ───────────────
   update() {
     if (!this.isAlive) return;
     if (keys.ArrowLeft && this.x > 0) this.x -= this.speed;
@@ -161,7 +164,7 @@ const Player: IPlayer = {
     this.updateBullets();
   },
 
-  // ── 화면 그리기 ────────────────────────────────────────────────
+  // ── 화면 그리기 ───────────────
   draw(ctx) {
     if (!this.isAlive) return;
 
@@ -179,7 +182,7 @@ const Player: IPlayer = {
     this.bullets.forEach(b => b.draw(ctx));
   },
 
-  // ── 총알 발사 함수 ──────────────────────────────────────────────
+  // ── 총알 발사 함수 ────────────────
   shoot() {
     if (!this.canShoot) return;
 
@@ -202,10 +205,10 @@ const Player: IPlayer = {
     this.canShoot = false;
     setTimeout(() => {
       this.canShoot = true;
-    }, 700);
+    }, 800);
   },
 
-  // ── 폭발 함수 ─────────────────────────────────────────────────────
+  // ── 폭발 함수 ─────────────────────────
   explode() {
     lives--;
     spawnExplosion(this.x + this.width / 2, this.y + this.height / 2, explosionPlayer, 2000, 48);
@@ -217,7 +220,7 @@ const Player: IPlayer = {
     }, 2000);
   },
 
-  // ── 부활 함수 ──────────────────────────────────────────────────────
+  // ── 부활 함수 ──────────────────────────
   respawn() {
     // 부활 위치
     this.x = (canvas.width - this.width) / 2;
@@ -225,14 +228,14 @@ const Player: IPlayer = {
     this.isAlive = true;
   },
 
-  // ── 총알 업데이트 ───────────────────────────────────────────────────
+  // ── 총알 업데이트 ──────────────────────
   updateBullets() {
     this.bullets.forEach(b => b.update());
     // 밖으로 나간 총알 제거
     this.bullets = this.bullets.filter(b => b.y + b.height > 0);
   },
 
-  // ── 부활 후 무적 ───────────────────────────────────────────────────
+  // ── 부활 후 무적 ────────────────────────
   invincibility(duration) {
     this.isInvincible = true;
     setTimeout(() => {
@@ -240,8 +243,9 @@ const Player: IPlayer = {
     }, duration);
   },
 };
+// ─── 플레이어 정의 ──────────────────────────────────────────────────
 
-// ─── 적 매니저 정의 ───────────────────────────────────────────────────
+// ─── 적 매니저 정의 ──────────────────────────────────────────────────
 const EnemyManager = {
   round: 1,
   enemies: [] as IEnemy[],
@@ -254,7 +258,7 @@ const EnemyManager = {
     3: { rows: 3, cols: 6, spriteSrc: '../../assets/images/space-img/enemy3.png', paddingX: 40, paddingY: 30, offsetX: 0, offsetY: 35, descentY: 80 },
   } as Record<number, IEnemyConfig>,
 
-  // ── 적 스폰 함수(gpt code) ────────────────────────────────────────────
+  // ── 적 스폰 함수(gpt code) ──────────────────────
   spawn(cfg: IEnemyConfig) {
     this.enemies = [];
     const img = new Image();
@@ -288,7 +292,7 @@ const EnemyManager = {
     }
   },
 
-  //  ── 적 배열 한칸 아래로 이동 시키는 함수  ──────────────────────────────────────────
+  // ──── 적 배열 한칸 아래로 이동 시키는 함수  ───────
   updateAll(delta: number) {
     // 히트영역 아님! 벽 히트 영역임 -> 좌우 중 맨 왼쪽, 맨 오른쪽 열이 닿았을 때를 판정
     // + 예상을 해야함 벽에 히트 예정인지를 계산해야함 따라서 벽 위치와 적 배열의 위치가 같이지는 지점을 예상
@@ -317,7 +321,7 @@ const EnemyManager = {
     }
   },
 
-  // 총알 제거하기(업데이트)
+  // ─── 총알 제거하기(업데이트) ───────────────
   updateEnemyBullets() {
     // 모든 총알 위치 업데이트하기
     enemyBullets.forEach(b => b.update());
@@ -330,7 +334,7 @@ const EnemyManager = {
     }
   },
 
-  // 랜덤으로 총 쏠 적 고르기
+  // ─── 랜덤으로 총 쏠 적 고르기 ───────────────
   fireFromRandomEnemy() {
     // [0, length] 사이로 랜덤 enemies[0~length] 들어가게 되서 슈터를 결정
     const shooter = this.enemies[Math.floor(Math.random() * this.enemies.length)];
@@ -354,8 +358,71 @@ const EnemyManager = {
     this.enemies.forEach(e => e.draw(ctx));
   },
 };
+// ─── 적 매니저 정의 ──────────────────────────────────────────────────
 
-// ─── 폭발 이펙트 생성 ─────────────────────────────────────────────
+// ─── 보스 정의 ──────────────────────────────────────────────────────
+const boss = {
+  x: canvas.width / 2 - 120,
+  y: 50,
+  width: 240,
+  height: 80,
+  sprite: new Image(),
+  speedX: 3,
+  direction: 1,
+  hitCount: 0,
+  hitPoint: 30,
+  fireCooldown: 0,
+  fireInterval: 700,
+
+  update() {},
+
+  updateBoss(delta: number) {
+    this.x += this.speedX * this.direction;
+    if (this.x <= 0 || this.x + this.width >= canvas.width) {
+      this.direction = -this.direction as 1 | -1;
+    }
+    this.fireCooldown -= delta;
+    if (this.fireCooldown <= 0) {
+      this.shoot();
+      this.fireCooldown = this.fireInterval;
+    }
+
+    this.updateBossBullets();
+  },
+
+  draw(ctx: CanvasRenderingContext2D) {
+    ctx.drawImage(this.sprite, this.x, this.y, this.width, this.height);
+  },
+
+  shoot() {
+    // 보스 총알 생성 (아래로 떨어지도록)
+    const cx = this.x + this.width / 2;
+    const sy = this.y + this.height;
+    const bullet = createBullet({
+      x: cx - 5,
+      y: sy,
+      width: 30,
+      height: 30,
+      speedY: 3,
+      sprite: enemyBulletImg,
+      hitboxWidth: 5,
+      hitboxHeight: 5,
+      hitboxOffsetX: 12,
+      hitboxOffsetY: 15,
+    });
+    bossBullets.push(bullet);
+  },
+
+  updateBossBullets() {
+    bossBullets.forEach(b => b.update());
+    for (let i = bossBullets.length - 1; i >= 0; i--) {
+      if (bossBullets[i].y > canvas.height) bossBullets.splice(i, 1);
+    }
+  },
+};
+// ─── 보스 정의 ──────────────────────────────────────────────────────
+
+// ─── 폭발 이펙트 생성 ────────────────────────────────────────────────
 function spawnExplosion(x: number, y: number, sprite: HTMLImageElement, duration: number, size: number) {
   const now = Date.now();
   Explosions.push({
@@ -399,80 +466,103 @@ function createBullet(bullet: BulletOptions): IBullet {
 
 // ─── 충돌 처리(gpt code) ───────────────────────────────────────────────────
 function handleCollisions() {
+  // 1) 일반 적 vs 플레이어 총알 충돌
   const enemyHit = new Set<IEnemy>();
   const bulletHit = new Set<IBullet>();
 
   EnemyManager.enemies.forEach(enemy => {
     Player.bullets.forEach(bullet => {
-      // 1) Bullet 히트박스 위치 & 크기
       const bx = bullet.x + bullet.hitboxOffsetX;
       const by = bullet.y + bullet.hitboxOffsetY;
       const bw = bullet.hitboxWidth;
       const bh = bullet.hitboxHeight;
-
-      // 히트박스가 없으면 검사 건너뛰기
       if (bw <= 0 || bh <= 0) return;
 
-      // 폴리곤 생성
       const bPoly = new SAT.Box(new SAT.Vector(bx, by), bw, bh).toPolygon();
       const ePoly = new SAT.Box(new SAT.Vector(enemy.x, enemy.y), enemy.width, enemy.height).toPolygon();
 
-      // 충돌 검사
       if (SAT.testPolygonPolygon(bPoly, ePoly)) {
-        enemy.explode(); // 적 폭발
-        enemyHit.add(enemy); // 적 제거
-        bulletHit.add(bullet); // 총알제거
+        enemy.explode();
+        enemyHit.add(enemy);
+        bulletHit.add(bullet);
       }
     });
   });
 
-  // 몬스터 기본 점수
-  enemyHit.forEach(enemy => {
-    score += enemy.scoreValue;
+  // 몬스터 제거 및 점수 추가
+  enemyHit.forEach(e => {
+    score += e.scoreValue;
   });
+  EnemyManager.enemies = EnemyManager.enemies.filter(e => !enemyHit.has(e));
+  Player.bullets = Player.bullets.filter(b => !bulletHit.has(b));
 
-  // 플레이어가 살아있는지 먼저 검사, 이후 플레이어의 이미지를 크기로 박스를 만들고 적과 충돌 시 explode() 호출
+  // 2) 플레이어 vs 일반 적 충돌
   if (Player.isAlive && !Player.isInvincible) {
     const pPoly = new SAT.Box(new SAT.Vector(Player.x, Player.y), Player.width, Player.height).toPolygon();
     EnemyManager.enemies.forEach(enemy => {
       const ePoly = new SAT.Box(new SAT.Vector(enemy.x, enemy.y), enemy.width, enemy.height).toPolygon();
-      if (SAT.testPolygonPolygon(pPoly, ePoly)) Player.explode();
+      if (SAT.testPolygonPolygon(pPoly, ePoly)) {
+        Player.explode();
+      }
     });
   }
 
-  // 배열에서 제거 시키기 (enemyHit에 기록된 총알)
-  EnemyManager.enemies = EnemyManager.enemies.filter(e => !enemyHit.has(e));
-  Player.bullets = Player.bullets.filter(b => !bulletHit.has(b));
+  // 3) 보스 vs 플레이어 총알 충돌 (웨이브 클리어 후)
+  if (EnemyManager.enemies.length === 0 && boss.hitPoint > 0) {
+    Player.bullets.forEach((bullet, idx) => {
+      const bx = bullet.x + bullet.hitboxOffsetX;
+      const by = bullet.y + bullet.hitboxOffsetY;
+      const bw = bullet.hitboxWidth;
+      const bh = bullet.hitboxHeight;
+      if (bw <= 0 || bh <= 0) return;
+
+      const bPoly = new SAT.Box(new SAT.Vector(bx, by), bw, bh).toPolygon();
+      const bossPoly = new SAT.Box(new SAT.Vector(boss.x, boss.y), boss.width, boss.height).toPolygon();
+      if (SAT.testPolygonPolygon(bPoly, bossPoly)) {
+        // 보스 피격
+        boss.hitPoint--;
+        spawnExplosion(bullet.x, bullet.y, explosionEnemy, 200, 20);
+
+        // 한 대당 점수 +4
+        score += 1;
+
+        // 총알 제거
+        Player.bullets.splice(idx, 1);
+      }
+    });
+
+    // 보스 체력 0 이하시 대폭발
+    if (boss.hitPoint <= 0) {
+      spawnExplosion(boss.x + boss.width / 2, boss.y + boss.height / 2, explosionEnemy, 2000, boss.width * 1.2);
+    }
+  }
+
+  // 4) 적(및 보스) 총알 vs 플레이어 충돌
+  handleEnemyBulletCollisions();
 }
 
 // ─── 충돌 처리(gpt code) ───────────────────────────────────────────────────
 function handleEnemyBulletCollisions() {
-  // 플레이어 살아있는지 확인 먼저
   if (!Player.isAlive) return;
-
-  // 플레이어 전체 스프라이트로 체크 점(x, y) 점(width, height) 크기의 사각형 생성 -> 영역을 폴리곤으로 변환
   const pPoly = new SAT.Box(new SAT.Vector(Player.x, Player.y), Player.width, Player.height).toPolygon();
 
-  // 총알 검사하기 ( - 순환 splice로 잘랐을 때 인덱스가 안꼬이도록 )
-  for (let i = enemyBullets.length - 1; i >= 0; i--) {
-    if (Player.isInvincible) break;
-    const b = enemyBullets[i];
-    // 적 총알 히트박스 (b.x b.y) -> 이미지 위치, (bw, bh)히트박스 시작 위치(좌상단)
-    const bx = b.x + b.hitboxOffsetX;
-    const by = b.y + b.hitboxOffsetY;
-    const bw = b.hitboxWidth;
-    const bh = b.hitboxHeight;
+  // 검사할 총알 배열을 하나로 묶어서 처리
+  const allBullets = [enemyBullets, bossBullets];
+  for (const bulletArr of allBullets) {
+    for (let i = bulletArr.length - 1; i >= 0; i--) {
+      if (Player.isInvincible) break;
+      const b = bulletArr[i];
+      const bx = b.x + b.hitboxOffsetX;
+      const by = b.y + b.hitboxOffsetY;
+      const bw = b.hitboxWidth;
+      const bh = b.hitboxHeight;
+      if (bw <= 0 || bh <= 0) continue;
 
-    //
-    if (bw <= 0 || bh <= 0) continue;
-
-    // 총알 히트박스도 마찬가지고 사각형 생성 후 영역을 폴리곤으로 변환
-    const bPoly = new SAT.Box(new SAT.Vector(bx, by), bw, bh).toPolygon();
-
-    // SAT 충돌 검사 true 시 플레이어 폭발과 함께 적 총알 제거
-    if (SAT.testPolygonPolygon(pPoly, bPoly)) {
-      Player.explode();
-      enemyBullets.splice(i, 1);
+      const bPoly = new SAT.Box(new SAT.Vector(bx, by), bw, bh).toPolygon();
+      if (SAT.testPolygonPolygon(pPoly, bPoly)) {
+        Player.explode();
+        bulletArr.splice(i, 1);
+      }
     }
   }
 }
@@ -503,6 +593,10 @@ explosionEnemy.src = '../../assets/images/space-img/explosion-enemy.png';
 const lifeIcon = new Image();
 lifeIcon.src = '../../assets/images/space-img/heart.png';
 
+// ─── 보스 이미지 생성
+const bossImg = new Image();
+bossImg.src = '../../assets/images/space-img/boss.png';
+
 // ─── 키버튼
 const keys = { ArrowLeft: false, ArrowRight: false, Space: false };
 document.addEventListener('keydown', e => {
@@ -516,7 +610,7 @@ document.addEventListener('keyup', e => {
 // ─── 초기화 & 게임 루프 ───────────────────────────────────────────
 let loaded = 0,
   lastTs = 0;
-const assets = [playerImg, bulletImg, enemyBulletImg, backgroundImg, explosionPlayer, explosionEnemy, lifeIcon];
+const assets = [playerImg, bulletImg, enemyBulletImg, backgroundImg, explosionPlayer, explosionEnemy, lifeIcon, bossImg];
 assets.forEach(
   img =>
     (img.onload = () => {
@@ -525,6 +619,7 @@ assets.forEach(
 );
 
 function init() {
+  boss.sprite = bossImg;
   Player.x = (canvas.width - Player.width) / 2;
   Player.y = canvas.height - Player.height - 20;
   EnemyManager.spawn(EnemyManager.configs[EnemyManager.round]);
@@ -554,14 +649,17 @@ function gameLoop(ts: number) {
 
   // ─── 플레이어
   Player.draw(ctx);
+
+  // ─── 적 & 보스 총알
   enemyBullets.forEach(b => b.draw(ctx));
+  bossBullets.forEach(b => b.draw(ctx));
 
   // ─── 라이프
-  Life.lives = lives; // 전역 lives 값과 동기화
+  Life.lives = lives;
   Life.draw(ctx);
 
   // ─── SCORE
-  Score.score = score; // 전역 score 변수를 사용 중이라면 이렇게 동기화
+  Score.score = score;
   Score.draw(ctx);
 
   // ─── 폭발 이펙트
@@ -578,14 +676,37 @@ function gameLoop(ts: number) {
   EnemyManager.drawAll(ctx);
 
   // ─── 라운드 전환
-  if (EnemyManager.enemies.length === 0) {
-    score += 15;
-    Player.bullets = [];
-    enemyBullets.length = 0;
+  if (EnemyManager.enemies.length === 0 && !bossPhase) {
+    if (!roundPoint) {
+      score += 15;
+      roundPoint = true;
+      Player.bullets = [];
+      enemyBullets.length = 0;
+    }
 
     const next = ++EnemyManager.round;
-    if (EnemyManager.configs[next]) EnemyManager.spawn(EnemyManager.configs[next]);
-    else return;
+    if (EnemyManager.configs[next]) {
+      EnemyManager.spawn(EnemyManager.configs[next]);
+      roundPoint = false;
+    } else {
+      bossPhase = true;
+      boss.hitPoint = 30;
+    }
+  }
+
+  if (bossPhase) {
+    boss.updateBoss(delta);
+    boss.draw(ctx);
+
+    if (boss.hitPoint <= 0) {
+      score = 777;
+      Score.score = score;
+      Score.draw(ctx);
+
+      spawnExplosion(boss.x + boss.width / 2, boss.y + boss.height / 2, explosionEnemy, 2000, boss.width * 1.2);
+      bossPhase = false;
+      return;
+    }
   }
 
   requestAnimationFrame(gameLoop);
