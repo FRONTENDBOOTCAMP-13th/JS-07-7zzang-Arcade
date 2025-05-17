@@ -1,14 +1,9 @@
 window.addEventListener('DOMContentLoaded', () => {
-  const homeBtn = document.querySelector('.home') as HTMLElement;
   const trophyBtn = document.querySelector('.trophy');
   const bestScore = document.querySelector('.bestscore') as HTMLElement;
   const startBtn = document.querySelector('.start') as HTMLElement;
 
   let isVisible = false;
-
-  homeBtn?.addEventListener('click', () => {
-    window.location.href = '/home.html';
-  });
 
   trophyBtn?.addEventListener('click', () => {
     ScoreToggle(bestScore);

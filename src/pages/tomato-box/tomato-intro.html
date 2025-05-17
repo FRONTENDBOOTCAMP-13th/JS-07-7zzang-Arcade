@@ -5,18 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tomato Box</title>
     <script type="module" src="./tomato-intro.ts"></script>
-    <link rel="stylesheet" href="tomato-box.css" />
+    <link rel="stylesheet" href="./tomatobox.css" />
+    <link rel="preload" as="font" href="/fonts/DungGeunMo.woff" crossorigin="anonymous" />
+    <link rel="preload" as="font" href="/fonts/DungGeunMo.woff2" crossorigin="anonymous" />
   </head>
   <body>
     <div class="bg">
       <!-- 초기 화면 -->
       <div class="wrap">
-        <div class="title"><img src="/src/assets/images/tomato-img/tomato-intro.png" alt="" /></div>
+        <div class="title"><img src="/src/assets/images/tomato-img/tomato-intro.png" alt="토마토 박스" /></div>
         <div class="top">
-          <div class="home"><img src="/src/assets/images/tomato-img/tomato-home.png" alt="" /></div>
-          <div class="trophy"><img src="/src/assets/images/tomato-img/tomato-trophy.png" alt="" /></div>
+          <a href="/home.html" class="home"><img src="/src/assets/images/tomato-img/tomato-home.png" alt="홈으로 돌아가기" /></a>
+          <div class="trophy"><img src="/src/assets/images/tomato-img/tomato-trophy.png" alt="순위 확인하기" /></div>
         </div>
-        <div class="start"><img src="/src/assets/images/tomato-img/tomato-start.png" alt="" /></div>
+        <div class="start"><img src="/src/assets/images/tomato-img/tomato-start.png" alt="게임 시작하기" /></div>
       </div>
       <!-- best score 확인 -->
       <div class="bestscore"></div>
