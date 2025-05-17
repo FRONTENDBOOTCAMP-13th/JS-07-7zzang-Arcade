@@ -327,7 +327,7 @@ const Player: IPlayer = {
     this.canShoot = false;
     setTimeout(() => {
       this.canShoot = true;
-    }, 0);
+    }, 700);
   },
 
   // ── 폭발 함수 ─────────────────────────
