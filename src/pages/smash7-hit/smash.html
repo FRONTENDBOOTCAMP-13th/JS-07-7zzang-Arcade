@@ -2,8 +2,12 @@
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>뿡뿡 두더지 게임</title>
-    <link rel="stylesheet" href="smash.css" />
+    <link rel="stylesheet" href="./smash.css" />
+    <script type="module" src="./smash.ts"></script>
+    <link rel="preload" as="font" href="/fonts/DungGeunMo.woff" crossorigin="anonymous" />
+    <link rel="preload" as="font" href="/fonts/DungGeunMo.woff2" crossorigin="anonymous"/>
   </head>
   <body>
     <!------------===================== 인트로 화면 =====================-------------->
@@ -93,6 +97,5 @@
     <!-- ✨ 트윙클 효과 (동적 생성용, 필요시만 사용) -->
     <img src="/src/assets/images/smash-img/smash-twinkle.png" id="twinkleEffect" style="display: none" />
 
-    <script type="module" src="/src/pages/smash7-hit/smash.ts"></script>
   </body>
 </html>
