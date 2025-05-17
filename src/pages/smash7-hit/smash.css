@@ -6,6 +6,12 @@ body {
   margin: 0;
   padding: 0;
   text-align: center;
+
+  /* ✅ 중앙 정렬 핵심 */
+  display: flex;
+  justify-content: center; /* 가로 가운데 */
+  align-items: center; /* 세로 가운데 */
+  height: 100vh; /* 화면 높이 기준으로 */
 }
 
 /* 🎬 인트로 화면 스타일 */
