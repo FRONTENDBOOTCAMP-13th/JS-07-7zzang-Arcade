@@ -7,6 +7,98 @@
     <script type="module" src="./space.ts"></script>
   </head>
   <body>
-    <canvas id="gameCanvas" width="920" height="600"></canvas>
+    <div id="intro">
+      <a href="/">
+        <img id="homeIcon" src="../../assets/images/space-img/home.png" width="30" height="30" alt="Home" />
+      </a>
+      <img id="trophyIcon" src="../../assets/images/space-img/trophy.png" width="30" height="30" alt="Score" />
+      <img id="titleImg" src="../../assets/images/space-img/title.png" width="330" height="80" alt="Title" />
+      <img src="../../assets/images/space-img/intro.png" width="500" height="300" alt="픽셀 외계인" />
+      <button id="startBtn">START GAME</button>
+      <!-- Score 모달 팝업 -->
+      <div id="scoreModal" class="modal hidden">
+        <div class="modal_content">
+          <h2>HI-SCORE</h2>
+          <ul>
+            <li>
+              <div>
+                <img src="../../assets/images/space-img/alien-icon.png" alt="alien icon" class="alien-icon" />
+                HYV
+              </div>
+              <div>777</div>
+            </li>
+            <li>
+              <div>
+                <img src="../../assets/images/space-img/alien-icon.png" alt="alien icon" class="alien-icon" />
+                EHJ
+              </div>
+              <div>777</div>
+            </li>
+            <li>
+              <div>
+                <img src="../../assets/images/space-img/alien-icon.png" alt="alien icon" class="alien-icon" />
+                BDC
+              </div>
+              <div>777</div>
+            </li>
+            <li>
+              <div>
+                <img src="../../assets/images/space-img/alien-icon.png" alt="alien icon" class="alien-icon" />
+                KJS
+              </div>
+              <div>777</div>
+            </li>
+            <li>
+              <div>
+                <img src="../../assets/images/space-img/alien-icon.png" alt="alien icon" class="alien-icon" />
+                HGD
+              </div>
+              <div>777</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!-- Score모달 팝업 -->
+    </div>
+
+    <!-- canvas 팝업 -->
+    <canvas id="gameCanvas" width="920" height="600" style="display: none"></canvas>
+    <!-- canvas 팝업 -->
+
+    <!-- GameOver 팝업 -->
+    <div id="gameOverModal" class="modal hidden">
+      <div class="modal_main">
+        <div class="modal_content game_content">
+          <h1 id="gameResult">GAME OVER</h1>
+          <div class="gameover-content">
+            <h3>SCORE:</h3>
+            <h2 id="gameScore">12345</h2>
+          </div>
+          <div class="btn-group">
+            <button id="restartBtn">RESTART</button>
+            <button id="openSave">SAVE SCORE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- GameOver모달 팝업 -->
+
+    <!-- Nickname모달 팝업 -->
+    <div id="nameModal" class="modal hidden">
+      <div class="modal_main">
+        <div class="modal_content">
+          <h2>SAVE SCORE</h2>
+          <div>
+            <h3>NICKNAME:</h3>
+            <input type="text" id="nicknameInput" placeholder="닉네임을 입력하세요" maxlength="3" />
+          </div>
+          <div class="btn-group">
+            <button id="saveBtn">SAVE</button>
+            <button id="cancelBtn">CANCEL</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Nickname모달 팝업 -->
   </body>
 </html>

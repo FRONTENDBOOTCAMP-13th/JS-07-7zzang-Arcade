@@ -2,6 +2,128 @@ import '../../style.css';
 import './space.css';
 import * as SAT from 'sat';
 
+// HTML 요소 가져오기 ───────────
+const introEl = document.getElementById('intro') as HTMLDivElement;
+const startBtn = document.getElementById('startBtn') as HTMLButtonElement;
+const canvasEl = document.getElementById('gameCanvas') as HTMLCanvasElement;
+const scoreModal = document.getElementById('scoreModal') as HTMLDivElement;
+const trophyIcon = document.getElementById('trophyIcon') as HTMLImageElement;
+const nameModal = document.getElementById('nameModal') as HTMLDivElement;
+const cancleBtn = document.getElementById('cancelBtn') as HTMLDivElement;
+const saveBtn = document.getElementById('saveBtn') as HTMLDivElement;
+const gameOverModal = document.getElementById('gameOverModal') as HTMLDivElement;
+const restartBtn = document.getElementById('restartBtn') as HTMLDivElement;
+const openSaveBtn = document.getElementById('openSave') as HTMLDivElement;
+const nicknameInput = document.getElementById('nicknameInput') as HTMLInputElement;
+const gameScoreEl = document.getElementById('gameScore') as HTMLHeadingElement;
+const gameResultEl = document.getElementById('gameResult') as HTMLHeadingElement;
+const scoreListEl = document.querySelector<HTMLUListElement>('#scoreModal ul')!;
+
+// ─── overlay 클릭 시 닫기 ────────────
+scoreModal.addEventListener('click', () => {
+  scoreModal.classList.add('hidden');
+});
+
+// ─── 트로피 클릭 시 ──────────────────
+trophyIcon.addEventListener('click', () => {
+  renderScoreList();
+  scoreModal.classList.remove('hidden');
+});
+
+// ─── 게임 시작 버튼 클릭 시 ────────────
+startBtn.addEventListener('click', () => {
+  console.log('시작');
+  if (!assetsLoaded) return;
+  introEl.style.display = 'none';
+  canvasEl.style.display = 'block';
+  init();
+});
+
+// ─── 취소 버튼 클릭 시 ──────────────────
+cancleBtn.addEventListener('click', () => {
+  console.log('취소');
+  canvasEl.style.display = 'none';
+  introEl.style.display = 'flex';
+  nameModal.classList.add('hidden');
+});
+
+// ─── 다시하기 버튼 클릭 시 ──────────────────
+restartBtn.addEventListener('click', () => {
+  console.log('다시시작');
+  gameOverModal.classList.add('hidden');
+  canvasEl.style.display = 'none';
+  introEl.style.display = 'flex';
+});
+
+// ─── 저장오픈버튼  클릭 시 ──────────────────
+openSaveBtn.addEventListener('click', () => {
+  nameModal.classList.remove('hidden');
+  gameOverModal.classList.add('hidden');
+});
+
+// ─── SAVE 클릭 시 ───────────────────────────
+saveBtn.addEventListener('click', () => {
+  const nick = nicknameInput.value.trim().toUpperCase();
+  if (!nick) {
+    alert('닉네임을 입력해주세요');
+    nicknameInput.focus();
+    return;
+  }
+  const currentScore = Score.score;
+  localStorage.setItem(nick, currentScore.toString());
+
+  // 모달 닫기
+  nameModal.classList.add('hidden');
+  canvasEl.style.display = 'none';
+  introEl.style.display = 'flex';
+
+  // 저장 완료 메시지
+  alert(`${nick}님, ${currentScore}점이 저장되었습니다!`);
+});
+
+// ─── 로컬스토리지 순위 불러오기 ──────────────────
+function getSortedScores(): [string, number][] {
+  const entries: [string, number][] = [];
+
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i)!;
+    const val = Number(localStorage.getItem(key));
+    if (!isNaN(val)) {
+      entries.push([key, val]);
+    }
+  }
+
+  // 점수 내림차순, 점수 같으면 닉네임 오름차순
+  entries.sort((a, b) => {
+    if (b[1] !== a[1]) return b[1] - a[1];
+    return a[0].localeCompare(b[0]);
+  });
+
+  // 상위 5개만
+  return entries.slice(0, 5);
+}
+
+// <ul>에 렌더링
+function renderScoreList() {
+  const top5 = getSortedScores();
+
+  scoreListEl.innerHTML = top5
+    .map(
+      ([nick, sc]) => `
+      <li>
+        <div>
+          <img src="../../assets/images/space-img/alien-icon.png"
+               alt="alien icon"
+               class="alien-icon" />
+          ${nick}
+        </div>
+        <div>${sc}</div>
+      </li>
+    `,
+    )
+    .join('');
+}
+
 // ─── 캔버스 & 컨텍스트 ──────────────────────────────────────────
 const canvas = document.getElementById('gameCanvas') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d')!;
@@ -205,7 +327,7 @@ const Player: IPlayer = {
     this.canShoot = false;
     setTimeout(() => {
       this.canShoot = true;
-    }, 800);
+    }, 0);
   },
 
   // ── 폭발 함수 ─────────────────────────
@@ -466,7 +588,7 @@ function createBullet(bullet: BulletOptions): IBullet {
 
 // ─── 충돌 처리(gpt code) ───────────────────────────────────────────────────
 function handleCollisions() {
-  // 1) 일반 적 vs 플레이어 총알 충돌
+  // 일반 적 vs 플레이어 총알 충돌
   const enemyHit = new Set<IEnemy>();
   const bulletHit = new Set<IBullet>();
 
@@ -496,7 +618,7 @@ function handleCollisions() {
   EnemyManager.enemies = EnemyManager.enemies.filter(e => !enemyHit.has(e));
   Player.bullets = Player.bullets.filter(b => !bulletHit.has(b));
 
-  // 2) 플레이어 vs 일반 적 충돌
+  // 플레이어 vs 일반 적 충돌
   if (Player.isAlive && !Player.isInvincible) {
     const pPoly = new SAT.Box(new SAT.Vector(Player.x, Player.y), Player.width, Player.height).toPolygon();
     EnemyManager.enemies.forEach(enemy => {
@@ -507,7 +629,7 @@ function handleCollisions() {
     });
   }
 
-  // 3) 보스 vs 플레이어 총알 충돌 (웨이브 클리어 후)
+  // 보스 vs 플레이어 총알 충돌 (웨이브 클리어 후)
   if (EnemyManager.enemies.length === 0 && boss.hitPoint > 0) {
     Player.bullets.forEach((bullet, idx) => {
       const bx = bullet.x + bullet.hitboxOffsetX;
@@ -537,7 +659,7 @@ function handleCollisions() {
     }
   }
 
-  // 4) 적(및 보스) 총알 vs 플레이어 충돌
+  // 적(및 보스) 총알 vs 플레이어 충돌
   handleEnemyBulletCollisions();
 }
 
@@ -607,31 +729,54 @@ document.addEventListener('keyup', e => {
   if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Space') keys[e.key] = false;
 });
 
-// ─── 초기화 & 게임 루프 ───────────────────────────────────────────
+// ─── 에셋 로드 ───────────────────────────────────────────
 let loaded = 0,
   lastTs = 0;
 const assets = [playerImg, bulletImg, enemyBulletImg, backgroundImg, explosionPlayer, explosionEnemy, lifeIcon, bossImg];
-assets.forEach(
-  img =>
-    (img.onload = () => {
-      if (++loaded === assets.length) init();
-    }),
-);
+let assetsLoaded = false;
 
+assets.forEach(img => {
+  img.onload = () => {
+    if (++loaded === assets.length) {
+      assetsLoaded = true;
+      startBtn.disabled = false; // 버튼 활성화
+    }
+  };
+});
+
+// ─── 초기화 ──────────────────────────────────────────────────────
 function init() {
   boss.sprite = bossImg;
+  score = 0;
+  lives = 3;
+  roundPoint = false;
+  bossPhase = false;
+  Player.bullets = [];
+  EnemyManager.round = 1;
+  Explosions.length = 0;
+  enemyBullets.length = 0;
+  bossBullets.length = 0;
+  gameResultEl.textContent = 'GAME OVER';
+  gameResultEl.style.color = 'red';
+  gameResultEl.style.fontSize = '7rem';
   Player.x = (canvas.width - Player.width) / 2;
   Player.y = canvas.height - Player.height - 20;
   EnemyManager.spawn(EnemyManager.configs[EnemyManager.round]);
   requestAnimationFrame(gameLoop);
 }
-
+// ─── 게임 루프 ──────────────────────────────────────────
 function gameLoop(ts: number) {
-  if (lives <= 0) return;
+  if (lives <= 0) {
+    gameScoreEl.textContent = Score.score.toString();
+    canvasEl.classList.add('hidden');
+    gameOverModal.classList.remove('hidden');
+    return;
+  }
+
   const delta = ts - lastTs;
   lastTs = ts;
 
-  // ─── 배경 업데이트 & 렌더링 ─────────────────────────────────────────
+  // ─── 배경 업데이트 & 렌더링
   bgOffset = (bgOffset + bgSpeed) % canvas.height;
 
   // 배경 그리기
@@ -639,7 +784,7 @@ function gameLoop(ts: number) {
   ctx.drawImage(backgroundImg, 0, bgOffset, canvas.width, canvas.height);
   ctx.drawImage(backgroundImg, 0, bgOffset - canvas.height, canvas.width, canvas.height);
 
-  // ─── 상태 업데이트 & 나머지 렌더링 ───────────────────────────────────
+  // ─── 상태 업데이트 & 나머지 렌더링
   Player.update();
   EnemyManager.updateAll(delta);
 
@@ -658,7 +803,7 @@ function gameLoop(ts: number) {
   Life.lives = lives;
   Life.draw(ctx);
 
-  // ─── SCORE
+  // ─── 스코어
   Score.score = score;
   Score.draw(ctx);
 
@@ -684,6 +829,7 @@ function gameLoop(ts: number) {
       enemyBullets.length = 0;
     }
 
+    // ─── 라운드 적 스폰 + 보스 조건 확인
     const next = ++EnemyManager.round;
     if (EnemyManager.configs[next]) {
       EnemyManager.spawn(EnemyManager.configs[next]);
@@ -694,10 +840,12 @@ function gameLoop(ts: number) {
     }
   }
 
+  // ──── 보스 소환
   if (bossPhase) {
     boss.updateBoss(delta);
     boss.draw(ctx);
 
+    // ─── 보스 격파
     if (boss.hitPoint <= 0) {
       score = 777;
       Score.score = score;
@@ -705,6 +853,13 @@ function gameLoop(ts: number) {
 
       spawnExplosion(boss.x + boss.width / 2, boss.y + boss.height / 2, explosionEnemy, 2000, boss.width * 1.2);
       bossPhase = false;
+
+      gameScoreEl.textContent = Score.score.toString();
+      gameResultEl.textContent = 'GAME CLEAR';
+      gameResultEl.style.color = 'lime';
+      gameResultEl.style.fontSize = '6rem';
+      canvasEl.classList.add('hidden');
+      gameOverModal.classList.remove('hidden');
       return;
     }
   }
