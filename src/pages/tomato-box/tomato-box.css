@@ -1,0 +1,238 @@
+@font-face {
+  font-family: 'DungGeunMo';
+  src:
+    url('/public/fonts/DungGeunMo.woff2') format('woff2'),
+    url('/public/fonts/DungGeunMo.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: 'DungGeunMo';
+}
+
+.bg {
+  display: flex;
+  align-items: center; /* 수직 중앙 */
+  justify-content: center; /* 수평 중앙 */
+  height: 100vh; /* 전체 화면 높이 */
+  background-color: #f8f8f8; /* 배경색은 네 마음대로 */
+}
+
+.wrap {
+  width: 920px;
+  height: 600px;
+  display: flex;
+  position: relative;
+  justify-content: center;
+}
+
+.top {
+  display: flex;
+  position: absolute;
+  width: 920px;
+  height: 41px;
+  justify-content: space-between;
+}
+
+.home img,
+.trophy img,
+.start img,
+.savebtn img,
+.retry img,
+.cancel img {
+  cursor: pointer;
+}
+
+.home {
+  padding-left: 30px;
+  padding-top: 13px;
+}
+
+.trophy {
+  padding-right: 20px;
+  padding-top: 13px;
+}
+
+.start {
+  display: flex;
+  position: absolute;
+  bottom: 0;
+  margin-bottom: 25px;
+}
+
+.bestscore {
+  width: 665px;
+  height: 555px;
+  background: url('/src/assets/images/tomato-img/best-socre.png') no-repeat;
+  background-size: cover;
+  position: absolute;
+  top: 51%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.bestscore.show {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.bestscore.hide {
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.result > .timer > .curr {
+  display: block;
+  width: 4%;
+  height: 66%;
+  background: #e6ac08;
+  position: absolute;
+  right: 43px;
+  bottom: 71px;
+  transition: height 1s linear;
+}
+
+.gameover {
+  width: 423px;
+  height: 423px;
+  background: url('/src/assets/images/tomato-img/tomato-gameover.png');
+  background-size: cover;
+  position: absolute;
+  top: 56%;
+  left: 44%;
+  transform: translate(-50%, -50%) scale(0);
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.gameover.show {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.gameover.hide {
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.score {
+  display: flex;
+  position: absolute;
+  top: 11px;
+  left: 200px;
+  font-size: 64px;
+  color: #f2af00;
+  text-shadow: 4px 4px #611107;
+}
+
+.gameover-buttons {
+  display: flex;
+  position: absolute;
+  gap: 23px;
+  left: 120px;
+  bottom: 41px;
+}
+
+.savescore {
+  width: 423px;
+  height: 423px;
+  background: url('/src/assets/images/tomato-img/tomato-nickname.png') no-repeat;
+  background-size: cover;
+  position: absolute;
+  top: 56.3%;
+  left: 47%;
+  transform: translate(-50%, -50%) scale(0);
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 30;
+}
+
+.savescore.show {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.savescore.hide {
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.nickname-buttons {
+  display: flex;
+  position: absolute;
+  gap: 22px;
+  left: 114.5px;
+  bottom: 38px;
+}
+
+.gameover-score {
+  position: absolute;
+  top: -150%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+  z-index: 25;
+}
+
+.gameover-score .score {
+  font-size: 64px;
+  color: #dc1b0a;
+  text-shadow: 4px 4px #611107;
+  text-align: center;
+  display: block;
+  border: none;
+  position: static;
+}
+
+.name {
+  position: absolute;
+  top: -245%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+  z-index: 35;
+}
+
+.nickname {
+  font-size: 48px;
+  color: #611107;
+  text-align: center;
+  display: block;
+  border: none;
+  position: static;
+}
+
+canvas {
+  position: absolute;
+  left: 44.3%;
+  top: 56%;
+  z-index: 10;
+  transform: translate(-50%, -50%);
+}
