@@ -2,9 +2,6 @@
 body {
   background-color: black;
   color: limegreen;
-  font-family: 'DungGeunMo', 'Arial', sans-serif;
-  margin: 0;
-  padding: 0;
   text-align: center;
 
   /* ✅ 중앙 정렬 핵심 */
@@ -247,11 +244,6 @@ canvas {
   z-index: 10;
 }
 
-/* ❌ display:none 처리용 클래스 */
-.hidden {
-  display: none !important;
-}
-
 /* 💾 점수 저장 화면 (팝업) */
 .save-popup {
   position: absolute;
@@ -339,4 +331,9 @@ canvas {
 /* ❌ 취소(나가기) 버튼 위치 */
 #exitGame {
   top: 396px;
+}
+
+/* ❌ display:none 처리용 클래스 */
+.hidden {
+  display: none;
 }
