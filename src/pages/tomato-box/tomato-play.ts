@@ -17,7 +17,7 @@ const numHeight = 445 / rows;
 
 let scoreNum = 0;
 
-const timeLimit = 120;
+const timeLimit = 10;
 let timeLeft = timeLimit;
 
 const dragThreshold = 5;
@@ -165,10 +165,8 @@ function gameOver() {
     bestScoreEl.textContent = `BEST : ${storedBest}`;
   }
 
-  // 현재 점수 표시
   scoreInGameOver.textContent = score.toString();
 
-  // 마지막 점수 저장 (닉네임 저장용)
   localStorage.setItem('lastScore', score.toString());
 }
 
@@ -301,7 +299,6 @@ function events() {
   // 다시하기
   restart?.addEventListener('click', () => {
     localStorage.removeItem('lastScore');
-    localStorage.removeItem('bestScore');
     location.href = '/src/pages/tomato-box/tomato-intro.html';
   });
 
