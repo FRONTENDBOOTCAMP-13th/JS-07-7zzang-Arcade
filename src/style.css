@@ -1,23 +1,104 @@
-@import '/src/common/modern-reset.css';
-
-@font-face {
-  font-family: 'DungGeunMo';
-  src:
-    url('/fonts/DungGeunMo.woff2') format('woff2'),
-    url('/fonts/DungGeunMo.woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
+html,
+body,
+.app,
+.main-wapper {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  display: block;
 }
 
-@font-face {
-  font-family: 'DungGeunMo';
-  src: url('/fonts/DungGeunMo.woff2') format('woff2');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
+.main-img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5200px;
+  height: 2600px;
+  perspective: 750px;
+  background-color: #000;
+  background-image: url('/images/main.png');
+  background-size: 5200px 2600px;
+  background-position: center center;
+  background-repeat: no-repeat;
 }
 
-.DungGeunMo {
-  font-family: 'DungGeunMo', sans-serif;
+.game-screen {
+  position: absolute;
+  top: 48%;
+  left: 50%;
+  transform-origin: center top;
+  /* translate 먼저, 그 다음 회전 순서 중요 */
+  transform: translate(-50%, -50%) rotateX(5deg);
+  width: 920px;
+  height: 600px;
+  background-color: black;
+}
+
+.coin-slot {
+  position: absolute;
+  top: 2050px;
+  left: 3040px;
+  width: 70px;
+  height: 100px;
+  background-color: red;
+}
+.game-selection {
+  display: grid;
+  /* 2열을 같은 비율로 나누기 */
+  grid-template-columns: repeat(2, 1fr);
+  /* 2행 자동 생성 */
+  grid-auto-rows: 1fr;
+  /* 아이템 사이 간격 */
+  gap: 20px;
+
+  /* 부모(.game-screen) 전체 영역 채우기 */
+  width: 100%;
+  height: 100%;
+
+  /* 가운데 정렬 (선택사항) */
+  place-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.game-selection > div {
+  /* 각 아이템 카드 스타일 */
+  width: 100%; /* 그리드 셀 너비만큼 */
+  height: 100%; /* 그리드 셀 높이만큼 */
+
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.game-selection .animal {
+  background-image: url('/images/icon-animal.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+.game-selection .space {
+  background-image: url('/images/icon-space.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+.game-selection .smash {
+  background-image: url('/images/icon-smash.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+.game-selection .tomato {
+  background-image: url('/images/icon-tomato.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+/* hover 효과 */
+.game-selection > div:hover {
+  transform: scale(1.05);
+  transition: transform 0.2s ease;
 }

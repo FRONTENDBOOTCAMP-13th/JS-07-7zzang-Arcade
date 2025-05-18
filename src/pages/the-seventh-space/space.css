@@ -14,7 +14,6 @@ body {
   align-items: center;
 }
 canvas {
-  border: 2px solid white;
   background-color: transparent;
 }
 #titleImg {
@@ -29,7 +28,6 @@ canvas {
   background-size: 920px 600px;
   background-position: center;
   background-repeat: no-repeat;
-  border: 2px solid white;
   background-color: transparent;
 
   display: flex;
