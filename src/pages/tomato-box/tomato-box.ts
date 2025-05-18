@@ -1,10 +1,16 @@
 import '../../style.css';
-import './tomatobox.css';
+import './tomato-box.css';
 
 // 실행
 document.addEventListener('DOMContentLoaded', main);
 
 // 전역 변수
+const trophyBtn = document.querySelector('.trophy');
+const bestScore = document.querySelector('.bestscore') as HTMLElement;
+const startBtn = document.querySelector('.start') as HTMLElement;
+const intro = document.querySelector('.intro-wrap');
+const play = document.querySelector('.play-wrap');
+
 let canvas: HTMLCanvasElement;
 let ctx: CanvasRenderingContext2D;
 
@@ -52,10 +58,74 @@ function main() {
   canvas = document.querySelector('canvas') as HTMLCanvasElement;
   ctx = canvas.getContext('2d')!;
 
+  tomatoIntro();
   playGrid();
-  startTimer();
   events();
   animateTomatoes();
+}
+
+// 인트로
+function tomatoIntro() {
+  // 트로피 클릭
+  trophyBtn?.addEventListener('click', () => {
+    bestFive();
+    ScoreToggle(bestScore);
+  });
+
+  // 스타트 버튼 클릭
+  startBtn?.addEventListener('click', () => {
+    intro?.classList.add('hide');
+    intro?.classList.remove('show');
+    play?.classList.remove('hide');
+    play?.classList.add('show');
+
+    startTimer();
+  });
+}
+
+// 스코어 리스트 보이기
+function ScoreToggle(scoreEl: HTMLElement) {
+  if (!isVisible) {
+    scoreEl.classList.remove('hide');
+    scoreEl.classList.add('show');
+  } else {
+    scoreEl.classList.remove('show');
+    scoreEl.classList.add('hide');
+  }
+  isVisible = !isVisible;
+}
+
+// 최고 점수 상위 5명
+function bestFive() {
+  const scoreListEl = document.querySelector('.bestscore .score-list');
+  const entries: { name: string; score: number }[] = [];
+
+  if (!scoreListEl) return;
+
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    const value = localStorage.getItem(key!);
+
+    if (key && value && !['bestScore', 'lastScore'].includes(key)) {
+      const parsed = parseInt(value, 10);
+
+      if (!isNaN(parsed)) {
+        entries.push({ name: key, score: parsed });
+      }
+    }
+  }
+
+  const top5 = entries.sort((a, b) => b.score - a.score).slice(0, 5);
+
+  scoreListEl.innerHTML = top5
+    .map(
+      entry => `
+    <li>
+      <span class="rank-name">${entry.name}</span>
+      <span class="rank-score">${entry.score}</span>
+    </li>`,
+    )
+    .join('');
 }
 
 // 숫자 스타일
