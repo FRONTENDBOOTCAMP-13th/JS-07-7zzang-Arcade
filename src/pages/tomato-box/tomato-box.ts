@@ -23,7 +23,7 @@ const numHeight = 445 / rows;
 
 let scoreNum = 0;
 
-const timeLimit = 120;
+const timeLimit = 5;
 let timeLeft = timeLimit;
 
 const dragThreshold = 5;
@@ -106,11 +106,14 @@ function bestFive() {
     const key = localStorage.key(i);
     const value = localStorage.getItem(key!);
 
-    if (key && value && !['bestScore', 'lastScore'].includes(key)) {
+    if (key && key.startsWith('tomatobox_') && value) {
       const parsed = parseInt(value, 10);
 
       if (!isNaN(parsed)) {
-        entries.push({ name: key, score: parsed });
+        entries.push({
+          name: key.replace('tomatobox_', ''),
+          score: parsed,
+        });
       }
     }
   }
@@ -369,7 +372,7 @@ function events() {
   // 다시하기
   restart?.addEventListener('click', () => {
     localStorage.removeItem('lastScore');
-    location.href = '/src/pages/tomato-box/tomato-intro.html';
+    location.href = '/src/pages/tomato-box/tomato-box.html';
   });
 
   // 취소
@@ -391,12 +394,12 @@ function events() {
     const name = nicknameInput.value.trim();
     const storedScore = localStorage.getItem('lastScore') || '0';
 
-    localStorage.setItem(name, storedScore);
+    localStorage.setItem(`tomatobox_${name}`, storedScore);
 
     alert(`점수가 저장되었습니다!\n${name} : ${storedScore}`);
 
     nicknameInput.value = '';
-    window.location.href = '/src/pages/tomato-box/tomato-intro.html';
+    window.location.href = '/src/pages/tomato-box/tomato-box.html';
   });
 
   nicknameInput?.addEventListener('input', () => {
