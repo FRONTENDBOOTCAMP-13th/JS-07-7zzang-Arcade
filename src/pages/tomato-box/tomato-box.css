@@ -107,9 +107,9 @@ html,
 
 .bestscore .score-list li {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  margin: 15.5px 0;
+  gap: 50px;
   font-family: 'DungGeunMo';
   font-size: 44px;
   color: #e6ac08;
@@ -120,6 +120,18 @@ html,
     2.5px 2.5px 0 #611107;
   margin-left: 250px;
   width: 45%;
+}
+
+.rank-name {
+  width: 180px;
+  text-align: center;
+  color: #e6ac08;
+}
+
+.rank-score {
+  width: 100px;
+  text-align: center;
+  color: #e6ac08;
 }
 
 .result > .timer > .curr {
