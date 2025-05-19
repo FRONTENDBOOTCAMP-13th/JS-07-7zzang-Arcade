@@ -9,6 +9,8 @@ body {
   justify-content: center; /* 가로 가운데 */
   align-items: center; /* 세로 가운데 */
   height: 100vh; /* 화면 높이 기준으로 */
+  margin: 0;
+  overflow: hidden;
 }
 
 /* 🎬 인트로 화면 스타일 */
@@ -47,6 +49,7 @@ body {
   height: 600px;
   margin: 0 auto;
   position: relative;
+  cursor: none;
 }
 
 /* 🖼️ 캔버스 설정 - 두더지 배경 + 테두리 */
@@ -54,7 +57,7 @@ canvas {
   background-image: url('/src/assets/images/smash-img/smash-play.png');
   background-size: cover;
   background-repeat: no-repeat;
-  border: 5px solid limegreen;
+  border: none;
   display: block;
 }
 
@@ -76,7 +79,7 @@ canvas {
 /* ⏳ 타이머 및 🏆 점수 텍스트 스타일 */
 #timer,
 #score {
-  font-size: 28px;
+  font-size: 30px;
   color: #fff;
   font-family: 'DungGeunMo', 'Arial', sans-serif;
   text-shadow: 0 0 6px #000;
@@ -95,11 +98,12 @@ canvas {
 
 /* 📦 팝업 기본 레이아웃 */
 .popup {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 920px;
-  height: 600px;
+  position: fixed; /* ✅ fixed로 바꾸기 */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  height: 500px;
   background: none;
   z-index: 2000;
   display: flex;
@@ -108,13 +112,72 @@ canvas {
   justify-content: center;
 }
 
+/* 🏆 점수 팝업 테이블 배치 */
+.score-table {
+  position: absolute;
+  top: 185px; /* ✅ 피그마 기준 조정 */
+  left: 64px; /* ✅ 좌측 여백에 맞춰 조정 */
+  width: 270px; /* ✅ 이미지 원본 사이즈로 수정 */
+  height: 211px;
+}
+.score-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 400px;
+  height: 500px;
+  z-index: 0;
+  display: block;
+}
+
+.score-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  image-rendering: pixelated; /* 🔧 픽셀 아트 선명도 유지 */
+}
+
+.score-list {
+  /* 전체 score 영역 - PNG 안 표 위치 */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  font-family: 'DungGeunMo', sans-serif;
+  font-size: 20px;
+  line-height: 42px; /* 한 줄 높이 */
+  color: #fff;
+  list-style: none;
+  margin: 0;
+  padding: 14px 12px; /* 내부 여백 (위/양옆) */
+}
+
+.score-list li {
+  display: flex;
+  justify-content: space-between; /* 이름과 점수 양쪽 정렬 */
+}
+.score-list li span:first-child {
+  width: 140px; /* 이름 공간 조금 더 확보 */
+}
+
+.score-list li span:last-child {
+  flex: 1;
+  text-align: left;
+  padding-left: 30px;
+}
+
 /* ❌ 팝업 닫기 버튼 위치 */
 .popup-close {
   position: absolute;
-  top: 20px;
-  right: 20px;
-  width: 48px;
-  height: 48px;
+  top: 12px; /* 약간 더 위 */
+  right: 12px; /* 너무 바깥이면 잘림 */
+  width: 36px;
+  height: 36px;
   cursor: pointer;
   z-index: 20;
 }
@@ -134,17 +197,6 @@ canvas {
   pointer-events: auto;
 }
 
-/* ☠️ 게임 오버 팝업 배경 */
-.gameover-overlay .over-bg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-}
-
-/* ☠️ 게임 오버 팝업 중앙 박스 */
 .gameover-center {
   position: relative;
   width: 400px;
@@ -154,36 +206,29 @@ canvas {
   align-items: center;
 }
 
-/* 🔁 게임 재시작 버튼 */
-#retry-btn {
-  position: absolute;
-  top: 350px;
-  left: 40px;
-  width: 160px;
-  height: 160px;
-  cursor: pointer;
-  z-index: 3;
-}
-
-/* 💾 점수 저장 버튼 */
+#retry-btn,
 #save-btn {
   position: absolute;
   top: 350px;
-  left: 200px;
   width: 160px;
   height: 160px;
   cursor: pointer;
   z-index: 3;
 }
 
-/* 📦 버튼 프레임 이미지 */
+#retry-btn {
+  left: 40px;
+}
+#save-btn {
+  left: 200px;
+}
+
 .btn-frame {
   width: 160px;
   height: 160px;
   pointer-events: none;
 }
 
-/* ☠️ 게임 오버 배경 이미지 */
 .gameover-img {
   width: 400px;
   height: 500px;
@@ -194,7 +239,6 @@ canvas {
   z-index: 1;
 }
 
-/* 🎯 게임 오버 팝업 점수 표시 영역 */
 .score-wrap {
   position: absolute;
   top: 310px;
@@ -205,14 +249,12 @@ canvas {
   z-index: 2;
 }
 
-/* 🎯 점수 박스 이미지 */
 .score-box-img {
   width: 120px;
   height: 120px;
   display: block;
 }
 
-/* 🎯 점수 숫자 텍스트 */
 .score-value {
   position: absolute;
   top: 44px;
@@ -221,60 +263,54 @@ canvas {
   text-align: center;
   font-size: 28px;
   color: #fff;
-  font-family: 'DungGeunMo', 'Arial', sans-serif;
   font-weight: bold;
   text-shadow: 0 0 4px #000;
   z-index: 3;
   pointer-events: none;
 }
 
-/* 🎯 SCORE 라벨 */
-.score-label {
-  color: #fff;
-  font-size: 28px;
-  font-family: 'DungGeunMo', 'Arial', sans-serif;
-  margin-bottom: 13px;
-  text-shadow: 0 0 6px #000;
-}
-
-/* ✨ 트윙클 효과 (타격 애니메이션) */
-.star {
-  position: absolute;
-  pointer-events: none;
-  z-index: 10;
-}
-
 /* 💾 점수 저장 화면 (팝업) */
 .save-popup {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 920px;
-  height: 600px;
+  /* 팝업 자체를 화면 정중앙에 위치시킴 */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  height: 500px;
   z-index: 4000;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* 💾 저장 화면 중앙 박스 */
 .save-inner {
+  /* 닉네임 입력, 버튼 등 포함하는 내부 박스 */
   position: relative;
   width: 400px;
   height: 500px;
 }
 
-/* 💾 저장 팝업 배경 이미지들 */
-.save-popup .hole-bg,
-.save-nik-bg {
+/* ✅ smash-hole-play.png: 맨 아래 배경 이미지 */
+.save-popup .hole-bg {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+  z-index: 1;
 }
 
-/* 👤 닉네임 입력 영역 전체 */
+/* ✅ smash-save-nik.png: 중앙 내용 프레임 이미지 */
+.save-inner .save-nik-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+
 .nickname-container {
   position: absolute;
   top: 243px;
@@ -288,7 +324,6 @@ canvas {
   z-index: 3;
 }
 
-/* 👤 닉네임 입력 테두리 이미지 */
 .nickname-box {
   width: 266px;
   height: 61px;
@@ -297,7 +332,6 @@ canvas {
   left: 0;
 }
 
-/* 👤 닉네임 입력 input */
 .nickname-input {
   width: 180px;
   height: 40px;
@@ -312,7 +346,6 @@ canvas {
   z-index: 4;
 }
 
-/* 💾 저장/취소 버튼 공통 스타일 */
 .save-button {
   position: absolute;
   left: 50%;
@@ -323,12 +356,9 @@ canvas {
   z-index: 3;
 }
 
-/* 💾 저장 버튼 위치 */
 #saveButton {
   top: 328px;
 }
-
-/* ❌ 취소(나가기) 버튼 위치 */
 #exitGame {
   top: 396px;
 }
