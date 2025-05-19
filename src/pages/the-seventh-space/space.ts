@@ -827,6 +827,11 @@ function gameLoop(ts: number) {
   // ─── 적군 그리기
   EnemyManager.drawAll(ctx);
 
+  // ─── 적이 바닥에 닿았는지 체크
+  if (EnemyManager.enemies.some(e => e.y + e.height >= canvas.height)) {
+    lives = 0;
+  }
+
   // ─── 라운드 전환
   if (EnemyManager.enemies.length === 0 && !bossPhase) {
     if (!roundPoint) {
