@@ -236,25 +236,11 @@ html,
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 48px;
+  font-size: 64px;
   color: #dc1b0a;
   text-shadow: 3px 3px #611107;
   font-family: 'DungGeunMo';
-}
-
-.score-block {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 244px;
-  margin-bottom: 0;
-}
-
-.gameover-bestscore {
-  font-size: 16px;
-  color: #f2af00;
-  font-family: 'DungGeunMo';
-  text-shadow: 1px 2px #611107;
+  margin-top: 237px;
 }
 
 .nickname-buttons {
@@ -288,8 +274,8 @@ input::placeholder {
 
 .toast {
   position: fixed;
-  top: 39%;
-  left: 46.5%;
+  top: 38%;
+  left: 410px;
   transform: translateX(-50%);
   background-color: #dc1b0a;
   color: white;

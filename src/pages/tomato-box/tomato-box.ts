@@ -221,18 +221,10 @@ function gameOver() {
   document.querySelector('.overlay-bg')?.classList.add('show');
 
   const score = scoreNum;
-  const bestScoreEl = document.querySelector('.gameover-bestscore .best-score') as HTMLElement;
   const scoreInGameOver = document.querySelector('.gameover-score .gamescore') as HTMLElement;
   isGameOver = true;
 
   scoreInGameOver.textContent = score.toString();
-
-  // 최고점 따로 저장
-  const storedBest = parseInt(localStorage.getItem('tomatobox_bestScore') || '0', 10);
-  const newBest = Math.max(storedBest, score);
-  localStorage.setItem('tomatobox_bestScore', newBest.toString());
-
-  bestScoreEl.textContent = `BEST : ${newBest}`;
 
   // 게임 오버 음악
   if (bgm) {
