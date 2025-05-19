@@ -161,6 +161,15 @@ const character = document.getElementById('character') as HTMLImageElement;
 const startButton = document.querySelector('.start-text') as HTMLDivElement;
 const scoreUI = document.getElementById('score') as HTMLElement;
 
+// 인게임 BGM
+const gameBgm = new Audio('/sounds/animal-bgm.mp3');
+gameBgm.loop = true;
+gameBgm.volume = 0.6;
+
+// 게임 오버 효과음
+const gameOverSfx = new Audio('/sounds/animal-gameover.wav');
+gameOverSfx.volume = 1.0;
+
 /**
  * START 버튼 클릭 -> 인트로에서 게임 화면으로 전환
  * 캐릭터 위치와 상태를 초기화
@@ -177,6 +186,10 @@ startButton.addEventListener('click', () => {
   character.style.left = `${characterX}px`;
   character.style.width = '90px';
   character.style.height = '110px';
+
+  // 인게임 BGM 시작
+  gameBgm.currentTime = 0;
+  gameBgm.play();
 
   updateScore();
   spawnObstacles();
@@ -455,6 +468,13 @@ function endGame(): void {
   gameActive = false;
   finalScore.textContent = `${score}`;
   gameOverPopup.classList.remove('hidden');
+
+  // 정지
+  gameBgm.pause();
+  gameBgm.currentTime = 0;
+  // GAME OVER 효과음
+  gameOverSfx.currentTime = 0;
+  gameOverSfx.play();
 
   character.src = '/src/assets/images/animal-img/chick-fallen.png';
   character.style.width = '120px';
