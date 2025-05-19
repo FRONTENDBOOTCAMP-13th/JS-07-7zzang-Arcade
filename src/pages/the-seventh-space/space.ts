@@ -69,14 +69,14 @@ saveBtn.addEventListener('click', () => {
 
   // 빈 값 체크
   if (!nickRaw) {
-    alert('닉네임을 입력해주세요');
+    showToast('닉네임을 입력해주세요');
     nicknameInput.focus();
     return;
   }
 
   // 패턴 검사
   if (!nickPattern.test(nickRaw)) {
-    alert('한글 3글자 또는 영어 3글자(영어는 대문자)만 입력 가능합니다.');
+    showToast('한글 3글자 또는 영어 3글자(영어는 대문자)만 입력 가능합니다.');
     nicknameInput.focus();
     return;
   }
@@ -93,7 +93,7 @@ saveBtn.addEventListener('click', () => {
   canvasEl.style.display = 'none';
   introEl.style.display = 'flex';
 
-  alert(`${nickRaw}님, ${currentScore}점이 저장되었습니다!`);
+  showToast(`${nickRaw}님, ${currentScore}점이 저장되었습니다!`);
 });
 
 // ─── 로컬스토리지 순위 불러오기 ──────────────────
@@ -129,6 +129,27 @@ function renderScoreList() {
     `,
     )
     .join('');
+}
+
+function showToast(message: string, duration = 2000) {
+  const container = document.getElementById('toast-container')!;
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = message;
+  container.appendChild(toast);
+
+  // 애니메이션 트리거
+  requestAnimationFrame(() => {
+    toast.classList.add('show');
+  });
+
+  // duration 후 페이드아웃 및 제거
+  setTimeout(() => {
+    toast.classList.remove('show');
+    toast.addEventListener('transitionend', () => {
+      toast.remove();
+    });
+  }, duration);
 }
 
 // ─── 캔버스 & 컨텍스트 ──────────────────────────────────────────
@@ -334,7 +355,7 @@ const Player: IPlayer = {
     this.canShoot = false;
     setTimeout(() => {
       this.canShoot = true;
-    }, 0);
+    }, 700);
   },
 
   // ── 폭발 함수 ─────────────────────────
