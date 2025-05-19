@@ -60,6 +60,8 @@ interface ScoreArray {
 
 const localKey = 'tomatobox_Score';
 
+let bgm: HTMLAudioElement;
+
 // 메인, 게임 실행 함수
 function main() {
   canvas = document.querySelector('canvas') as HTMLCanvasElement;
@@ -86,6 +88,7 @@ function tomatoIntro() {
     play?.classList.remove('hide');
     play?.classList.add('show');
 
+    playBgm('/sounds/tomato-bgm.wav');
     startTimer();
   });
 }
@@ -230,6 +233,13 @@ function gameOver() {
   localStorage.setItem('tomatobox_bestScore', newBest.toString());
 
   bestScoreEl.textContent = `BEST : ${newBest}`;
+
+  // 게임 오버 음악
+  if (bgm) {
+    bgm.pause();
+    bgm.currentTime = 0;
+    playGameover('/sounds/tomato-gameover.wav');
+  }
 }
 
 // 드래그 박스 스타일
@@ -300,6 +310,8 @@ function events() {
       const nums = filtered.map(pos => gridData[pos.row][pos.col].number);
 
       if (nums.length && nums.reduce((a, b) => a + b, 0) === 10) {
+        playEffect('/sounds/tomato-effect.wav');
+
         filtered.forEach(pos => {
           const cell = gridData[pos.row][pos.col];
 
@@ -454,4 +466,35 @@ function animateTomatoes() {
 
   selectBoxStyle();
   requestAnimationFrame(animateTomatoes);
+}
+
+// 배경음
+function playBgm(soundPath: string) {
+  bgm = new Audio(soundPath);
+  bgm.loop = true;
+  bgm.volume = 0.5;
+
+  bgm.play().catch(err => {
+    console.warn('배경음 재생 실패:', err);
+  });
+}
+
+// 토마토 떨어질 때 효과음
+function playEffect(soundPath: string) {
+  const effect = new Audio(soundPath);
+  effect.volume = 0.5;
+
+  effect.play().catch(err => {
+    console.warn('효과음 재생 실패:', err);
+  });
+}
+
+// 게임오버 효과음
+function playGameover(soundPath: string) {
+  const gameover = new Audio(soundPath);
+  gameover.volume = 0.5;
+
+  gameover.play().catch(err => {
+    console.warn('효과음 재생 실패:', err);
+  });
 }
