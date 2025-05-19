@@ -2,6 +2,15 @@ import '../../style.css';
 import './space.css';
 import * as SAT from 'sat';
 
+// ─── 사운드 로드 ─────────────────────────
+const bgm = new Audio('/sounds/space-bgm.mp3');
+const bossBgm = new Audio('/sounds/space-boss.mp3');
+const gameOverSound = new Audio('/sounds/space-gameover.mp3');
+const attackSound = new Audio('/sounds/space-attack.mp3');
+bgm.loop = true;
+bossBgm.loop = true;
+bgm.volume = bossBgm.volume = gameOverSound.volume = attackSound.volume = 0.1;
+
 // HTML 요소 가져오기 ───────────
 const introEl = document.getElementById('intro') as HTMLDivElement;
 const startBtn = document.getElementById('startBtn') as HTMLButtonElement;
@@ -38,6 +47,8 @@ startBtn.addEventListener('click', () => {
   if (!assetsLoaded) return;
   introEl.style.display = 'none';
   canvasEl.style.display = 'block';
+  bgm.currentTime = 0;
+  bgm.play().catch(() => {});
   init();
 });
 
@@ -334,7 +345,10 @@ const Player: IPlayer = {
 
   // ── 총알 발사 함수 ────────────────
   shoot() {
-    if (!this.canShoot) return;
+    if (!this.canShoot || !this.isAlive) return;
+
+    attackSound.currentTime = 0;
+    attackSound.play().catch(() => {});
 
     const bx = this.x + this.width / 2 - 10;
     const by = this.y;
@@ -795,6 +809,12 @@ function init() {
 // ─── 게임 루프 ──────────────────────────────────────────
 function gameLoop(ts: number) {
   if (lives <= 0) {
+    bgm.pause();
+    bossBgm.pause();
+    // game over 사운드
+    gameOverSound.currentTime = 0;
+    gameOverSound.play().catch(() => {});
+
     gameScoreEl.textContent = Score.score.toString();
     canvasEl.classList.add('hidden');
     gameOverModal.classList.remove('hidden');
@@ -870,6 +890,11 @@ function gameLoop(ts: number) {
     } else {
       bossPhase = true;
       boss.hitPoint = 30;
+
+      // BGM 전환
+      bgm.pause();
+      bossBgm.currentTime = 0;
+      bossBgm.play().catch(() => {});
     }
   }
 
