@@ -21,3 +21,151 @@
 .DungGeunMo {
   font-family: 'DungGeunMo', sans-serif;
 }
+
+html,
+body,
+.app,
+.main-wapper {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  display: block;
+}
+
+.main-img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5200px;
+  height: 2600px;
+  perspective: 750px;
+  background-color: #000;
+  background-image: url('/images/main.png');
+  background-size: 5200px 2600px;
+  background-position: center center;
+  background-repeat: no-repeat;
+  transition: transform 0.8s ease-in-out;
+}
+
+.game-screen {
+  position: absolute;
+  top: 48%;
+  left: 50%;
+  transform-origin: center top;
+  transform: translate(-50%, -50%) rotateX(5deg);
+  width: 920px;
+  height: 600px;
+  background-color: black;
+}
+.game-screen object {
+  display: block;
+  border: none;
+}
+.index-screen {
+  position: absolute;
+  top: 932px;
+  left: 3465px;
+  width: 850px;
+  height: 632px;
+  /* background-image: url('/images/bg6.png');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover; */
+  clip-path: polygon(0% 0%, 91.5% 0%, 100% 100%, 4% 100%);
+}
+.coin-slot {
+  position: relative;
+  top: 2050px;
+  left: 3040px;
+  width: 70px;
+  height: 100px;
+  perspective: 800px;
+}
+.game-selection {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: 1fr;
+  gap: 20px;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+  /* background-image: url('/images/bg4.png');
+  background-repeat: no-repeat;
+  background-size: cover; */
+}
+.game-selection.hidden {
+  display: none;
+}
+.game-selection > div {
+  width: 100%;
+  height: 100%;
+
+  background-color: rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.game-selection .animal {
+  background-image: url('/images/icon-animal.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+.game-selection .space {
+  background-image: url('/images/icon-space.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+.game-selection .smash {
+  background-image: url('/images/icon-smash.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+.game-selection .tomato {
+  background-image: url('/images/icon-tomato.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.game-selection > div:hover {
+  transform: scale(1.05);
+  transition: transform 0.2s ease;
+}
+
+.coin-slot:hover {
+  cursor:
+    url('/images/coin-front.png') 16 16,
+    auto;
+}
+
+.insert-coin {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 40px;
+  height: 80px;
+  transform-origin: center center;
+  animation: insertCoin 0.8s ease-in;
+  pointer-events: none;
+}
+
+@keyframes insertCoin {
+  0% {
+    transform: translate(-50%, 0%) translateZ(0) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-50%, 20px) translateZ(100px) scale(0.8);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, 40px) translateZ(200px) scale(0.4);
+    opacity: 0;
+  }
+}
