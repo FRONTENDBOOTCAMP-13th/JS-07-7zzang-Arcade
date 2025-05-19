@@ -23,9 +23,8 @@ const numHeight = 445 / rows;
 
 let scoreNum = 0;
 
-const timeLimit = 5;
+const timeLimit = 120;
 let timeLeft = timeLimit;
-
 const dragThreshold = 5;
 let isDragging = false;
 let startX: number;
@@ -54,6 +53,16 @@ tomatoImage.src = '/src/assets/images/tomato-img/tomato-empty.png';
 const tomatoSelectedImage = new Image();
 tomatoSelectedImage.src = '/src/assets/images/tomato-img/select-tomato.png';
 
+interface ScoreArray {
+  name: string;
+  score: number;
+}
+
+const localKey = 'tomatobox_Score';
+
+let bgm: HTMLAudioElement;
+
+// 메인, 게임 실행 함수
 function main() {
   canvas = document.querySelector('canvas') as HTMLCanvasElement;
   ctx = canvas.getContext('2d')!;
@@ -79,6 +88,7 @@ function tomatoIntro() {
     play?.classList.remove('hide');
     play?.classList.add('show');
 
+    playBgm('/sounds/tomato-bgm.wav');
     startTimer();
   });
 }
@@ -98,25 +108,11 @@ function ScoreToggle(scoreEl: HTMLElement) {
 // 최고 점수 상위 5명
 function bestFive() {
   const scoreListEl = document.querySelector('.bestscore .score-list');
-  const entries: { name: string; score: number }[] = [];
 
   if (!scoreListEl) return;
 
-  for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    const value = localStorage.getItem(key!);
-
-    if (key && key.startsWith('tomatobox_') && !['tomatobox_bestScore', 'tomatobox_lastScore'].includes(key) && value) {
-      const parsed = parseInt(value, 10);
-
-      if (!isNaN(parsed)) {
-        entries.push({
-          name: key.replace('tomatobox_', ''),
-          score: parsed,
-        });
-      }
-    }
-  }
+  const stored = localStorage.getItem(localKey);
+  const entries: ScoreArray[] = stored ? JSON.parse(stored) : [];
 
   const top5 = entries.sort((a, b) => b.score - a.score).slice(0, 5);
 
@@ -225,30 +221,33 @@ function gameOver() {
   document.querySelector('.overlay-bg')?.classList.add('show');
 
   const score = scoreNum;
-  const storedBest = localStorage.getItem('tomatobox_bestScore');
   const bestScoreEl = document.querySelector('.gameover-bestscore .best-score') as HTMLElement;
   const scoreInGameOver = document.querySelector('.gameover-score .gamescore') as HTMLElement;
   isGameOver = true;
 
-  // 최고점 갱신
-  if (!storedBest || score > parseInt(storedBest)) {
-    localStorage.setItem('tomatobox_bestScore', score.toString());
-    bestScoreEl.textContent = `BEST : ${score}`;
-  } else {
-    bestScoreEl.textContent = `BEST : ${storedBest}`;
-  }
-
   scoreInGameOver.textContent = score.toString();
 
-  localStorage.setItem('tomatobox_lastScore', score.toString());
+  // 최고점 따로 저장
+  const storedBest = parseInt(localStorage.getItem('tomatobox_bestScore') || '0', 10);
+  const newBest = Math.max(storedBest, score);
+  localStorage.setItem('tomatobox_bestScore', newBest.toString());
+
+  bestScoreEl.textContent = `BEST : ${newBest}`;
+
+  // 게임 오버 음악
+  if (bgm) {
+    bgm.pause();
+    bgm.currentTime = 0;
+    playGameover('/sounds/tomato-gameover.wav');
+  }
 }
 
 // 드래그 박스 스타일
 function selectBoxStyle() {
   if (draggable && isDragging && !isGameOver) {
-    ctx.strokeStyle = '#F26900';
-    ctx.lineWidth = 2;
-    ctx.fillStyle = 'rgba(47,72,209,0.05)';
+    ctx.strokeStyle = '#0092FF';
+    ctx.lineWidth = 2.5;
+    ctx.fillStyle = 'rgba(242, 175, 0,0.2)';
     ctx.strokeRect(startX, startY, endX - startX, endY - startY);
     ctx.fillRect(startX, startY, endX - startX, endY - startY);
   }
@@ -311,6 +310,8 @@ function events() {
       const nums = filtered.map(pos => gridData[pos.row][pos.col].number);
 
       if (nums.length && nums.reduce((a, b) => a + b, 0) === 10) {
+        playEffect('/sounds/tomato-effect.wav');
+
         filtered.forEach(pos => {
           const cell = gridData[pos.row][pos.col];
 
@@ -327,7 +328,6 @@ function events() {
         });
 
         scoreNum += nums.length;
-        localStorage.setItem('lastScore', scoreNum.toString());
 
         if (scoreInGame) scoreInGame.textContent = scoreNum.toString();
       }
@@ -386,20 +386,29 @@ function events() {
   // 닉네임 입력 받고 점수저장
   saveScoreBtn?.addEventListener('click', () => {
     if (!nicknameInput || !nicknameInput.value.trim()) {
-      alert('닉네임을 입력해주세요!');
+      Toast('닉네임을 입력해주세요!');
 
       return;
     }
 
-    const name = nicknameInput.value.trim();
-    const storedScore = localStorage.getItem('tomatobox_lastScore') || '0';
+    const name = nicknameInput.value.trim().toUpperCase();
+    const score = scoreNum;
 
-    localStorage.setItem(`tomatobox_${name}`, storedScore);
+    const newEntry: ScoreArray = { name, score };
+    const stored = localStorage.getItem(localKey);
+    const scoreList: ScoreArray[] = stored ? JSON.parse(stored) : [];
 
-    alert(`점수가 저장되었습니다!\n${name} : ${storedScore}`);
+    scoreList.unshift(newEntry);
+    scoreList.sort((a, b) => b.score - a.score);
+    localStorage.setItem(localKey, JSON.stringify(scoreList));
 
     nicknameInput.value = '';
-    window.location.href = '/src/pages/tomato-box/tomato-box.html';
+
+    Toast(`점수가 저장되었습니다!`);
+
+    setTimeout(() => {
+      window.location.href = '/src/pages/tomato-box/tomato-box.html';
+    }, 1500);
   });
 
   nicknameInput?.addEventListener('input', () => {
@@ -410,6 +419,21 @@ function events() {
       nicknameInput.value = sliced;
     }
   });
+}
+
+// 토스트
+function Toast(message: string) {
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+
+  toast.textContent = message;
+  toast.classList.remove('hidden');
+  toast.classList.add('show');
+
+  setTimeout(() => {
+    toast.classList.remove('show');
+    toast.classList.add('hidden');
+  }, 1500);
 }
 
 // 선택 초기화
@@ -442,4 +466,35 @@ function animateTomatoes() {
 
   selectBoxStyle();
   requestAnimationFrame(animateTomatoes);
+}
+
+// 배경음
+function playBgm(soundPath: string) {
+  bgm = new Audio(soundPath);
+  bgm.loop = true;
+  bgm.volume = 0.5;
+
+  bgm.play().catch(err => {
+    console.warn('배경음 재생 실패:', err);
+  });
+}
+
+// 토마토 떨어질 때 효과음
+function playEffect(soundPath: string) {
+  const effect = new Audio(soundPath);
+  effect.volume = 0.5;
+
+  effect.play().catch(err => {
+    console.warn('효과음 재생 실패:', err);
+  });
+}
+
+// 게임오버 효과음
+function playGameover(soundPath: string) {
+  const gameover = new Audio(soundPath);
+  gameover.volume = 0.5;
+
+  gameover.play().catch(err => {
+    console.warn('효과음 재생 실패:', err);
+  });
 }

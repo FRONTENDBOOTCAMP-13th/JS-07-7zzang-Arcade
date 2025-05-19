@@ -38,10 +38,8 @@ class MoleGame {
 
     // 🏆 트로피 팝업 열기/닫기
     document.getElementById('trophyIcon')?.addEventListener('click', () => {
-      document.getElementById('trophyPopup')?.classList.remove('hidden');
-    });
-    document.getElementById('closeTrophy')?.addEventListener('click', () => {
-      document.getElementById('trophyPopup')?.classList.add('hidden');
+      this.renderScoreList(); // 점수 리스트 로컬스토리지에서 불러오기
+      this.show('scorePopup'); // ✅ scorePopup을 보여줘야 해!!
     });
 
     // 🏠 홈 아이콘 클릭 시 (향후 기능 추가 예정)
@@ -53,8 +51,7 @@ class MoleGame {
     // 🔁 게임 오버 후 다시 시작
     document.getElementById('retry-btn')?.addEventListener('click', () => {
       this.hide('gameOverPopup');
-      this.show('gameScreen');
-      this.startGame();
+      this.gotoIntro();
     });
 
     // 💾 게임 오버 → 닉네임 저장 팝업으로 전환
@@ -69,6 +66,25 @@ class MoleGame {
     // ⛔ 저장 팝업에서 게임 나가기 → 인트로 화면
     document.getElementById('exitGame')?.addEventListener('click', () => this.gotoIntro());
 
+    // 💾 게임 오버 → 닉네임 저장 팝업으로 전환
+    document.getElementById('save-btn')?.addEventListener('click', () => {
+      this.hide('gameOverPopup');
+      this.show('savePopup');
+      document.getElementById('bat')!.style.display = 'none'; // 뿅망치 숨기기
+    });
+
+    // ✅ 저장 팝업에서 점수 저장 버튼 클릭
+    document.getElementById('saveButton')?.addEventListener('click', () => {
+      this.saveScore();
+      document.getElementById('savePopup')?.classList.add('hidden');
+      document.getElementById('bat')!.style.display = ''; // 뿅망치 다시 보이기
+    });
+
+    // ⛔ 저장 팝업에서 게임 나가기 → 인트로 화면
+    document.getElementById('exitGame')?.addEventListener('click', () => {
+      this.gotoIntro();
+      document.getElementById('bat')!.style.display = ''; // 뿅망치 다시 보이기
+    });
     // 🎯 게임 캔버스 클릭 시 두더지 맞추기 처리
     this.canvas.addEventListener('click', e => this.handleClick(e));
 
@@ -151,6 +167,9 @@ class MoleGame {
       this.updateScore();
       // ✨ 트윙클 효과 발생 위치
       this.spawnStarEffect(clickX + 50, clickY - 16);
+
+      // 두더지 맞춘 후에는 더 이상 클릭해도 점수 안 오르게!
+      this.currentMoleIdx = null;
     }
   }
 
@@ -185,15 +204,26 @@ class MoleGame {
     }
   }
 
-  // 💾 닉네임 입력 후 점수 저장 → localStorage 저장 (4명까지)
+  // 💾 닉네임 입력 후 점수 저장 → localStorage 저장 (5명까지)
   private saveScore(): void {
-    const name = (document.getElementById('playerName') as HTMLInputElement).value.trim().slice(0, 4);
+    const name = (document.getElementById('playerName') as HTMLInputElement).value.trim().slice(0, 3);
     if (!name) return;
     const scores = JSON.parse(localStorage.getItem('moleScores') || '[]');
     scores.push({ name, score: this.score });
     scores.sort((a: any, b: any) => b.score - a.score || a.name.localeCompare(b.name, 'ko'));
-    localStorage.setItem('moleScores', JSON.stringify(scores.slice(0, 4)));
+    localStorage.setItem('moleScores', JSON.stringify(scores.slice(0, 5)));
     this.gotoIntro();
+  }
+
+  private renderScoreList(): void {
+    const list = document.getElementById('scoreList')!;
+    list.innerHTML = '';
+    const scores = JSON.parse(localStorage.getItem('moleScores') || '[]');
+    scores.forEach((entry: { name: string; score: number }) => {
+      const li = document.createElement('li');
+      li.innerHTML = `<span class="name">${entry.name}</span><span class="score">${entry.score}</span>`;
+      list.appendChild(li);
+    });
   }
 
   // 📦 화면 숨기기/보이기 공통 처리
