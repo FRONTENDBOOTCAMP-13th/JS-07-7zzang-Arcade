@@ -55,6 +55,15 @@ html,
   cursor: pointer;
 }
 
+.home:hover,
+.trophy:hover,
+.start:hover,
+.savebtn:hover,
+.retry:hover,
+.cancel:hover {
+  scale: 1.2;
+}
+
 .home {
   padding-left: 30px;
   padding-top: 13px;
@@ -102,7 +111,7 @@ html,
 
 .bestscore .score-list {
   padding: 0;
-  margin-top: 173px;
+  margin-top: 170px;
 }
 
 .bestscore .score-list li {
@@ -119,6 +128,7 @@ html,
     -2.5px 2.5px 0 #611107,
     2.5px 2.5px 0 #611107;
   margin-left: 250px;
+  margin-bottom: 16px;
   width: 45%;
 }
 
@@ -274,6 +284,29 @@ input::placeholder {
   color: #611107;
   font-size: 48px;
   font-family: 'DungGeunMo';
+}
+
+.toast {
+  position: fixed;
+  top: 39%;
+  left: 46.5%;
+  transform: translateX(-50%);
+  background-color: #dc1b0a;
+  color: white;
+  font-family: 'DungGeunMo';
+  padding: 10px 20px;
+  border-radius: 25px;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  z-index: 50;
+}
+
+.toast.show {
+  opacity: 1;
+}
+
+.toast.hidden {
+  display: none;
 }
 
 .overlay-bg {
