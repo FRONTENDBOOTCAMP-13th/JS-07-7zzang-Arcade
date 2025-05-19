@@ -382,10 +382,9 @@ function events() {
       window.parent.postMessage({ type: 'PLAY_MAIN_BGM' }, '*');
     }, 200);
 
-    // 2) 약간 기다렸다가 reload
     setTimeout(() => {
       location.href = '/src/pages/tomato-box/tomato-box.html';
-    }, 200); // 0.2초만 기다려도 충분
+    }, 200);
   });
 
   // 취소
