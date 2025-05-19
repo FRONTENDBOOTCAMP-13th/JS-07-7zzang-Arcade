@@ -221,7 +221,7 @@ class MoleGame {
     const scores = JSON.parse(localStorage.getItem('moleScores') || '[]');
     scores.forEach((entry: { name: string; score: number }) => {
       const li = document.createElement('li');
-      li.innerHTML = `<span>${entry.name}</span><span>${entry.score}</span>`;
+      li.innerHTML = `<span class="name">${entry.name}</span><span class="score">${entry.score}</span>`;
       list.appendChild(li);
     });
   }

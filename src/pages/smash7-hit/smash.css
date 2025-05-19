@@ -81,7 +81,6 @@ canvas {
 #score {
   font-size: 30px;
   color: #fff;
-  font-family: 'DungGeunMo', 'Arial', sans-serif;
   text-shadow: 0 0 6px #000;
 }
 
@@ -137,7 +136,7 @@ canvas {
   width: 100%;
   height: 100%;
   z-index: 1;
-  image-rendering: pixelated; /* 🔧 픽셀 아트 선명도 유지 */
+  image-rendering: pixelated;
 }
 
 .score-list {
@@ -148,27 +147,24 @@ canvas {
   width: 100%;
   height: 100%;
   z-index: 2;
-  font-family: 'DungGeunMo', sans-serif;
-  font-size: 20px;
-  line-height: 42px; /* 한 줄 높이 */
+  font-size: 18px;
+  line-height: 42px;
   color: #fff;
   list-style: none;
   margin: 0;
-  padding: 14px 12px; /* 내부 여백 (위/양옆) */
+  padding: 0;
 }
 
 .score-list li {
   display: flex;
-  justify-content: space-between; /* 이름과 점수 양쪽 정렬 */
-}
-.score-list li span:first-child {
-  width: 140px; /* 이름 공간 조금 더 확보 */
+  justify-content: center;
+  text-align: center;
+  justify-content: center;
 }
 
-.score-list li span:last-child {
+.score-list span {
   flex: 1;
-  text-align: left;
-  padding-left: 30px;
+  text-align: center;
 }
 
 /* ❌ 팝업 닫기 버튼 위치 */
