@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="./smash.css" />
     <script type="module" src="./smash.ts"></script>
     <link rel="preload" as="font" href="/fonts/DungGeunMo.woff" crossorigin="anonymous" />
-    <link rel="preload" as="font" href="/fonts/DungGeunMo.woff2" crossorigin="anonymous"/>
+    <link rel="preload" as="font" href="/fonts/DungGeunMo.woff2" crossorigin="anonymous" />
   </head>
   <body>
     <!------------===================== 인트로 화면 =====================-------------->
@@ -29,7 +29,7 @@
     </div>
 
     <!------------=============== 인트로 화면 ===============-------------->
-
+    <!-- 🎮 게임 화면 -->
     <div id="gameScreen" class="hidden" style="position: relative">
       <div class="status-bar">
         <span id="timer">⏳ 30초</span>
@@ -38,64 +38,58 @@
       <canvas id="gameCanvas" width="920" height="600"></canvas>
       <img id="bat" src="/src/assets/images/smash-img/smash-bat.png" />
 
-<!----- 게임 오버 팝업 (오버레이) - 반드시 내부에! ----->
-<div id="gameOverPopup" class="gameover-overlay hidden">
-  <div class="gameover-center" style="position: relative; width: 400px; height: 500px">
-    
-    <!--- 게임 오버 이미지 --->
-    <img src="/src/assets/images/smash-img/smash-over.png" class="gameover-img" alt="게임 오버" />
+      <!-- ☠️ 게임 오버 팝업 -->
+      <div id="gameOverPopup" class="gameover-overlay hidden">
+        <div class="gameover-center">
+          <img src="/src/assets/images/smash-img/smash-over.png" class="gameover-img" alt="게임 오버" />
+          <div class="score-wrap">
+            <img src="/src/assets/images/smash-img/smash-square.png" class="score-box-img" alt="점수 박스" />
+            <span id="score-display" class="score-value">0</span>
+          </div>
+          <div id="retry-btn">
+            <img src="/src/assets/images/smash-img/smash-square-lg.png" class="btn-frame" alt="다시 시작" />
+          </div>
+          <div id="save-btn">
+            <img src="/src/assets/images/smash-img/smash-square-lg.png" class="btn-frame" alt="저장" />
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <!--- 점수 박스 위치 고정 --->
- <div class="score-wrap">
-  <img src="/src/assets/images/smash-img/smash-square.png" class="score-box-img" alt="점수 박스" />
-  <span id="score-display" class="score-value">0</span>
-</div>
-
-
-    <!--- 다시 시작 버튼 --->
-<div id="retry-btn">
-  <img src="/src/assets/images/smash-img/smash-square-lg.png" class="btn-frame" alt="" />
-</div>
-    <!--- 저장하기 버튼 --->
-<div id="save-btn">
-  <img src="/src/assets/images/smash-img/smash-square-lg.png" class="btn-frame" alt="" />
-</div>
- </div>
-</div>
-
-    <!---- 최고 점수 팝업 ---->
+    <!-- 🏆 최고 점수 팝업 -->
     <div id="scorePopup" class="popup hidden">
-      <img src="/src/assets/images/smash-img/smash-trophy.png" width="400" height="500" alt="최고 점수 화면" />
-      <ul id="scoreList"></ul>
-      <img src="/src/assets/images/smash-img/smash-x.png" id="closeScore" class="popup-close" alt="닫기" />
+      <img src="/src/assets/images/smash-img/smash-score.png" class="score-bg" />
+      <div class="score-table">
+        <img src="/src/assets/images/smash-img/smash-memou.png" class="score-frame" />
+        <ul id="scoreList" class="score-list"></ul>
+      </div>
+      <img src="/src/assets/images/smash-img/smash-x.png" id="closeScore" class="popup-close" />
     </div>
 
-  <!----- SAVE SCORE 팝업 ----->
-<div id="savePopup" class="save-popup popup hidden">
-  <img src="/src/assets/images/smash-img/smash-hole-play.png" class="hole-bg" />
+    <!----- SAVE SCORE 팝업 ----->
+    <div id="savePopup" class="save-popup popup hidden">
+      <img src="/src/assets/images/smash-img/smash-hole-play.png" class="hole-bg" />
 
-  <!--- SAVE SCORE 팝업 내부 png --->
-  <div class="save-inner">
-    <img src="/src/assets/images/smash-img/smash-save-nik.png" class="save-nik-bg" />
+      <!--- SAVE SCORE 팝업 내부 png --->
+      <div class="save-inner">
+        <img src="/src/assets/images/smash-img/smash-save-nik.png" class="save-nik-bg" />
 
-    <div class="nickname-container">
-      <img src="/src/assets/images/smash-img/smash-name.png" class="nickname-box" />
-      <input type="text" id="playerName" maxlength="4" class="nickname-input" />
+        <!-- 👤 닉네임 입력 UI -->
+        <div class="nickname-container">
+          <img src="/src/assets/images/smash-img/smash-name.png" class="nickname-box" />
+          <input type="text" id="playerName" maxlength="3" class="nickname-input" />
+        </div>
+
+        <div id="saveButton" class="save-button">
+          <img src="/src/assets/images/smash-img/smash-save-one.png" />
+        </div>
+        <div id="exitGame" class="save-button cancel">
+          <img src="/src/assets/images/smash-img/smash-save-one.png" />
+        </div>
+      </div>
     </div>
-
-    <div id="saveButton" class="save-button">
-      <img src="/src/assets/images/smash-img/smash-save-one.png" />
-    </div>
-    <div id="exitGame" class="save-button cancel">
-      <img src="/src/assets/images/smash-img/smash-save-one.png" />
-    </div>
-  </div>
-</div>
-
-
 
     <!-- ✨ 트윙클 효과 (동적 생성용, 필요시만 사용) -->
     <img src="/src/assets/images/smash-img/smash-twinkle.png" id="twinkleEffect" style="display: none" />
-
   </body>
 </html>
