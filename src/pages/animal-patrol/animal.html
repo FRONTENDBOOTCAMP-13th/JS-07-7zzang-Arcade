@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ko-KR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>출동! 동물특공대</title>
+    <script type="module" src="./animal.ts"></script>
+    <link rel="preload" as="font" href="/fonts/DungGeunMo.woff" crossorigin="anonymous" />
+    <link rel="preload" as="font" href="/fonts/DungGeunMo.woff2" crossorigin="anonymous" />
+  </head>
+  <body class="DungGeunMo">
+    <div class="screen-base">
+      <!-- 공통 배경 920x600 -->
+      <div class="background-layer" id="bg1"></div>
+      <div class="background-layer" id="bg2"></div>
+      <img src="/src/assets/images/animal-img/cloud.png" class="cloud cloud1" />
+      <img src="/src/assets/images/animal-img/cloud.png" class="cloud cloud2" />
+      <img src="/src/assets/images/animal-img/cloud.png" class="cloud cloud3" />
+      <img src="/src/assets/images/animal-img/bg-grass1.png" class="intro-grass" alt="잔디" />
+
+      <!-- 인트로 화면 UI -->
+      <div id="intro" class="intro-container">
+        <!-- 헤더 -->
+        <div class="intro-header">
+          <a href="/index.html" class="intro-button">
+            <img src="/src/assets/icons/home.png" class="home-button" alt="홈으로 이동" />
+          </a>
+          <div class="intro-title-wrapper">
+            <img src="/src/assets/images/animal-img/go-animal-patrol-t.png" class="intro-title" alt="출동! 동물특공대" />
+          </div>
+          <img src="/src/assets/icons/trophy.png" class="intro-button trophy-button" alt="트로피" />
+        </div>
+
+        <!-- 메인 캐릭터 -->
+        <div>
+          <img src="/src/assets/images/animal-img/intro-animal.png" class="intro-character" alt="병아리 캐릭터" />
+        </div>
+
+        <!-- START GAME 텍스트 -->
+        <div class="start-text">START GAME</div>
+
+        <!-- Best Score 팝업 -->
+        <div id="bestScorePopup" class="best-score-popup hidden">
+          <img src="/src/assets/images/animal-img/score-frame.png" alt="최고 점수 게시판" />
+          <ul id="bestScoreList" class="best-score-entries"></ul>
+        </div>
+      </div>
+
+      <!-- 게임 화면 UI -->
+      <div id="game" class="game-container hidden">
+        <div id="star-container" class="star-container"></div>
+
+        <!-- 캐릭터 (병아리) -->
+        <img id="character" class="character" src="/src/assets/images/animal-img/chick-idle-front.png" alt="캐릭터" />
+
+        <!-- 점수 표시 -->
+        <div id="score" class="score-ui">Score: 0</div>
+
+        <!-- Game Over 팝업 -->
+        <div id="game-over-popup" class="game-over-popup hidden">
+          <div class="popup-head">
+            <h2 class="game-over-title">GAME OVER</h2>
+            <p class="final-score">SCORE: <span id="finalScore">0</span></p>
+          </div>
+          <div class="popup-buttons gameover-buttons">
+            <button id="retryButton" class="popup-button">RETRY</button>
+            <button id="saveScoreButton" class="popup-button">SAVE SCORE</button>
+          </div>
+        </div>
+
+        <!-- SAVE SCORE 팝업 -->
+        <div id="overlay" class="popup-overlay hidden">
+          <div id="save-score-popup" class="save-score-popup hidden">
+            <h2 class="save-score-title">SAVE SCORE</h2>
+            <label for="playerName" class="input-label">Please enter your name:</label>
+            <input id="playerName" class="name-input" type="text" maxlength="3" pattern="^[가-힣a-zA-Z]{1,3}$" placeholder="한글 또는 영어(3글자)" autocomplete="off" />
+            <div class="popup-buttons save-buttons">
+              <button id="saveNameButton" class="popup-button">SAVE</button>
+              <button id="cancelSaveButton" class="popup-button">CANCEL</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Toast 메시지 -->
+    <div id="toast" class="toast hidden">기록이 저장되었습니다!</div>
+  </body>
+</html>
