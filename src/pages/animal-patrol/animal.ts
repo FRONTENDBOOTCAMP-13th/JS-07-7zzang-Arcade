@@ -153,7 +153,7 @@ let characterX = (920 - 90) / 2;
 
 // 인게임 캐릭터 방향 & 단계 변수
 let characterDirection: 'left' | 'right' = 'right';
-let evolutionStage: 0 | 1 | 2 | 3 | 4 = 0; // 단계별 효과 추가할 때 사용할거니까 경고 무시
+let evolutionStage: 0 | 1 | 2 | 3 | 4 = 0;
 
 const introScreen = document.getElementById('intro') as HTMLElement;
 const gameScreen = document.getElementById('game') as HTMLElement;
@@ -173,7 +173,7 @@ startButton.addEventListener('click', () => {
   score = 0;
   characterX = (920 - 90) / 2;
 
-  character.src = '/src/assets/images/animal-img/chick-idle-front.png'; // 정면
+  character.src = '/src/assets/images/animal-img/chick-idle-front.png';
   character.style.left = `${characterX}px`;
   character.style.width = '90px';
   character.style.height = '110px';
@@ -182,16 +182,89 @@ startButton.addEventListener('click', () => {
   spawnObstacles();
 });
 
+// 이미 출력한 예고 멘트 점수 기록용 Set
+const shownWarnings = new Set<number>();
 /**
- * 점수를 1초마다 증가시키고 배경을 점수에 맞게 업데이트
+ * 점수를 1초마다 증가시키고 배경 & 진화 멘트 & 단계 업데이트
  */
 function updateScore(): void {
   if (!gameActive) return;
 
   score++;
   scoreUI.textContent = `Score: ${score}`;
+
+  // 진화 예고 멘트 출력
+  const warningMessage = evolutionWarnings[score];
+  if (warningMessage && !shownWarnings.has(score)) {
+    showSpeechBubble(warningMessage);
+    shownWarnings.add(score);
+    updateSpeechBubblePosition(); // 말풍선 위치
+
+    setTimeout(updateScore, 1000);
+    return; // 멘트 출력 시에는 이후 진화·배경 갱신 생략
+  }
+
+  // 진화 로직은 유지 -> 멘트는 출력x
+  const newStage = getEvolutionStage(score);
+  if (newStage !== evolutionStage) {
+    evolutionStage = newStage;
+    updateCharacterImage();
+  }
+
   updateBackgroundByStep(score); // 현재 점수 기반으로 배경 전환
   setTimeout(updateScore, 1000);
+}
+
+// 진화 단계 예고 멘트
+const evolutionWarnings: Record<number, string> = {
+  17: '몸이...뭔가 간질간질해!',
+  37: '어어...! 내 안의 솟구치는 힘!',
+  62: '모자를 쓰면... 무언가 달라질까?',
+  87: '전설의 변신, 지금 시작된다!',
+};
+
+// 진화 단계 예고 말풍선
+const speechBubble = document.getElementById('speech-bubble') as HTMLDivElement;
+const bubbleText = speechBubble.querySelector('.bubble-text') as HTMLDivElement;
+
+function showSpeechBubble(message: string): void {
+  if (!bubbleText) return; // 안정성 확인
+
+  bubbleText.textContent = message;
+  speechBubble.classList.remove('hidden');
+  speechBubble.classList.add('show');
+
+  speechBubbleVisible = true;
+  animateSpeechBubble(); // 캐릭터 위치 업데이트 시작
+
+  setTimeout(() => {
+    speechBubble.classList.remove('show');
+    speechBubble.classList.add('hidden');
+    speechBubbleVisible = false; // 말풍선 사라지고 위치 업데이트 중단
+  }, 2000);
+}
+
+/**
+ * 말풍선을 캐릭터 위 중앙 정렬 위치로 이동
+ */
+function updateSpeechBubblePosition(): void {
+  const bubbleRect = speechBubble.getBoundingClientRect();
+
+  // 말풍선을 캐릭터 중심 위에 맞춤
+  speechBubble.style.left = `${character.offsetLeft + character.offsetWidth / 2 - bubbleRect.width / 2}px`;
+  speechBubble.style.top = `${character.offsetTop - bubbleRect.height - 10}px`; // 캐릭터 위 10px 간격
+}
+
+let speechBubbleVisible = false;
+
+/**
+ * 말풍선이 보이는 동안 캐릭터 따라다니도록 위치 지속 갱신
+ */
+function animateSpeechBubble(): void {
+  if (!speechBubbleVisible) return;
+
+  updateSpeechBubblePosition();
+  requestAnimationFrame(animateSpeechBubble);
 }
 
 /**
@@ -230,7 +303,7 @@ function updateCharacterImage(): void {
   character.src = src;
   character.style.width = `${width}px`;
   character.style.height = `${height}px`;
-  character.style.left = `${(920 - width) / 2}px`;
+  character.style.left = `${characterX}px`;
 }
 
 /**
@@ -307,10 +380,10 @@ function spawnObstacles(): void {
  */
 function getSpawnInterval(score: number): number {
   if (score < 20) return 850;
-  if (score < 40) return 750;
-  if (score < 65) return 650;
-  if (score < 90) return 500;
-  return 400;
+  if (score < 40) return 800;
+  if (score < 65) return 750;
+  if (score < 90) return 700;
+  return 650;
 }
 
 /**
@@ -351,11 +424,11 @@ function fallObstacle(obstacle: HTMLDivElement): void {
  * @returns 프레임당 이동 픽셀 수
  */
 function getObstacleSpeed(score: number): number {
-  if (score < 20) return 5;
-  if (score < 40) return 6;
-  if (score < 65) return 7;
-  if (score < 90) return 8;
-  return 9;
+  if (score < 20) return 4;
+  if (score < 40) return 5;
+  if (score < 65) return 6;
+  if (score < 90) return 7;
+  return 8;
 }
 
 /**
@@ -470,8 +543,8 @@ function showToast(message: string): void {
   setTimeout(() => {
     toast.classList.remove('show');
     toast.classList.add('hidden');
-    resetGame(); // 인트로 화면으로 초기화
-  }, 1000);
+    resetGame();
+  }, 1500);
 }
 
 /**
@@ -481,6 +554,7 @@ function resetGame(): void {
   score = 0;
   characterX = (920 - 90) / 2;
   gameActive = false;
+  shownWarnings.clear(); // set 초기화 필요 (멘트 떠야함)
 
   gameScreen.classList.add('hidden');
   introScreen.classList.remove('hidden');
