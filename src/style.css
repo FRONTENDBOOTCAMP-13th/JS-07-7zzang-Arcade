@@ -1,3 +1,27 @@
+@import '/src/common/modern-reset.css';
+
+@font-face {
+  font-family: 'DungGeunMo';
+  src:
+    url('/fonts/DungGeunMo.woff2') format('woff2'),
+    url('/fonts/DungGeunMo.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DungGeunMo';
+  src: url('/fonts/DungGeunMo.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+.DungGeunMo {
+  font-family: 'DungGeunMo', sans-serif;
+}
+
 html,
 body,
 .app,
@@ -21,6 +45,7 @@ body,
   background-size: 5200px 2600px;
   background-position: center center;
   background-repeat: no-repeat;
+  transition: transform 0.8s ease-in-out;
 }
 
 .game-screen {
@@ -28,46 +53,57 @@ body,
   top: 48%;
   left: 50%;
   transform-origin: center top;
-  /* translate 먼저, 그 다음 회전 순서 중요 */
   transform: translate(-50%, -50%) rotateX(5deg);
   width: 920px;
   height: 600px;
   background-color: black;
 }
-
-.coin-slot {
+.game-screen object {
+  display: block;
+  border: none;
+}
+.index-screen {
   position: absolute;
+  top: 932px;
+  left: 3465px;
+  width: 850px;
+  height: 632px;
+  /* background-image: url('/images/bg6.png');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover; */
+  clip-path: polygon(0% 0%, 91.5% 0%, 100% 100%, 4% 100%);
+}
+.coin-slot {
+  position: relative;
   top: 2050px;
   left: 3040px;
   width: 70px;
   height: 100px;
-  background-color: red;
+  perspective: 800px;
 }
 .game-selection {
   display: grid;
-  /* 2열을 같은 비율로 나누기 */
   grid-template-columns: repeat(2, 1fr);
-  /* 2행 자동 생성 */
   grid-auto-rows: 1fr;
-  /* 아이템 사이 간격 */
   gap: 20px;
-
-  /* 부모(.game-screen) 전체 영역 채우기 */
   width: 100%;
   height: 100%;
-
-  /* 가운데 정렬 (선택사항) */
   place-items: center;
   padding: 20px;
   box-sizing: border-box;
+  /* background-image: url('/images/bg4.png');
+  background-repeat: no-repeat;
+  background-size: cover; */
 }
-
+.game-selection.hidden {
+  display: none;
+}
 .game-selection > div {
-  /* 각 아이템 카드 스타일 */
-  width: 100%; /* 그리드 셀 너비만큼 */
-  height: 100%; /* 그리드 셀 높이만큼 */
+  width: 100%;
+  height: 100%;
 
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.06);
   border-radius: 12px;
   cursor: pointer;
 }
@@ -97,8 +133,39 @@ body,
   background-position: center center;
 }
 
-/* hover 효과 */
 .game-selection > div:hover {
   transform: scale(1.05);
   transition: transform 0.2s ease;
+}
+
+.coin-slot:hover {
+  cursor:
+    url('/images/coin-front.png') 16 16,
+    auto;
+}
+
+.insert-coin {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 40px;
+  height: 80px;
+  transform-origin: center center;
+  animation: insertCoin 0.8s ease-in;
+  pointer-events: none;
+}
+
+@keyframes insertCoin {
+  0% {
+    transform: translate(-50%, 0%) translateZ(0) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-50%, 20px) translateZ(100px) scale(0.8);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, 40px) translateZ(200px) scale(0.4);
+    opacity: 0;
+  }
 }
