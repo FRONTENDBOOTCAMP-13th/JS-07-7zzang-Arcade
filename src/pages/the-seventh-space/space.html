@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>제7 우주</title>
     <script type="module" src="./space.ts"></script>
-    <link rel="icon" href="../../../public/images/favicon.ico" />
+    <link rel="icon" href="../../../images/favicon.ico" />
   </head>
   <body>
     <!-- 토스트 위치 지정용 컨테이너 -->
@@ -20,15 +20,18 @@
       <img id="titleImg" src="../../assets/images/space-img/title.png" width="330" height="80" alt="Title" />
       <img src="../../assets/images/space-img/intro.png" width="500" height="300" alt="픽셀 외계인" />
       <button id="startBtn">START GAME</button>
-      <!-- Score 모달 팝업 -->
-      <div id="scoreModal" class="modal hidden">
+    </div>
+
+    <!-- Score 모달 팝업 -->
+    <div id="scoreModal" class="modal hidden">
+      <div class="modal_main">
         <div class="modal_content">
           <h2>HI-SCORE</h2>
           <ul></ul>
         </div>
       </div>
-      <!-- Score모달 팝업 -->
     </div>
+    <!-- Score모달 팝업 -->
 
     <!-- canvas 팝업 -->
     <canvas id="gameCanvas" width="920" height="600" style="display: none"></canvas>
