@@ -1,6 +1,86 @@
 import '../../style.css';
 import './space.css';
 import * as SAT from 'sat';
+import playerImgSrc from '../../assets/images/space-img/player.png';
+import bulletImgSrc from '../../assets/images/space-img/player-bullet.png';
+import enemyBulletImgSrc from '../../assets/images/space-img/enemy-bullet.png';
+import backgroundImgSrc from '../../assets/images/space-img/background.png';
+import explosionPlayerSrc from '../../assets/images/space-img/explosion-player.png';
+import explosionEnemySrc from '../../assets/images/space-img/explosion-enemy.png';
+import lifeIconSrc from '../../assets/images/space-img/heart.png';
+import bossImgSrc from '../../assets/images/space-img/boss.png';
+import enemy1ImgSrc from '../../assets/images/space-img/enemy1.png';
+import enemy2ImgSrc from '../../assets/images/space-img/enemy2.png';
+import enemy3ImgSrc from '../../assets/images/space-img/enemy3.png';
+import alienIconSrc from '../../assets/images/space-img/alien-icon.png';
+
+// ─── 타입 가드 헬퍼 ────────────────────────────────────────
+function assertInstance<T>(el: any, constructor: { new (...args: any[]): T }, name: string): asserts el is T {
+  if (!(el instanceof constructor)) {
+    throw new Error(`${name} 엘리먼트를 찾을 수 없거나 올바른 타입이 아닙니다.`);
+  }
+}
+
+// ─── HTML 요소 가져오기 ───────────────────────────────────
+const introElRaw = document.getElementById('intro');
+assertInstance(introElRaw, HTMLDivElement, 'intro');
+const introEl = introElRaw;
+
+const startBtnRaw = document.getElementById('startBtn');
+assertInstance(startBtnRaw, HTMLButtonElement, 'startBtn');
+const startBtn = startBtnRaw;
+
+const canvasElRaw = document.getElementById('gameCanvas');
+assertInstance(canvasElRaw, HTMLCanvasElement, 'gameCanvas');
+const canvasEl = canvasElRaw;
+
+const scoreModalRaw = document.getElementById('scoreModal');
+assertInstance(scoreModalRaw, HTMLDivElement, 'scoreModal');
+const scoreModal = scoreModalRaw;
+
+const trophyIconRaw = document.getElementById('trophyIcon');
+assertInstance(trophyIconRaw, HTMLImageElement, 'trophyIcon');
+const trophyIcon = trophyIconRaw;
+
+const nameModalRaw = document.getElementById('nameModal');
+assertInstance(nameModalRaw, HTMLDivElement, 'nameModal');
+const nameModal = nameModalRaw;
+
+const cancelBtnRaw = document.getElementById('cancelBtn');
+assertInstance(cancelBtnRaw, HTMLButtonElement, 'cancelBtn');
+const cancleBtn = cancelBtnRaw;
+
+const saveBtnRaw = document.getElementById('saveBtn');
+assertInstance(saveBtnRaw, HTMLButtonElement, 'saveBtn');
+const saveBtn = saveBtnRaw;
+
+const gameOverModalRaw = document.getElementById('gameOverModal');
+assertInstance(gameOverModalRaw, HTMLDivElement, 'gameOverModal');
+const gameOverModal = gameOverModalRaw;
+
+const restartBtnRaw = document.getElementById('restartBtn');
+assertInstance(restartBtnRaw, HTMLButtonElement, 'restartBtn');
+const restartBtn = restartBtnRaw;
+
+const openSaveBtnRaw = document.getElementById('openSave');
+assertInstance(openSaveBtnRaw, HTMLButtonElement, 'openSave');
+const openSaveBtn = openSaveBtnRaw;
+
+const nicknameInputRaw = document.getElementById('nicknameInput');
+assertInstance(nicknameInputRaw, HTMLInputElement, 'nicknameInput');
+const nicknameInput = nicknameInputRaw;
+
+const gameScoreElRaw = document.getElementById('gameScore');
+assertInstance(gameScoreElRaw, HTMLHeadingElement, 'gameScore');
+const gameScoreEl = gameScoreElRaw;
+
+const gameResultElRaw = document.getElementById('gameResult');
+assertInstance(gameResultElRaw, HTMLHeadingElement, 'gameResult');
+const gameResultEl = gameResultElRaw;
+
+const scoreListElRaw = document.querySelector('#scoreModal ul');
+assertInstance(scoreListElRaw, HTMLUListElement, 'scoreModal ul');
+const scoreListEl = scoreListElRaw;
 
 // ─── 사운드 로드 ─────────────────────────
 const bgm = new Audio('/sounds/space-bgm.mp3');
@@ -11,22 +91,7 @@ bgm.loop = true;
 bossBgm.loop = true;
 bgm.volume = bossBgm.volume = gameOverSound.volume = attackSound.volume = 0.1;
 
-// HTML 요소 가져오기 ───────────
-const introEl = document.getElementById('intro') as HTMLDivElement;
-const startBtn = document.getElementById('startBtn') as HTMLButtonElement;
-const canvasEl = document.getElementById('gameCanvas') as HTMLCanvasElement;
-const scoreModal = document.getElementById('scoreModal') as HTMLDivElement;
-const trophyIcon = document.getElementById('trophyIcon') as HTMLImageElement;
-const nameModal = document.getElementById('nameModal') as HTMLDivElement;
-const cancleBtn = document.getElementById('cancelBtn') as HTMLDivElement;
-const saveBtn = document.getElementById('saveBtn') as HTMLDivElement;
-const gameOverModal = document.getElementById('gameOverModal') as HTMLDivElement;
-const restartBtn = document.getElementById('restartBtn') as HTMLDivElement;
-const openSaveBtn = document.getElementById('openSave') as HTMLDivElement;
-const nicknameInput = document.getElementById('nicknameInput') as HTMLInputElement;
-const gameScoreEl = document.getElementById('gameScore') as HTMLHeadingElement;
-const gameResultEl = document.getElementById('gameResult') as HTMLHeadingElement;
-const scoreListEl = document.querySelector<HTMLUListElement>('#scoreModal ul')!;
+// ──── 닉네임 패턴 && 스토리지 ────────────────────────────
 const nickPattern = /^([가-힣]{3}|[A-Z]{3})$/;
 const STORAGE_KEY = 'space-bestScores';
 
@@ -43,7 +108,8 @@ trophyIcon.addEventListener('click', () => {
 
 // ─── 게임 시작 버튼 클릭 시 ────────────
 startBtn.addEventListener('click', () => {
-  console.log('시작');
+  window.parent.postMessage({ type: 'STOP_BGM' }, '*');
+
   if (!assetsLoaded) return;
   introEl.style.display = 'none';
   canvasEl.style.display = 'block';
@@ -54,7 +120,6 @@ startBtn.addEventListener('click', () => {
 
 // ─── 취소 버튼 클릭 시 ──────────────────
 cancleBtn.addEventListener('click', () => {
-  console.log('취소');
   canvasEl.style.display = 'none';
   introEl.style.display = 'flex';
   nameModal.classList.add('hidden');
@@ -62,7 +127,7 @@ cancleBtn.addEventListener('click', () => {
 
 // ─── 다시하기 버튼 클릭 시 ──────────────────
 restartBtn.addEventListener('click', () => {
-  console.log('다시시작');
+  window.parent.postMessage({ type: 'PLAY_MAIN_BGM' }, '*');
   gameOverModal.classList.add('hidden');
   canvasEl.style.display = 'none';
   introEl.style.display = 'flex';
@@ -70,6 +135,10 @@ restartBtn.addEventListener('click', () => {
 
 // ─── 저장오픈버튼  클릭 시 ──────────────────
 openSaveBtn.addEventListener('click', () => {
+  nicknameInput.value = '';
+  //  포커스
+  nicknameInput.focus();
+
   nameModal.classList.remove('hidden');
   gameOverModal.classList.add('hidden');
 });
@@ -130,9 +199,11 @@ function renderScoreList() {
       ([nick, sc]) => `
       <li>
         <div>
-          <img src="../../assets/images/space-img/alien-icon.png"
-               alt="alien icon"
-               class="alien-icon" />
+          <img
+            src="${alienIconSrc}"
+            alt="alien icon"
+            class="alien-icon"
+          />
           ${nick}
         </div>
         <div>${sc}</div>
@@ -417,9 +488,9 @@ const EnemyManager = {
   fireInterval: 1000,
 
   configs: {
-    1: { rows: 3, cols: 7, spriteSrc: '../../assets/images/space-img/enemy1.png', paddingX: 20, paddingY: 10, offsetX: 0, offsetY: 30, descentY: 60 },
-    2: { rows: 3, cols: 7, spriteSrc: '../../assets/images/space-img/enemy2.png', paddingX: 30, paddingY: 20, offsetX: 0, offsetY: 30, descentY: 70 },
-    3: { rows: 3, cols: 6, spriteSrc: '../../assets/images/space-img/enemy3.png', paddingX: 40, paddingY: 30, offsetX: 0, offsetY: 35, descentY: 80 },
+    1: { rows: 3, cols: 7, spriteSrc: enemy1ImgSrc, paddingX: 20, paddingY: 10, offsetX: 0, offsetY: 30, descentY: 60 },
+    2: { rows: 3, cols: 7, spriteSrc: enemy2ImgSrc, paddingX: 30, paddingY: 20, offsetX: 0, offsetY: 30, descentY: 70 },
+    3: { rows: 3, cols: 6, spriteSrc: enemy3ImgSrc, paddingX: 40, paddingY: 30, offsetX: 0, offsetY: 35, descentY: 80 },
   } as Record<number, IEnemyConfig>,
 
   // ── 적 스폰 함수(gpt code) ──────────────────────
@@ -734,32 +805,32 @@ function handleEnemyBulletCollisions() {
 // ─── 애셋 로딩 & 키 바인딩 ────────────────────────────────────────
 // ─── 플레이어 이미지 생성
 const playerImg = new Image();
-playerImg.src = '../../assets/images/space-img/player.png';
+playerImg.src = playerImgSrc;
 Player.sprite = playerImg;
 
 // ─── 총알 이미지 생성
 const bulletImg = new Image();
-bulletImg.src = '../../assets/images/space-img/player-bullet.png';
+bulletImg.src = bulletImgSrc;
 const enemyBulletImg = new Image();
-enemyBulletImg.src = '../../assets/images/space-img/enemy-bullet.png';
+enemyBulletImg.src = enemyBulletImgSrc;
 
 // ─── 배경 이미지 생성
 const backgroundImg = new Image();
-backgroundImg.src = '../../assets/images/space-img/background.png';
+backgroundImg.src = backgroundImgSrc;
 
 // ─── 폭발 이미지 생성
 const explosionPlayer = new Image();
-explosionPlayer.src = '../../assets/images/space-img/explosion-player.png';
+explosionPlayer.src = explosionPlayerSrc;
 const explosionEnemy = new Image();
-explosionEnemy.src = '../../assets/images/space-img/explosion-enemy.png';
+explosionEnemy.src = explosionEnemySrc;
 
 // ─── 생명 이미지 생성
 const lifeIcon = new Image();
-lifeIcon.src = '../../assets/images/space-img/heart.png';
+lifeIcon.src = lifeIconSrc;
 
 // ─── 보스 이미지 생성
 const bossImg = new Image();
-bossImg.src = '../../assets/images/space-img/boss.png';
+bossImg.src = bossImgSrc;
 
 // ─── 키버튼
 const keys = { ArrowLeft: false, ArrowRight: false, Space: false };
