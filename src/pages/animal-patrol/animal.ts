@@ -164,11 +164,11 @@ const scoreUI = document.getElementById('score') as HTMLElement;
 // 인게임 BGM
 const gameBgm = new Audio('/sounds/animal-bgm.mp3');
 gameBgm.loop = true;
-gameBgm.volume = 0.6;
+gameBgm.volume = 0.3;
 
 // 게임 오버 효과음
 const gameOverSfx = new Audio('/sounds/animal-gameover.wav');
-gameOverSfx.volume = 1.0;
+gameOverSfx.volume = 0.3;
 
 /**
  * START 버튼 클릭 -> 인트로에서 게임 화면으로 전환
