@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>뿡뿡 두더지 게임</title>
+    <link rel="stylesheet" href="./smash.css" />
+    <script type="module" src="./smash.ts"></script>
+    <link rel="preload" as="font" href="/fonts/DungGeunMo.woff" crossorigin="anonymous" />
+    <link rel="preload" as="font" href="/fonts/DungGeunMo.woff2" crossorigin="anonymous" />
+  </head>
+  <body>
+    <!------------===================== 인트로 화면 =====================-------------->
+    <div id="introScreen" style="position: relative">
+      <img src="/src/assets/images/smash-img/smash-start.png" width="920" height="600" alt="인트로 화면" />
+      <!-- 🏆 트로피 아이콘 (왼쪽 위) -->
+      <img src="/src/assets/images/smash-img/smash-trophy.png" id="trophyIcon" class="intro-trophy" />
+      <!-- 🏠 홈 아이콘 (오른쪽 위) -->
+      <a href="/home.html" class="home">
+        <img src="/src/assets/images/smash-img/smash-home.png" id="homeIcon" class="intro-home" alt="홈으로 돌아가기" />
+      </a>
+      <!-- 게임 시작 버튼 -->
+      <img src="/src/assets/images/smash-img/smash-click.png" id="clickStart" alt="게임 시작 버튼" style="cursor: pointer; position: absolute; top: 495px; left: 700px; width: 100px; height: 100px" />
+      <!-- 트로피 팝업 (인트로 화면 위에 오버레이) -->
+      <div id="trophyPopup" class="popup hidden">
+        <div class="trophy-img-wrap" style="position: relative; display: inline-block">
+          <img src="/src/assets/images/smash-img/smash-score.png" alt="트로피 팝업" />
+          <img src="/src/assets/images/smash-img/smash-x.png" id="closeTrophy" class="popup-close" alt="닫기" />
+        </div>
+      </div>
+    </div>
+
+    <!------------=============== 인트로 화면 ===============-------------->
+    <!-- 🎮 게임 화면 -->
+    <div id="gameScreen" class="hidden" style="position: relative">
+      <div class="status-bar">
+        <span id="timer">⏳ 30초</span>
+        <span id="score">🏆 점수: 0</span>
+      </div>
+      <canvas id="gameCanvas" width="920" height="600"></canvas>
+      <img id="bat" src="/src/assets/images/smash-img/smash-bat.png" />
+
+      <!-- ☠️ 게임 오버 팝업 -->
+      <div id="gameOverPopup" class="gameover-overlay hidden">
+        <div class="gameover-center">
+          <img src="/src/assets/images/smash-img/smash-over.png" class="gameover-img" alt="게임 오버" />
+          <div class="score-wrap">
+            <img src="/src/assets/images/smash-img/smash-square.png" class="score-box-img" alt="점수 박스" />
+            <span id="score-display" class="score-value">0</span>
+          </div>
+          <div id="retry-btn">
+            <img src="/src/assets/images/smash-img/smash-square-lg.png" class="btn-frame" alt="다시 시작" />
+          </div>
+          <div id="save-btn">
+            <img src="/src/assets/images/smash-img/smash-square-lg.png" class="btn-frame" alt="저장" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🏆 최고 점수 팝업 -->
+    <div id="scorePopup" class="popup hidden">
+      <img src="/src/assets/images/smash-img/smash-score.png" class="score-bg" />
+      <div class="score-table">
+        <img src="/src/assets/images/smash-img/smash-memou.png" class="score-frame" />
+        <ul id="scoreList" class="score-list"></ul>
+      </div>
+      <img src="/src/assets/images/smash-img/smash-x.png" id="closeScore" class="popup-close" />
+    </div>
+
+    <!----- SAVE SCORE 팝업 ----->
+    <div id="savePopup" class="save-popup popup hidden">
+      <img src="/src/assets/images/smash-img/smash-hole-play.png" class="hole-bg" />
+
+      <!--- SAVE SCORE 팝업 내부 png --->
+      <div class="save-inner">
+        <img src="/src/assets/images/smash-img/smash-save-nik.png" class="save-nik-bg" />
+
+        <!-- 👤 닉네임 입력 UI -->
+        <div class="nickname-container">
+          <img src="/src/assets/images/smash-img/smash-name.png" class="nickname-box" />
+          <input type="text" id="playerName" maxlength="3" class="nickname-input" autocomplete="off" />
+        </div>
+
+        <div id="saveButton" class="save-button">
+          <img src="/src/assets/images/smash-img/smash-save-one.png" />
+        </div>
+        <div id="exitGame" class="save-button cancel">
+          <img src="/src/assets/images/smash-img/smash-save-one.png" />
+        </div>
+      </div>
+    </div>
+
+    <!-- ✨ 트윙클 효과 (동적 생성용, 필요시만 사용) -->
+    <img src="/src/assets/images/smash-img/smash-twinkle.png" id="twinkleEffect" style="display: none" />
+
+    <!-- ✅ 토스트 메시지 -->
+    <div id="toast" class="toast hidden">저장되었습니다!</div>
+  </body>
+</html>

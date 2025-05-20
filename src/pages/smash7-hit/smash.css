@@ -1,0 +1,392 @@
+/* 🌑 전체 페이지 기본 설정 */
+body {
+  background-color: black;
+  color: limegreen;
+  text-align: center;
+
+  /* ✅ 중앙 정렬 핵심 */
+  display: flex;
+  justify-content: center; /* 가로 가운데 */
+  align-items: center; /* 세로 가운데 */
+  height: 100vh; /* 화면 높이 기준으로 */
+  margin: 0;
+  overflow: hidden;
+}
+
+/* 🎬 인트로 화면 스타일 */
+#introScreen {
+  width: 920px;
+  height: 600px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* 🏠 인트로 - 왼쪽 상단 집 아이콘 */
+.intro-home {
+  position: absolute;
+  top: 40px;
+  left: 50px;
+  width: 87px;
+  height: 97px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+/* 🏆 인트로 - 오른쪽 상단 트로피 아이콘 */
+.intro-trophy {
+  position: absolute;
+  top: 40px;
+  right: 50px;
+  width: 84px;
+  height: 84px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+/* 🎮 게임 화면 (캔버스 포함) */
+#gameScreen {
+  width: 920px;
+  height: 600px;
+  margin: 0 auto;
+  position: relative;
+  cursor: none;
+}
+
+/* 🖼️ 캔버스 설정 - 두더지 배경 + 테두리 */
+canvas {
+  background-image: url('/src/assets/images/smash-img/smash-play.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  border: none;
+  display: block;
+}
+
+/* 📊 상단 상태바 - 점수, 타이머 */
+.status-bar {
+  position: absolute;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 40px;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 8px 32px;
+  border-radius: 24px;
+  align-items: center;
+}
+
+/* ⏳ 타이머 및 🏆 점수 텍스트 스타일 */
+#timer,
+#score {
+  font-size: 30px;
+  color: #fff;
+  text-shadow: 0 0 6px #000;
+}
+
+/* 🔨 뿅망치 이미지 (마우스 따라다님) */
+#bat {
+  width: 205px;
+  height: 215px;
+  position: absolute;
+  pointer-events: none;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+}
+
+/* 📦 팝업 기본 레이아웃 */
+.popup {
+  position: fixed; /* ✅ fixed로 바꾸기 */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  height: 500px;
+  background: none;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 🏆 점수 팝업 테이블 배치 */
+.score-table {
+  position: absolute;
+  top: 185px; /* ✅ 피그마 기준 조정 */
+  left: 64px; /* ✅ 좌측 여백에 맞춰 조정 */
+  width: 270px; /* ✅ 이미지 원본 사이즈로 수정 */
+  height: 211px;
+}
+.score-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 400px;
+  height: 500px;
+  z-index: 0;
+  display: block;
+}
+
+.score-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  image-rendering: pixelated;
+}
+
+.score-list {
+  /* 전체 score 영역 - PNG 안 표 위치 */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  font-size: 18px;
+  line-height: 42px;
+  color: #fff;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.score-list li {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  justify-content: center;
+}
+
+.score-list span {
+  flex: 1;
+  text-align: center;
+}
+
+/* ❌ 팝업 닫기 버튼 위치 */
+.popup-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  z-index: 20;
+}
+
+/* ☠️ 게임 오버 팝업 전체 덮는 오버레이 */
+.gameover-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 920px;
+  height: 600px;
+  background: none;
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.gameover-center {
+  position: relative;
+  width: 400px;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#retry-btn,
+#save-btn {
+  position: absolute;
+  top: 350px;
+  width: 160px;
+  height: 160px;
+  cursor: pointer;
+  z-index: 3;
+}
+
+#retry-btn {
+  left: 40px;
+}
+#save-btn {
+  left: 200px;
+}
+
+.btn-frame {
+  width: 160px;
+  height: 160px;
+  pointer-events: none;
+}
+
+.gameover-img {
+  width: 400px;
+  height: 500px;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.score-wrap {
+  position: absolute;
+  top: 310px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 120px;
+  z-index: 2;
+}
+
+.score-box-img {
+  width: 120px;
+  height: 120px;
+  display: block;
+}
+
+.score-value {
+  position: absolute;
+  top: 44px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 28px;
+  color: #fff;
+  font-weight: bold;
+  text-shadow: 0 0 4px #000;
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* 💾 점수 저장 화면 (팝업) */
+.save-popup {
+  /* 팝업 자체를 화면 정중앙에 위치시킴 */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  height: 500px;
+  z-index: 4000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.save-inner {
+  /* 닉네임 입력, 버튼 등 포함하는 내부 박스 */
+  position: relative;
+  width: 400px;
+  height: 500px;
+}
+
+/* ✅ smash-hole-play.png: 맨 아래 배경 이미지 */
+.save-popup .hole-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* ✅ smash-save-nik.png: 중앙 내용 프레임 이미지 */
+.save-inner .save-nik-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+
+.nickname-container {
+  position: absolute;
+  top: 243px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 266px;
+  height: 61px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 3;
+}
+
+.nickname-box {
+  width: 266px;
+  height: 61px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.nickname-input {
+  width: 180px;
+  height: 40px;
+  margin-top: 10px;
+  font-size: 22px;
+  text-align: center;
+  background: transparent;
+  color: #fff;
+  border: none;
+  outline: none;
+  position: relative;
+  z-index: 4;
+}
+
+.save-button {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 261px;
+  height: 54px;
+  cursor: pointer;
+  z-index: 3;
+}
+
+#saveButton {
+  top: 328px;
+}
+#exitGame {
+  top: 396px;
+}
+
+/* ❌ display:none 처리용 클래스 */
+.hidden {
+  display: none;
+}
+
+/* 🌟 토스트 메시지 스타일 */
+.toast {
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 14px 24px;
+  border-radius: 8px;
+  font-size: 1.4rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  z-index: 9999;
+}
+
+.toast.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.toast.hidden {
+  display: none;
+  opacity: 0 !important;
+}

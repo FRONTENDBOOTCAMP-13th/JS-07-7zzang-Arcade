@@ -1,0 +1,233 @@
+#homeIcon:hover,
+#trophyIcon:hover {
+  opacity: 0.8;
+}
+body {
+  font-family: 'DungGeunMo', sans-serif;
+  background-color: black;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+canvas {
+  background-color: transparent;
+}
+#titleImg {
+  margin-bottom: 10px;
+}
+#intro {
+  position: relative;
+  width: 920px;
+  height: 600px;
+
+  background-image: url('../../assets/images/space-img/background.png');
+  background-size: 920px 600px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: transparent;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+#homeIcon {
+  position: absolute;
+  top: 30px;
+  left: 40px;
+  cursor: pointer;
+}
+#trophyIcon {
+  position: absolute;
+  top: 30px;
+  right: 40px;
+  cursor: pointer;
+}
+#startBtn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: #fff;
+  font-size: 4.2rem;
+  cursor: pointer;
+}
+#startBtn:hover {
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+}
+.modal {
+  position: fixed;
+  inset: 0;
+  width: 70%;
+  height: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3;
+}
+.modal.hidden {
+  display: none;
+}
+.modal_content {
+  position: relative;
+  z-index: 1;
+  background: rgba(17, 17, 17, 0.8);
+  color: #fca713;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 8px;
+  width: 100%;
+  height: 100%;
+  padding: 0 10%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  border: 2px solid #fca713;
+  box-sizing: border-box;
+}
+.modal_content ul {
+  list-style: none;
+  margin: 0;
+  width: 100%;
+  padding: 0 10%;
+}
+.modal_content ul li {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-top: 0.5rem;
+  font-size: 3rem;
+  width: 100%;
+}
+.modal_content ul li > div:first-child {
+  display: flex;
+  align-items: center;
+}
+.modal_content h2 {
+  font-size: 6rem;
+}
+.modal_content h3 {
+  font-size: 2.5rem;
+}
+.alien-icon {
+  width: 3rem;
+  height: 2.5rem;
+  margin-right: 0.5rem;
+}
+.btn-group {
+  display: flex;
+  width: 95%;
+  gap: 1rem;
+}
+
+#nameModal,
+#gameOverModal,
+#scoreModal {
+  width: 920px;
+  height: 600px;
+}
+.modal_main {
+  width: 70%;
+  height: 80%;
+}
+.gameover-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.gameover-content > h3 {
+  font-size: 3.5rem;
+}
+.gameover-content > h2 {
+  font-size: 5rem;
+}
+.game_content > h1 {
+  color: red;
+  font-size: 7rem;
+}
+
+#saveBtn,
+#cancelBtn {
+  flex: 1;
+  width: auto;
+  padding: 0;
+  font-size: 3rem;
+  font-weight: bold;
+  background: none;
+  border: 2px solid #fca713;
+  color: #fca713;
+  border-radius: 10px;
+  cursor: pointer;
+}
+#restartBtn,
+#openSave {
+  flex: 1;
+  width: auto;
+  padding: 0;
+  font-size: 2.5rem;
+  font-weight: bold;
+  background: none;
+  border: 2px solid #fca713;
+  color: #fca713;
+  border-radius: 10px;
+  cursor: pointer;
+}
+#saveBtn:hover,
+#cancelBtn:hover,
+#restartBtn:hover,
+#openSave:hover {
+  background: #fca713;
+  color: #111;
+}
+/*  */
+#nicknameInput {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 2rem;
+  color: #111;
+  background: #fff;
+  border: 2px solid #fca713;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-bottom: 2.5rem;
+  text-align: center;
+}
+
+.toast-container {
+  position: fixed;
+  top: 65%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.toast {
+  min-width: 300px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  font-size: 1.2rem;
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}

@@ -1,0 +1,507 @@
+html,
+body {
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  background-color: #000; /* 임시 배경 */
+}
+
+/*
+  공통 화면 배치 (Toast 제외)
+*/
+.screen-base {
+  position: fixed;
+  width: 920px;
+  height: 600px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+}
+
+/* 
+  인트로, 인게임 공통 배경
+*/
+.background-layer {
+  position: fixed;
+  width: 920px;
+  height: 600px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: opacity 6s ease-in-out;
+  z-index: -1;
+}
+
+.background-layer.visible {
+  opacity: 1;
+}
+.background-layer.hidden {
+  opacity: 0;
+}
+
+/*
+  배경 요소 - cloud
+*/
+.cloud {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 4s ease-in-out;
+  object-fit: contain;
+}
+.cloud1 {
+  top: 10%;
+  left: 10%;
+  width: 170px;
+}
+.cloud2 {
+  top: 15%;
+  left: 50%;
+  width: 230px;
+}
+.cloud3 {
+  top: 5%;
+  left: 75%;
+  width: 160px;
+}
+
+/*
+   배경 요소 - star
+*/
+.star-container {
+  position: fixed;
+  width: 920px;
+  height: 600px;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  pointer-events: none;
+  display: none;
+  opacity: 0;
+  transition: opacity 4s ease-in-out;
+}
+
+.star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background-color: white;
+  border-radius: 50%;
+  opacity: 0;
+  animation: twinkle 5s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.3);
+  }
+}
+
+/*
+  Intro 화면 구성
+*/
+.intro-container {
+  width: 920px;
+  height: 600px;
+  margin: auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.intro-header {
+  position: relative;
+  width: 100%;
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-inline: 32px;
+  margin-top: 38px;
+}
+
+.intro-button {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.intro-title-wrapper {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.intro-character {
+  position: absolute;
+  z-index: 1;
+  bottom: 15%;
+  left: 50%;
+  width: 250;
+  height: 220px;
+  transform: translateX(-50%);
+}
+
+.intro-grass {
+  position: absolute;
+  bottom: 0;
+  width: 920px;
+  height: 160px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/*
+  START GAME Text
+*/
+.start-text {
+  position: absolute;
+  bottom: 2%;
+  z-index: 1;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 70px;
+  white-space: nowrap;
+  color: #fff;
+  animation: blink 1.2s infinite;
+  cursor: pointer;
+  letter-spacing: 2px;
+  text-shadow:
+    1px 1px 0 #000,
+    2px 2px 0 #000,
+    3px 3px 0 #000,
+    1px 2px 2px #000,
+    2px 3px 4px #000;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+/*
+  Best Score 팝업
+*/
+.best-score-popup {
+  position: absolute;
+  top: 39%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 450px;
+  height: 400px;
+  z-index: 10;
+}
+
+.best-score-popup.hidden {
+  display: none;
+}
+
+.best-score-popup img {
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.best-score-entries {
+  position: absolute;
+  top: 130px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  list-style: none;
+}
+
+.best-score-entries li {
+  background-color: #001c48;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-weight: bold;
+  color: #fff;
+  box-shadow: 0 2px 0 #000;
+  border-radius: 16px;
+  gap: 16px;
+  width: 100%;
+}
+
+.best-score-entries img {
+  width: 80px;
+  height: 36px;
+  object-fit: contain;
+}
+
+.score-name {
+  min-width: 120px;
+  text-align: left;
+  font-size: 28px;
+}
+
+.score-value {
+  width: 60px;
+  text-align: right;
+  font-size: 28px;
+  color: #ffd600;
+}
+
+/*
+  인게임 캐릭터 및 UI
+*/
+.character {
+  position: absolute;
+  width: 90px;
+  height: 110px;
+  bottom: 15%;
+  z-index: 2;
+}
+
+.score-ui {
+  position: absolute;
+  top: 20px;
+  left: 25px;
+  font-size: 48px;
+  color: #fff;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px #000;
+  z-index: 3;
+}
+
+.game-container {
+  position: relative;
+  width: 920px;
+  height: 600px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+/* 
+  캐릭터 진화 예고 말풍선 UI
+*/
+.speech-bubble {
+  position: absolute;
+  padding: 12px 20px;
+  background-color: rgba(255, 250, 230, 0.75); /* 🏆 베스트: 따뜻한 중립 아이보리 */
+  border: 2px solid rgba(0, 0, 0, 0.3);
+  color: #222;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  z-index: 10;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.speech-bubble.show {
+  opacity: 1;
+}
+
+.bubble-tail {
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 12px solid rgba(255, 255, 210, 0.7);
+}
+
+/*
+  방해물 요소
+*/
+.obstacle {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background-size: cover;
+  z-index: 2;
+}
+
+/*
+  Game Over 팝업
+*/
+.game-over-popup {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 460px;
+  padding: 32px;
+  transform: translate(-50%, -50%);
+  background-color: #0d192c;
+  color: white;
+  border: 3px solid #ff7043;
+  border-radius: 8px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 28px;
+  z-index: 1000;
+}
+
+.popup-head {
+  display: flex;
+  flex-direction: column;
+}
+.game-over-title {
+  font-size: 70px;
+  letter-spacing: 2px;
+}
+.final-score {
+  font-size: 35px;
+  color: #ffd600;
+  letter-spacing: 1px;
+}
+
+/*
+  Save Score 팝업
+*/
+.popup-overlay {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 920px;
+  height: 600px;
+  background-color: rgba(0, 0, 0, 0.6);
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+}
+.popup-overlay.show {
+  display: flex;
+}
+
+.save-score-popup {
+  width: 460px;
+  padding: 32px;
+  background-color: #0f2b57;
+  color: white;
+  border: 3px solid #64b5f6;
+  border-radius: 8px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 20px;
+  z-index: 1200;
+}
+
+.save-score-title {
+  font-size: 70px;
+  letter-spacing: 2px;
+}
+.input-label {
+  font-size: 24px;
+  letter-spacing: 2px;
+  color: #bbdefb;
+}
+.name-input {
+  font-size: 20px;
+  padding: 12px 20px;
+  text-align: center;
+  width: 340px;
+  background-color: #fff;
+  color: #000;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  box-shadow: 2px 2px 0 #333;
+  border: none;
+  border-radius: 4px;
+}
+.name-input::placeholder {
+  color: #999;
+  font-size: 13px;
+  font-style: italic;
+}
+
+/*
+  공통 팝업 버튼
+*/
+.popup-buttons {
+  display: flex;
+  gap: 20px;
+}
+.popup-button {
+  padding: 12px 24px;
+  font-size: 20px;
+  min-width: 160px;
+  border: none;
+  border-radius: 4px;
+  box-shadow: 2px 2px 0 #333;
+  cursor: pointer;
+  font-weight: bold;
+}
+/* GAME OVER 버튼 */
+.gameover-buttons button {
+  color: #0d192c;
+  background-color: #ffd600;
+}
+.gameover-buttons button:hover {
+  background-color: #fec312;
+  color: white;
+}
+/* SAVE SCORE 버튼 */
+.save-buttons button {
+  color: #0f2b57;
+  background-color: white;
+}
+.save-buttons button:hover {
+  background-color: #64b5f6;
+  color: white;
+}
+
+/*
+  Toast 메시지
+*/
+.toast {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  text-shadow:
+    1px 1px 0 #000,
+    2px 2px 0 #000;
+  padding: 12px 28px;
+  border-radius: 6px;
+  font-size: 24px;
+  opacity: 0;
+  z-index: 1000;
+  transition: opacity 0.3s ease;
+  text-align: center;
+  max-width: 70%;
+  white-space: nowrap;
+}
+.toast.show {
+  opacity: 1;
+}
+
+/*
+  공통 숨김 처리
+*/
+.hidden {
+  display: none;
+}
