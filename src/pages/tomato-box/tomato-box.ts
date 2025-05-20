@@ -520,7 +520,7 @@ function animateTomatoes() {
 function playBgm(soundPath: string) {
   bgm = new Audio(soundPath);
   bgm.loop = true;
-  bgm.volume = 0.3;
+  bgm.volume = 0.1;
 
   bgm.play().catch(err => {
     console.warn('배경음 재생 실패:', err);
@@ -530,7 +530,7 @@ function playBgm(soundPath: string) {
 // 토마토 떨어질 때 효과음
 function playEffect(soundPath: string) {
   const effect = new Audio(soundPath);
-  effect.volume = 0.3;
+  effect.volume = 0.1;
 
   effect.play().catch(err => {
     console.warn('효과음 재생 실패:', err);
@@ -540,7 +540,7 @@ function playEffect(soundPath: string) {
 // 게임오버 효과음
 function playGameover(soundPath: string) {
   const gameover = new Audio(soundPath);
-  gameover.volume = 0.3;
+  gameover.volume = 0.1;
 
   gameover.play().catch(err => {
     console.warn('효과음 재생 실패:', err);
@@ -550,7 +550,7 @@ function playGameover(soundPath: string) {
 // 홈, 트로피 클릭 효과음
 function playIcon(soundPath: string) {
   const pointer = new Audio(soundPath);
-  pointer.volume = 1;
+  pointer.volume = 0.7;
 
   pointer.play().catch(err => {
     console.warn('효과음 재생 실패', err);
