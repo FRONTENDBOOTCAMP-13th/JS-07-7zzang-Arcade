@@ -288,6 +288,43 @@ body {
   overflow: hidden;
 }
 
+/* 
+  캐릭터 진화 예고 말풍선 UI
+*/
+.speech-bubble {
+  position: absolute;
+  padding: 12px 20px;
+  background-color: rgba(255, 250, 230, 0.75); /* 🏆 베스트: 따뜻한 중립 아이보리 */
+  border: 2px solid rgba(0, 0, 0, 0.3);
+  color: #222;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  z-index: 10;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.speech-bubble.show {
+  opacity: 1;
+}
+
+.bubble-tail {
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 12px solid rgba(255, 255, 210, 0.7);
+}
+
 /*
   방해물 요소
 */
@@ -439,18 +476,24 @@ body {
   Toast 메시지
 */
 .toast {
-  position: fixed;
-  bottom: 40px;
+  position: absolute;
+  bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: #333;
+  background-color: rgba(0, 0, 0, 0.8);
   color: #fff;
-  padding: 10px 24px;
+  text-shadow:
+    1px 1px 0 #000,
+    2px 2px 0 #000;
+  padding: 12px 28px;
   border-radius: 6px;
-  font-size: 16px;
+  font-size: 24px;
   opacity: 0;
   z-index: 1000;
   transition: opacity 0.3s ease;
+  text-align: center;
+  max-width: 70%;
+  white-space: nowrap;
 }
 .toast.show {
   opacity: 1;
