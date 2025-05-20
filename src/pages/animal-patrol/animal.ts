@@ -200,7 +200,7 @@ const scoreUI = getElById('score', HTMLElement);
 // 인게임 BGM
 const gameBgm = new Audio('/sounds/animal-bgm.mp3');
 gameBgm.loop = true;
-gameBgm.volume = 0.3;
+gameBgm.volume = 0.1;
 
 // 게임 오버 효과음
 const gameOverSfx = new Audio('/sounds/animal-gameover.wav');

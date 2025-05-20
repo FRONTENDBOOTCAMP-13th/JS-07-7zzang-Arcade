@@ -214,7 +214,7 @@ class MoleGame {
   private playBgm(path: string): void {
     this.bgm = new Audio(path);
     this.bgm.loop = true;
-    this.bgm.volume = 0.3;
+    this.bgm.volume = 0.1;
     this.bgm.play().catch(err => {
       console.warn('🎵 BGM 재생 실패:', err);
     });
@@ -229,7 +229,7 @@ class MoleGame {
 
   private playEffect(path: string): void {
     const effect = new Audio(path);
-    effect.volume = 0.3;
+    effect.volume = 0.1;
     effect.play().catch(err => {
       console.warn('🔇 효과음 재생 실패:', err);
     });
