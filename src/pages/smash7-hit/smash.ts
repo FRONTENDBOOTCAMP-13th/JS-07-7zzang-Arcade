@@ -62,12 +62,6 @@ class MoleGame {
       this.gotoIntro();
     });
 
-    // ✅ 저장 팝업에서 점수 저장 버튼 클릭
-    document.getElementById('saveButton')?.addEventListener('click', () => this.saveScore());
-
-    // ⛔ 저장 팝업에서 게임 나가기 → 인트로 화면
-    document.getElementById('exitGame')?.addEventListener('click', () => this.gotoIntro());
-
     // 💾 게임 오버 → 닉네임 저장 팝업으로 전환
     document.getElementById('save-btn')?.addEventListener('click', () => {
       this.hide('gameOverPopup');
@@ -86,14 +80,13 @@ class MoleGame {
     // ✅ 저장 팝업에서 점수 저장 버튼 클릭
     document.getElementById('saveButton')?.addEventListener('click', () => {
       this.saveScore();
-      document.getElementById('savePopup')?.classList.add('hidden');
-      document.getElementById('bat')!.style.display = ''; // 뿅망치 다시 보이기
+      // document.getElementById('savePopup')?.classList.add('hidden');
     });
 
     // ⛔ 저장 팝업에서 게임 나가기 → 인트로 화면
     document.getElementById('exitGame')?.addEventListener('click', () => {
       this.gotoIntro();
-      document.getElementById('bat')!.style.display = ''; // 뿅망치 다시 보이기
+      window.parent.postMessage({ type: 'PLAY_MAIN_BGM' }, '*');
     });
 
     // 🎯 닉네임 입력 시: 한글 + 영어만 허용하고 3글자까지 제한
@@ -161,6 +154,7 @@ class MoleGame {
 
   // ▶️ 게임 시작 로직
   private startGame(): void {
+    window.parent.postMessage({ type: 'STOP_BGM' }, '*');
     this.playBgm('/sounds/smash-bgm.mp3');
     this.score = 0;
     this.timeLeft = 30;
@@ -187,6 +181,11 @@ class MoleGame {
     if (!this.gameActive) return;
     this.timeLeft--;
     this.updateTimer();
+    if (this.timeLeft === 10) {
+      clearInterval(this.gameLoop); // 기존 루프 제거
+      this.gameLoop = setInterval(() => this.spawnMole(), 700); // 더 빠르게
+    }
+
     if (this.timeLeft <= 0) {
       this.gameActive = false;
       clearInterval(this.gameLoop);
@@ -215,7 +214,7 @@ class MoleGame {
   private playBgm(path: string): void {
     this.bgm = new Audio(path);
     this.bgm.loop = true;
-    this.bgm.volume = 0.5;
+    this.bgm.volume = 0.3;
     this.bgm.play().catch(err => {
       console.warn('🎵 BGM 재생 실패:', err);
     });
@@ -230,7 +229,7 @@ class MoleGame {
 
   private playEffect(path: string): void {
     const effect = new Audio(path);
-    effect.volume = 0.5;
+    effect.volume = 0.3;
     effect.play().catch(err => {
       console.warn('🔇 효과음 재생 실패:', err);
     });
@@ -289,7 +288,11 @@ class MoleGame {
   // 💾 닉네임 입력 후 점수 저장 → localStorage 저장 (5명까지)
   private saveScore(): void {
     const name = (document.getElementById('playerName') as HTMLInputElement).value.trim().slice(0, 3);
-    if (!name) return;
+    if (!/^([가-힣]{3}|[A-Z]{3})$/.test(name)) {
+      alert('닉네임을 다시 입력 해주세요!');
+      return;
+    }
+    document.getElementById('savePopup')?.classList.add('hidden');
     const scores = JSON.parse(localStorage.getItem('moleScores') || '[]');
     scores.push({ name, score: this.score });
     scores.sort((a: any, b: any) => b.score - a.score || a.name.localeCompare(b.name, 'ko'));
@@ -347,6 +350,7 @@ class MoleGame {
     this.hide('scorePopup');
     this.hide('gameScreen'); // ✅ start 화면과 play 화면이 같이 붙어서 나오는 현상 방지
     this.show('introScreen');
+    window.parent.postMessage({ type: 'PLAY_MAIN_BGM' }, '*');
   }
 }
 
@@ -360,9 +364,11 @@ function showToast(message: string) {
   if (!toast) return;
 
   toast.textContent = message;
-  toast.classList.add('show');
+  toast.classList.remove('hidden'); // 숨김 해제
+  toast.classList.add('show'); // 표시
 
   setTimeout(() => {
     toast.classList.remove('show');
-  }, 2000); // 2초 후 사라짐
+    toast.classList.add('hidden'); // 다시 숨김 처리
+  }, 2000);
 }

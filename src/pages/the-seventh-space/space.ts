@@ -89,7 +89,7 @@ const gameOverSound = new Audio('/sounds/space-gameover.mp3');
 const attackSound = new Audio('/sounds/space-attack.mp3');
 bgm.loop = true;
 bossBgm.loop = true;
-bgm.volume = bossBgm.volume = gameOverSound.volume = attackSound.volume = 0.1;
+bgm.volume = bossBgm.volume = gameOverSound.volume = attackSound.volume = 0.3;
 
 // ──── 닉네임 패턴 && 스토리지 ────────────────────────────
 const nickPattern = /^([가-힣]{3}|[A-Z]{3})$/;
