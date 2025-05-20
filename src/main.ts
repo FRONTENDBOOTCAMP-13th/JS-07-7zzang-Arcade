@@ -67,6 +67,15 @@ window.addEventListener('resize', updateMainImgScale);
 
 coin.addEventListener('click', () => {
   const el = document.querySelector<HTMLElement>('.main-img')!;
+  if (currentObj) {
+    // 이미 object(게임 iframe)가 떠 있으면
+    playCoinAnimation();
+    isZoomed = true;
+    el.style.transform = 'translate(-50%, -50%) scale(1)';
+    el.style.transition = 'transform 0.8s ease-in-out';
+    return;
+  }
+
   // translate만 남기고, scale을 1로 리셋
   isZoomed = true;
   sel.style.display = 'grid';
