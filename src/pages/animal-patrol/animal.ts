@@ -1,5 +1,28 @@
 import '../../style.css';
 import './animal.css';
+import bananaImg from '../../assets/images/animal-img/banana.png';
+import canImg from '../../assets/images/animal-img/can.png';
+import fireImg from '../../assets/images/animal-img/fire.png';
+import boom1Img from '../../assets/images/animal-img/boom1.png';
+import boom2Img from '../../assets/images/animal-img/boom2.png';
+import acornsImg from '../../assets/images/animal-img/acorns.png';
+import scoreChick1 from '../../assets/images/animal-img/score-chick1.png';
+import scoreChick2 from '../../assets/images/animal-img/score-chick2.png';
+import scoreChick3 from '../../assets/images/animal-img/score-chick3.png';
+import scoreChick4 from '../../assets/images/animal-img/score-chick4.png';
+import scoreChick5 from '../../assets/images/animal-img/score-chick5.png';
+import chickIdleFront from '../../assets/images/animal-img/chick-idle-front.png';
+import chickFallen from '../../assets/images/animal-img/chick-fallen.png';
+import idleLeft from '../../assets/images/animal-img/chick-idle-left.png';
+import idleRight from '../../assets/images/animal-img/chick-idle-right.png';
+import evo1Left from '../../assets/images/animal-img/chick-evo1-left.png';
+import evo1Right from '../../assets/images/animal-img/chick-evo1-right.png';
+import evo2Left from '../../assets/images/animal-img/chick-evo2-left.png';
+import evo2Right from '../../assets/images/animal-img/chick-evo2-right.png';
+import evo3Left from '../../assets/images/animal-img/chick-evo3-left.png';
+import evo3Right from '../../assets/images/animal-img/chick-evo3-right.png';
+import evo4Left from '../../assets/images/animal-img/chick-evo4-left.png';
+import evo4Right from '../../assets/images/animal-img/chick-evo4-right.png';
 
 const localKey = 'animal-bestScores';
 
@@ -130,7 +153,7 @@ function showBestScores() {
   bestScoreList.innerHTML = '';
 
   const latestScores: ScoreEntry[] = JSON.parse(localStorage.getItem(localKey) || '[]');
-  const characterImages = ['/src/assets/images/animal-img/score-chick1.png', '/src/assets/images/animal-img/score-chick2.png', '/src/assets/images/animal-img/score-chick3.png', '/src/assets/images/animal-img/score-chick4.png', '/src/assets/images/animal-img/score-chick5.png'];
+  const characterImages = [scoreChick1, scoreChick2, scoreChick3, scoreChick4, scoreChick5];
 
   latestScores.slice(0, 5).forEach((entry, index) => {
     const li = document.createElement('li');
@@ -182,7 +205,7 @@ startButton.addEventListener('click', () => {
   score = 0;
   characterX = (920 - 90) / 2;
 
-  character.src = '/src/assets/images/animal-img/chick-idle-front.png';
+  character.src = chickIdleFront;
   character.style.left = `${characterX}px`;
   character.style.width = '90px';
   character.style.height = '110px';
@@ -306,12 +329,30 @@ function updateCharacterImage(): void {
   const width = Math.round(baseWidth * scale);
   const height = Math.round(baseHeight * scale);
 
-  let src = '';
-  if (stage === 0) {
-    src = `/src/assets/images/animal-img/chick-idle-${characterDirection}.png`;
-  } else {
-    src = `/src/assets/images/animal-img/chick-evo${stage}-${characterDirection}.png`;
-  }
+  const characterImagesMap = {
+    idle: {
+      left: idleLeft,
+      right: idleRight,
+    },
+    evo1: {
+      left: evo1Left,
+      right: evo1Right,
+    },
+    evo2: {
+      left: evo2Left,
+      right: evo2Right,
+    },
+    evo3: {
+      left: evo3Left,
+      right: evo3Right,
+    },
+    evo4: {
+      left: evo4Left,
+      right: evo4Right,
+    },
+  };
+
+  const src = evolutionStage === 0 ? characterImagesMap.idle[characterDirection] : characterImagesMap[`evo${evolutionStage}`][characterDirection];
 
   character.src = src;
   character.style.width = `${width}px`;
@@ -341,7 +382,7 @@ document.addEventListener('keydown', (e: KeyboardEvent) => {
   character.style.left = `${characterX}px`;
 });
 
-const obstacleImages = ['/src/assets/images/animal-img/banana.png', '/src/assets/images/animal-img/can.png', '/src/assets/images/animal-img/fire.png', '/src/assets/images/animal-img/boom1.png', '/src/assets/images/animal-img/boom2.png', '/src/assets/images/animal-img/acorns.png'];
+const obstacleImages = [bananaImg, canImg, fireImg, boom1Img, boom2Img, acornsImg];
 
 let lastCellIndex = -1; // 연속된 위치 중복 방지용
 
@@ -476,7 +517,7 @@ function endGame(): void {
   gameOverSfx.currentTime = 0;
   gameOverSfx.play();
 
-  character.src = '/src/assets/images/animal-img/chick-fallen.png';
+  character.src = chickFallen;
   character.style.width = '120px';
   character.style.height = '80px';
 }
@@ -584,7 +625,7 @@ function resetGame(): void {
   overlay.classList.remove('show');
 
   // 캐릭터 상태 초기화 (정면 대기 상태 이미지로 복원)
-  character.src = '/src/assets/images/animal-img/chick-idle-front.png';
+  character.src = chickIdleFront;
   character.style.left = `${characterX}px`;
   character.style.width = '90px';
   character.style.height = '110px';
@@ -592,7 +633,7 @@ function resetGame(): void {
   // 방향, 진화 단계 초기화
   characterDirection = 'right';
   evolutionStage = 0;
-  character.src = '/src/assets/images/animal-img/chick-idle-front.png';
+  character.src = chickIdleFront;
 
   // 점수 UI 초기화
   scoreUI.textContent = 'Score: 0';
