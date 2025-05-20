@@ -42,10 +42,10 @@ body,
   perspective: 750px;
   background-color: #000;
   background-image: url('/images/main.png');
+  transform: translate(-50%, -50%) scale(1);
   background-size: 5200px 2600px;
   background-position: center center;
   background-repeat: no-repeat;
-  transition: transform 0.8s ease-in-out;
 }
 
 .game-screen {
@@ -62,18 +62,7 @@ body,
   display: block;
   border: none;
 }
-.index-screen {
-  position: absolute;
-  top: 932px;
-  left: 3465px;
-  width: 850px;
-  height: 632px;
-  /* background-image: url('/images/bg6.png');
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-size: cover; */
-  clip-path: polygon(0% 0%, 91.5% 0%, 100% 100%, 4% 100%);
-}
+
 .coin-slot {
   position: relative;
   top: 2050px;
@@ -92,9 +81,9 @@ body,
   place-items: center;
   padding: 20px;
   box-sizing: border-box;
-  /* background-image: url('/images/bg4.png');
+  background-image: url('/images/maingame-bg.png');
   background-repeat: no-repeat;
-  background-size: cover; */
+  background-size: cover;
 }
 .game-selection.hidden {
   display: none;
@@ -138,6 +127,57 @@ body,
   transition: transform 0.2s ease;
 }
 
+.index-screen {
+  position: absolute;
+  top: 932px;
+  left: 3475px;
+  width: 825px;
+  height: 632px;
+  transform: skewX(4.4deg);
+  background-color: #000;
+  clip-path: polygon(2% 0%, 97% 0%, 100% 100%, 0% 100%);
+}
+
+.index-selection {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: 1fr;
+  gap: 20px;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+  background-image: url('/images/index-bg.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.index-selection > div {
+  width: 70%;
+  height: 70%;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.index-selection > div:hover {
+  transform: scale(1.05);
+  transition: transform 0.2s ease;
+}
+
+.index-selection .wiki {
+  background-image: url('/images/icon-wiki.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+.index-selection .readme {
+  background-image: url('/images/icon-readme.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
 .coin-slot:hover {
   cursor:
     url('/images/coin-front.png') 16 16,
@@ -155,6 +195,63 @@ body,
   pointer-events: none;
 }
 
+.set-audio {
+  position: absolute;
+  top: 160px;
+  left: 3520px;
+  width: 600px;
+  height: 600px;
+}
+
+.audio-icon {
+  width: 90%;
+  height: 102%;
+  background-image: url('/images/audio-in.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+.audio-icon.off {
+  background-image: url('/images/audio-out.png');
+  background-position: -360% center;
+  width: 105%;
+  height: 103%;
+}
+.break-screen {
+  position: absolute;
+  top: 930px;
+  left: 940px;
+  width: 795px;
+  height: 690px;
+  border-radius: 30px;
+  background-color: #000;
+  clip-path: polygon(10% 0%, 100% 0%, 95% 100%, 0% 100%);
+}
+
+.break-img {
+  position: absolute;
+  top: 740px;
+  left: 970px;
+  width: 750px;
+  height: 1000px;
+  clip-path: polygon(10% 0%, 100% 0%, 95% 100%, 0% 100%);
+  background-image: url('/images/break.png');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.game-poster {
+  position: absolute;
+  top: 700px;
+  left: 4610px;
+  width: 400px;
+  height: 1100px;
+  background-image: url('/images/game-poster.png');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
 @keyframes insertCoin {
   0% {
     transform: translate(-50%, 0%) translateZ(0) scale(1);
