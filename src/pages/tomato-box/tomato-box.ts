@@ -3,9 +3,6 @@ import './tomato-box.css';
 import tomatoImg from '../../assets/images/tomato-img/tomato-empty.png';
 import tomatoSelectedSrc from '../../assets/images/tomato-img/select-tomato.png';
 
-// 실행
-document.addEventListener('DOMContentLoaded', main);
-
 // 전역 변수
 const trophyBtn = document.querySelector('.trophy');
 const bestScore = document.querySelector('.bestscore') as HTMLElement;
@@ -64,12 +61,29 @@ const localKey = 'tomatobox_Score';
 
 let bgm: HTMLAudioElement;
 
+document.addEventListener('DOMContentLoaded', () => {
+  tomatoIntro();
+});
+
 // 메인, 게임 실행 함수
 function main() {
-  canvas = document.querySelector('canvas') as HTMLCanvasElement;
-  ctx = canvas.getContext('2d')!;
+  const canvasEl = document.querySelector('canvas');
 
-  tomatoIntro();
+  if (!canvasEl) {
+    console.error('Canvas not found');
+    return;
+  }
+
+  canvas = canvasEl as HTMLCanvasElement;
+
+  const maybeCtx = canvas.getContext('2d');
+  if (!maybeCtx) {
+    console.error('getContext failed');
+    return;
+  }
+
+  ctx = maybeCtx;
+
   playGrid();
   events();
   animateTomatoes();
@@ -92,6 +106,10 @@ function tomatoIntro() {
     intro?.classList.remove('show');
     play?.classList.remove('hide');
     play?.classList.add('show');
+
+    setTimeout(() => {
+      main();
+    }, 50);
 
     playBgm('/sounds/tomato-bgm.wav');
     playIcon('/sounds/pointer.wav');
@@ -144,7 +162,15 @@ function setNumStyle() {
 
 // 토마토, 숫자 그리기
 function playGrid() {
-  Promise.all([document.fonts.ready, new Promise(resolve => (tomatoImage.onload = resolve))]).then(() => {
+  const tomatoReady = new Promise<void>(resolve => {
+    if (tomatoImage.complete) {
+      resolve();
+    } else {
+      tomatoImage.onload = () => resolve();
+    }
+  });
+
+  Promise.all([document.fonts.ready, tomatoReady]).then(() => {
     setNumStyle();
 
     for (let row = 0; row < rows; row++) {
@@ -361,6 +387,7 @@ function events() {
     if (!isVisible) {
       saveScore.classList.remove('hide');
       saveScore.classList.add('show');
+      nicknameInput.focus();
     } else {
       saveScore.classList.remove('show');
       saveScore.classList.add('hide');
@@ -401,13 +428,15 @@ function events() {
       return;
     }
     playIcon('/sounds/pointer.wav');
+
     const name = nicknameInput.value.trim().toUpperCase();
     const score = scoreNum;
 
     const newEntry: ScoreArray = { name, score };
     const stored = localStorage.getItem(localKey);
-    const scoreList: ScoreArray[] = stored ? JSON.parse(stored) : [];
+    let scoreList: ScoreArray[] = stored ? JSON.parse(stored) : [];
 
+    scoreList = scoreList.filter(entry => entry.name !== name);
     scoreList.unshift(newEntry);
     scoreList.sort((a, b) => b.score - a.score);
     localStorage.setItem(localKey, JSON.stringify(scoreList));
