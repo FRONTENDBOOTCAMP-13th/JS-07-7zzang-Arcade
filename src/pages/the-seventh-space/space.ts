@@ -14,6 +14,74 @@ import enemy2ImgSrc from '../../assets/images/space-img/enemy2.png';
 import enemy3ImgSrc from '../../assets/images/space-img/enemy3.png';
 import alienIconSrc from '../../assets/images/space-img/alien-icon.png';
 
+// ─── 타입 가드 헬퍼 ────────────────────────────────────────
+function assertInstance<T>(el: any, constructor: { new (...args: any[]): T }, name: string): asserts el is T {
+  if (!(el instanceof constructor)) {
+    throw new Error(`${name} 엘리먼트를 찾을 수 없거나 올바른 타입이 아닙니다.`);
+  }
+}
+
+// ─── HTML 요소 가져오기 ───────────────────────────────────
+const introElRaw = document.getElementById('intro');
+assertInstance(introElRaw, HTMLDivElement, 'intro');
+const introEl = introElRaw;
+
+const startBtnRaw = document.getElementById('startBtn');
+assertInstance(startBtnRaw, HTMLButtonElement, 'startBtn');
+const startBtn = startBtnRaw;
+
+const canvasElRaw = document.getElementById('gameCanvas');
+assertInstance(canvasElRaw, HTMLCanvasElement, 'gameCanvas');
+const canvasEl = canvasElRaw;
+
+const scoreModalRaw = document.getElementById('scoreModal');
+assertInstance(scoreModalRaw, HTMLDivElement, 'scoreModal');
+const scoreModal = scoreModalRaw;
+
+const trophyIconRaw = document.getElementById('trophyIcon');
+assertInstance(trophyIconRaw, HTMLImageElement, 'trophyIcon');
+const trophyIcon = trophyIconRaw;
+
+const nameModalRaw = document.getElementById('nameModal');
+assertInstance(nameModalRaw, HTMLDivElement, 'nameModal');
+const nameModal = nameModalRaw;
+
+const cancelBtnRaw = document.getElementById('cancelBtn');
+assertInstance(cancelBtnRaw, HTMLButtonElement, 'cancelBtn');
+const cancleBtn = cancelBtnRaw;
+
+const saveBtnRaw = document.getElementById('saveBtn');
+assertInstance(saveBtnRaw, HTMLButtonElement, 'saveBtn');
+const saveBtn = saveBtnRaw;
+
+const gameOverModalRaw = document.getElementById('gameOverModal');
+assertInstance(gameOverModalRaw, HTMLDivElement, 'gameOverModal');
+const gameOverModal = gameOverModalRaw;
+
+const restartBtnRaw = document.getElementById('restartBtn');
+assertInstance(restartBtnRaw, HTMLButtonElement, 'restartBtn');
+const restartBtn = restartBtnRaw;
+
+const openSaveBtnRaw = document.getElementById('openSave');
+assertInstance(openSaveBtnRaw, HTMLButtonElement, 'openSave');
+const openSaveBtn = openSaveBtnRaw;
+
+const nicknameInputRaw = document.getElementById('nicknameInput');
+assertInstance(nicknameInputRaw, HTMLInputElement, 'nicknameInput');
+const nicknameInput = nicknameInputRaw;
+
+const gameScoreElRaw = document.getElementById('gameScore');
+assertInstance(gameScoreElRaw, HTMLHeadingElement, 'gameScore');
+const gameScoreEl = gameScoreElRaw;
+
+const gameResultElRaw = document.getElementById('gameResult');
+assertInstance(gameResultElRaw, HTMLHeadingElement, 'gameResult');
+const gameResultEl = gameResultElRaw;
+
+const scoreListElRaw = document.querySelector('#scoreModal ul');
+assertInstance(scoreListElRaw, HTMLUListElement, 'scoreModal ul');
+const scoreListEl = scoreListElRaw;
+
 // ─── 사운드 로드 ─────────────────────────
 const bgm = new Audio('/sounds/space-bgm.mp3');
 const bossBgm = new Audio('/sounds/space-boss.mp3');
@@ -23,22 +91,7 @@ bgm.loop = true;
 bossBgm.loop = true;
 bgm.volume = bossBgm.volume = gameOverSound.volume = attackSound.volume = 0.1;
 
-// HTML 요소 가져오기 ───────────
-const introEl = document.getElementById('intro') as HTMLDivElement;
-const startBtn = document.getElementById('startBtn') as HTMLButtonElement;
-const canvasEl = document.getElementById('gameCanvas') as HTMLCanvasElement;
-const scoreModal = document.getElementById('scoreModal') as HTMLDivElement;
-const trophyIcon = document.getElementById('trophyIcon') as HTMLImageElement;
-const nameModal = document.getElementById('nameModal') as HTMLDivElement;
-const cancleBtn = document.getElementById('cancelBtn') as HTMLDivElement;
-const saveBtn = document.getElementById('saveBtn') as HTMLDivElement;
-const gameOverModal = document.getElementById('gameOverModal') as HTMLDivElement;
-const restartBtn = document.getElementById('restartBtn') as HTMLDivElement;
-const openSaveBtn = document.getElementById('openSave') as HTMLDivElement;
-const nicknameInput = document.getElementById('nicknameInput') as HTMLInputElement;
-const gameScoreEl = document.getElementById('gameScore') as HTMLHeadingElement;
-const gameResultEl = document.getElementById('gameResult') as HTMLHeadingElement;
-const scoreListEl = document.querySelector<HTMLUListElement>('#scoreModal ul')!;
+// ──── 닉네임 패턴 && 스토리지 ────────────────────────────
 const nickPattern = /^([가-힣]{3}|[A-Z]{3})$/;
 const STORAGE_KEY = 'space-bestScores';
 
@@ -55,7 +108,8 @@ trophyIcon.addEventListener('click', () => {
 
 // ─── 게임 시작 버튼 클릭 시 ────────────
 startBtn.addEventListener('click', () => {
-  console.log('시작');
+  window.parent.postMessage({ type: 'STOP_BGM' }, '*');
+
   if (!assetsLoaded) return;
   introEl.style.display = 'none';
   canvasEl.style.display = 'block';
@@ -66,7 +120,6 @@ startBtn.addEventListener('click', () => {
 
 // ─── 취소 버튼 클릭 시 ──────────────────
 cancleBtn.addEventListener('click', () => {
-  console.log('취소');
   canvasEl.style.display = 'none';
   introEl.style.display = 'flex';
   nameModal.classList.add('hidden');
@@ -74,7 +127,7 @@ cancleBtn.addEventListener('click', () => {
 
 // ─── 다시하기 버튼 클릭 시 ──────────────────
 restartBtn.addEventListener('click', () => {
-  console.log('다시시작');
+  window.parent.postMessage({ type: 'PLAY_MAIN_BGM' }, '*');
   gameOverModal.classList.add('hidden');
   canvasEl.style.display = 'none';
   introEl.style.display = 'flex';
