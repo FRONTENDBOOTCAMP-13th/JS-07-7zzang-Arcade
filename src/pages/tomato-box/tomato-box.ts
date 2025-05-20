@@ -79,16 +79,27 @@ function tomatoIntro() {
   trophyBtn?.addEventListener('click', () => {
     bestFive();
     ScoreToggle(bestScore);
+    playIcon('/sounds/pointer.wav');
   });
 
   // 스타트 버튼 클릭
   startBtn?.addEventListener('click', () => {
+    window.parent.postMessage({ type: 'STOP_BGM' }, '*');
+
     intro?.classList.add('hide');
     intro?.classList.remove('show');
     play?.classList.remove('hide');
     play?.classList.add('show');
 
+    const bgm = (window as any).bgm as HTMLAudioElement | undefined;
+    if (bgm) {
+      bgm.pause();
+      bgm.currentTime = 0;
+    }
+
     playBgm('/sounds/tomato-bgm.wav');
+    playIcon('/sounds/pointer.wav');
+
     startTimer();
   });
 }
@@ -221,18 +232,10 @@ function gameOver() {
   document.querySelector('.overlay-bg')?.classList.add('show');
 
   const score = scoreNum;
-  const bestScoreEl = document.querySelector('.gameover-bestscore .best-score') as HTMLElement;
   const scoreInGameOver = document.querySelector('.gameover-score .gamescore') as HTMLElement;
   isGameOver = true;
 
   scoreInGameOver.textContent = score.toString();
-
-  // 최고점 따로 저장
-  const storedBest = parseInt(localStorage.getItem('tomatobox_bestScore') || '0', 10);
-  const newBest = Math.max(storedBest, score);
-  localStorage.setItem('tomatobox_bestScore', newBest.toString());
-
-  bestScoreEl.textContent = `BEST : ${newBest}`;
 
   // 게임 오버 음악
   if (bgm) {
@@ -358,6 +361,7 @@ function events() {
 
   // 점수 저장
   saveBtn?.addEventListener('click', () => {
+    playIcon('/sounds/pointer.wav');
     if (!isVisible) {
       saveScore.classList.remove('hide');
       saveScore.classList.add('show');
@@ -372,11 +376,20 @@ function events() {
   // 다시하기
   restart?.addEventListener('click', () => {
     localStorage.removeItem('tomatobox_lastScore');
-    location.href = '/src/pages/tomato-box/tomato-box.html';
+    playIcon('/sounds/pointer.wav');
+
+    setTimeout(() => {
+      window.parent.postMessage({ type: 'PLAY_MAIN_BGM' }, '*');
+    }, 200);
+
+    setTimeout(() => {
+      location.href = '/src/pages/tomato-box/tomato-box.html';
+    }, 200);
   });
 
   // 취소
   cancel?.addEventListener('click', () => {
+    playIcon('/sounds/pointer.wav');
     if (saveScore?.classList.contains('show')) {
       saveScore.classList.remove('show');
       saveScore.classList.add('hide');
@@ -386,11 +399,12 @@ function events() {
   // 닉네임 입력 받고 점수저장
   saveScoreBtn?.addEventListener('click', () => {
     if (!nicknameInput || !nicknameInput.value.trim()) {
+      playIcon('/sounds/pointer.wav');
       Toast('닉네임을 입력해주세요!');
 
       return;
     }
-
+    playIcon('/sounds/pointer.wav');
     const name = nicknameInput.value.trim().toUpperCase();
     const score = scoreNum;
 
@@ -496,5 +510,15 @@ function playGameover(soundPath: string) {
 
   gameover.play().catch(err => {
     console.warn('효과음 재생 실패:', err);
+  });
+}
+
+// 홈, 트로피 클릭 효과음
+function playIcon(soundPath: string) {
+  const pointer = new Audio(soundPath);
+  pointer.volume = 1;
+
+  pointer.play().catch(err => {
+    console.warn('효과음 재생 실패', err);
   });
 }
