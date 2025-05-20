@@ -120,6 +120,7 @@ startBtn.addEventListener('click', () => {
 
 // ─── 취소 버튼 클릭 시 ──────────────────
 cancleBtn.addEventListener('click', () => {
+  window.parent.postMessage({ type: 'PLAY_MAIN_BGM' }, '*');
   canvasEl.style.display = 'none';
   introEl.style.display = 'flex';
   nameModal.classList.add('hidden');
