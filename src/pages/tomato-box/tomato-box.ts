@@ -387,6 +387,7 @@ function events() {
     if (!isVisible) {
       saveScore.classList.remove('hide');
       saveScore.classList.add('show');
+      nicknameInput.focus();
     } else {
       saveScore.classList.remove('show');
       saveScore.classList.add('hide');
@@ -433,8 +434,9 @@ function events() {
 
     const newEntry: ScoreArray = { name, score };
     const stored = localStorage.getItem(localKey);
-    const scoreList: ScoreArray[] = stored ? JSON.parse(stored) : [];
+    let scoreList: ScoreArray[] = stored ? JSON.parse(stored) : [];
 
+    scoreList = scoreList.filter(entry => entry.name !== name);
     scoreList.unshift(newEntry);
     scoreList.sort((a, b) => b.score - a.score);
     localStorage.setItem(localKey, JSON.stringify(scoreList));
