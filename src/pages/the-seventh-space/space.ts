@@ -135,6 +135,10 @@ restartBtn.addEventListener('click', () => {
 
 // ─── 저장오픈버튼  클릭 시 ──────────────────
 openSaveBtn.addEventListener('click', () => {
+  nicknameInput.value = '';
+  //  포커스
+  nicknameInput.focus();
+
   nameModal.classList.remove('hidden');
   gameOverModal.classList.add('hidden');
 });
