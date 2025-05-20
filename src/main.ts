@@ -21,6 +21,28 @@ const gamePaths: Record<string, string> = {
 };
 let isZoomed = false;
 
+(window as any).bgm = bgm;
+
+// 메인-인트로 이후 개인 화면 진입 시 재생 멈춤
+window.addEventListener('message', event => {
+  const bgm = (window as any).bgm as HTMLAudioElement;
+
+  if (event.data?.type === 'STOP_BGM') {
+    if (bgm) {
+      bgm.pause();
+      bgm.currentTime = 0;
+    }
+  }
+
+  if (event.data?.type === 'PLAY_MAIN_BGM') {
+    if (bgm && bgm.paused) {
+      bgm.play().catch(() => {
+        console.warn('BGM 재생 실패');
+      });
+    }
+  }
+});
+
 function updateMainImgScale() {
   if (isZoomed) return;
   const el = document.querySelector<HTMLElement>('.main-img')!;
