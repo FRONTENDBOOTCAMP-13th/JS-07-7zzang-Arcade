@@ -5,8 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>제7 우주</title>
     <script type="module" src="./space.ts"></script>
+    <link rel="icon" href="../../../public/images/favicon.ico" />
   </head>
   <body>
+    <!-- 토스트 위치 지정용 컨테이너 -->
+    <div id="toast-container" class="toast-container"></div>
+    <!-- 토스트 위치 지정용 컨테이너 -->
+
     <div id="intro">
       <a href="/">
         <img id="homeIcon" src="../../assets/images/space-img/home.png" width="30" height="30" alt="Home" />
@@ -54,7 +59,7 @@
           <h2>SAVE SCORE</h2>
           <div>
             <h3>NICKNAME:</h3>
-            <input type="text" id="nicknameInput" placeholder="닉네임을 입력하세요" maxlength="3" />
+            <input type="text" id="nicknameInput" placeholder="닉네임을 입력하세요" maxlength="3" pattern="^([가-힣]{3}|[A-Za-z]{3})$" title="한글 3글자 또는 영어 3글자만 입력 가능합니다." />
           </div>
           <div class="btn-group">
             <button id="saveBtn">SAVE</button>

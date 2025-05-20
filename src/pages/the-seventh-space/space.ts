@@ -2,6 +2,15 @@ import '../../style.css';
 import './space.css';
 import * as SAT from 'sat';
 
+// ─── 사운드 로드 ─────────────────────────
+const bgm = new Audio('/sounds/space-bgm.mp3');
+const bossBgm = new Audio('/sounds/space-boss.mp3');
+const gameOverSound = new Audio('/sounds/space-gameover.mp3');
+const attackSound = new Audio('/sounds/space-attack.mp3');
+bgm.loop = true;
+bossBgm.loop = true;
+bgm.volume = bossBgm.volume = gameOverSound.volume = attackSound.volume = 0.1;
+
 // HTML 요소 가져오기 ───────────
 const introEl = document.getElementById('intro') as HTMLDivElement;
 const startBtn = document.getElementById('startBtn') as HTMLButtonElement;
@@ -18,6 +27,8 @@ const nicknameInput = document.getElementById('nicknameInput') as HTMLInputEleme
 const gameScoreEl = document.getElementById('gameScore') as HTMLHeadingElement;
 const gameResultEl = document.getElementById('gameResult') as HTMLHeadingElement;
 const scoreListEl = document.querySelector<HTMLUListElement>('#scoreModal ul')!;
+const nickPattern = /^([가-힣]{3}|[A-Z]{3})$/;
+const STORAGE_KEY = 'space-bestScores';
 
 // ─── overlay 클릭 시 닫기 ────────────
 scoreModal.addEventListener('click', () => {
@@ -36,6 +47,8 @@ startBtn.addEventListener('click', () => {
   if (!assetsLoaded) return;
   introEl.style.display = 'none';
   canvasEl.style.display = 'block';
+  bgm.currentTime = 0;
+  bgm.play().catch(() => {});
   init();
 });
 
@@ -63,46 +76,51 @@ openSaveBtn.addEventListener('click', () => {
 
 // ─── SAVE 클릭 시 ───────────────────────────
 saveBtn.addEventListener('click', () => {
-  const nick = nicknameInput.value.trim().toUpperCase();
-  if (!nick) {
-    alert('닉네임을 입력해주세요');
+  const nickRaw = nicknameInput.value.trim().toUpperCase();
+
+  // 빈 값 체크
+  if (!nickRaw) {
+    showToast('닉네임을 입력해주세요');
     nicknameInput.focus();
     return;
   }
-  const currentScore = Score.score;
-  localStorage.setItem(nick, currentScore.toString());
 
-  // 모달 닫기
+  // 패턴 검사
+  if (!nickPattern.test(nickRaw)) {
+    showToast('한글 3글자 또는 영어 3글자(영어는 대문자)만 입력 가능합니다.');
+    nicknameInput.focus();
+    return;
+  }
+
+  // 유효성 통과 시 저장
+  const currentScore = Score.score;
+  const data = localStorage.getItem(STORAGE_KEY);
+  const scores = data ? JSON.parse(data) : [];
+  scores.push({ name: nickRaw, score: currentScore });
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(scores));
+
+  // 모달 닫기 및 화면 전환
   nameModal.classList.add('hidden');
   canvasEl.style.display = 'none';
   introEl.style.display = 'flex';
 
-  // 저장 완료 메시지
-  alert(`${nick}님, ${currentScore}점이 저장되었습니다!`);
+  showToast(`${nickRaw}님, ${currentScore}점이 저장되었습니다!`);
 });
 
 // ─── 로컬스토리지 순위 불러오기 ──────────────────
 function getSortedScores(): [string, number][] {
-  const entries: [string, number][] = [];
+  const data = localStorage.getItem(STORAGE_KEY);
+  const scores: { name: string; score: number }[] = data ? JSON.parse(data) : [];
 
-  for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i)!;
-    const val = Number(localStorage.getItem(key));
-    if (!isNaN(val)) {
-      entries.push([key, val]);
-    }
-  }
-
-  // 점수 내림차순, 점수 같으면 닉네임 오름차순
-  entries.sort((a, b) => {
-    if (b[1] !== a[1]) return b[1] - a[1];
-    return a[0].localeCompare(b[0]);
+  // 2) 점수 내림차순, 점수 같으면 닉네임 오름차순
+  scores.sort((a, b) => {
+    if (b.score !== a.score) return b.score - a.score;
+    return a.name.localeCompare(b.name);
   });
 
-  // 상위 5개만
-  return entries.slice(0, 5);
+  // 3) [nick, score] 튜플로 변환 & 상위 5개만
+  return scores.slice(0, 5).map(item => [item.name, item.score] as [string, number]);
 }
-
 // <ul>에 렌더링
 function renderScoreList() {
   const top5 = getSortedScores();
@@ -122,6 +140,27 @@ function renderScoreList() {
     `,
     )
     .join('');
+}
+
+function showToast(message: string, duration = 2000) {
+  const container = document.getElementById('toast-container')!;
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = message;
+  container.appendChild(toast);
+
+  // 애니메이션 트리거
+  requestAnimationFrame(() => {
+    toast.classList.add('show');
+  });
+
+  // duration 후 페이드아웃 및 제거
+  setTimeout(() => {
+    toast.classList.remove('show');
+    toast.addEventListener('transitionend', () => {
+      toast.remove();
+    });
+  }, duration);
 }
 
 // ─── 캔버스 & 컨텍스트 ──────────────────────────────────────────
@@ -306,7 +345,10 @@ const Player: IPlayer = {
 
   // ── 총알 발사 함수 ────────────────
   shoot() {
-    if (!this.canShoot) return;
+    if (!this.canShoot || !this.isAlive) return;
+
+    attackSound.currentTime = 0;
+    attackSound.play().catch(() => {});
 
     const bx = this.x + this.width / 2 - 10;
     const by = this.y;
@@ -646,7 +688,7 @@ function handleCollisions() {
         spawnExplosion(bullet.x, bullet.y, explosionEnemy, 200, 20);
 
         // 한 대당 점수 +4
-        score += 1;
+        score += 3;
 
         // 총알 제거
         Player.bullets.splice(idx, 1);
@@ -767,6 +809,12 @@ function init() {
 // ─── 게임 루프 ──────────────────────────────────────────
 function gameLoop(ts: number) {
   if (lives <= 0) {
+    bgm.pause();
+    bossBgm.pause();
+    // game over 사운드
+    gameOverSound.currentTime = 0;
+    gameOverSound.play().catch(() => {});
+
     gameScoreEl.textContent = Score.score.toString();
     canvasEl.classList.add('hidden');
     gameOverModal.classList.remove('hidden');
@@ -820,10 +868,15 @@ function gameLoop(ts: number) {
   // ─── 적군 그리기
   EnemyManager.drawAll(ctx);
 
+  // ─── 적이 바닥에 닿았는지 체크
+  if (EnemyManager.enemies.some(e => e.y + e.height >= canvas.height)) {
+    lives = 0;
+  }
+
   // ─── 라운드 전환
   if (EnemyManager.enemies.length === 0 && !bossPhase) {
     if (!roundPoint) {
-      score += 15;
+      score += 23;
       roundPoint = true;
       Player.bullets = [];
       enemyBullets.length = 0;
@@ -837,6 +890,11 @@ function gameLoop(ts: number) {
     } else {
       bossPhase = true;
       boss.hitPoint = 30;
+
+      // BGM 전환
+      bgm.pause();
+      bossBgm.currentTime = 0;
+      bossBgm.play().catch(() => {});
     }
   }
 
@@ -845,12 +903,14 @@ function gameLoop(ts: number) {
     boss.updateBoss(delta);
     boss.draw(ctx);
 
-    // ─── 보스 격파
-    if (boss.hitPoint <= 0) {
-      score = 777;
+    if (boss.hitPoint == 1) {
+      score = 774;
       Score.score = score;
       Score.draw(ctx);
+    }
 
+    // ─── 보스 격파
+    if (boss.hitPoint <= 0) {
       spawnExplosion(boss.x + boss.width / 2, boss.y + boss.height / 2, explosionEnemy, 2000, boss.width * 1.2);
       bossPhase = false;
 
