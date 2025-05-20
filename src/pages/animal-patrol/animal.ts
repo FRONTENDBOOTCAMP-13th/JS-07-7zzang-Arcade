@@ -31,13 +31,24 @@ interface ScoreEntry {
   score: number;
 }
 
+function getElById<T extends HTMLElement>(id: string, type: { new (): T }): T {
+  const el = document.getElementById(id);
+  if (!(el instanceof type)) throw new Error(`#${id} is not a ${type.name}`);
+  return el;
+}
+function queryEl<T extends HTMLElement>(selector: string, type: { new (): T }): T {
+  const el = document.querySelector(selector);
+  if (!(el instanceof type)) throw new Error(`${selector} is not a ${type.name}`);
+  return el;
+}
+
 /**
  * 배경 관련 요소 및 상태 초기화
  */
-const bg1 = document.getElementById('bg1') as HTMLElement;
-const bg2 = document.getElementById('bg2') as HTMLElement;
-const starContainer = document.getElementById('star-container') as HTMLElement;
-const clouds = document.querySelectorAll('.cloud') as NodeListOf<HTMLElement>;
+const bg1 = getElById('bg1', HTMLElement);
+const bg2 = getElById('bg2', HTMLElement);
+const starContainer = getElById('star-container', HTMLElement);
+const clouds = document.querySelectorAll('.cloud');
 
 const gradients: string[] = [
   'linear-gradient(135deg, #1976D2 0%, #2196F3 25%, #42A5F5 50%, #64B5F6 75%, #BBDEFB 95%, #E0F7FA 100%)',
@@ -89,8 +100,10 @@ function updateBackgroundByStep(score: number): void {
   starContainer.style.display = isNight ? 'block' : 'none';
   starContainer.style.opacity = isNight ? `${0.3 + 0.3 * (newIndex % 3)}` : '0';
 
-  clouds.forEach((cloud: HTMLElement) => {
-    cloud.style.opacity = isNight ? '0.6' : '1';
+  clouds.forEach(cloud => {
+    if (cloud instanceof HTMLElement) {
+      cloud.style.opacity = isNight ? '0.6' : '1';
+    }
   });
 
   isBg1Visible = !isBg1Visible;
@@ -123,8 +136,8 @@ function createStars(count: number): void {
 /**
  * 인트로 트로피 팝업
  */
-const trophyButton = document.querySelector('.trophy-button') as HTMLImageElement;
-const bestScorePopup = document.getElementById('bestScorePopup') as HTMLDivElement;
+const trophyButton = queryEl('.trophy-button', HTMLImageElement);
+const bestScorePopup = getElById('bestScorePopup', HTMLDivElement);
 
 // 트로피 버튼 클릭 시 BEST SCORE 팝업 열기
 trophyButton.addEventListener('click', () => {
@@ -149,7 +162,7 @@ document.addEventListener('keydown', e => {
  * 트로피 팝업 -> BEST SCORE 목록 보여주기
  */
 function showBestScores() {
-  const bestScoreList = document.getElementById('bestScoreList') as HTMLUListElement;
+  const bestScoreList = getElById('bestScoreList', HTMLUListElement);
   bestScoreList.innerHTML = '';
 
   const latestScores: ScoreEntry[] = JSON.parse(localStorage.getItem(localKey) || '[]');
@@ -178,11 +191,11 @@ let characterX = (920 - 90) / 2;
 let characterDirection: 'left' | 'right' = 'right';
 let evolutionStage: 0 | 1 | 2 | 3 | 4 = 0;
 
-const introScreen = document.getElementById('intro') as HTMLElement;
-const gameScreen = document.getElementById('game') as HTMLElement;
-const character = document.getElementById('character') as HTMLImageElement;
-const startButton = document.querySelector('.start-text') as HTMLDivElement;
-const scoreUI = document.getElementById('score') as HTMLElement;
+const introScreen = getElById('intro', HTMLElement);
+const gameScreen = getElById('game', HTMLElement);
+const character = getElById('character', HTMLImageElement);
+const startButton = queryEl('.start-text', HTMLDivElement);
+const scoreUI = getElById('score', HTMLElement);
 
 // 인게임 BGM
 const gameBgm = new Audio('/sounds/animal-bgm.mp3');
@@ -198,6 +211,7 @@ gameOverSfx.volume = 1.0;
  * 캐릭터 위치와 상태를 초기화
  */
 startButton.addEventListener('click', () => {
+  // 인게임 화면 진입 & 음악 재생
   introScreen.classList.add('hidden');
   gameScreen.classList.remove('hidden');
 
@@ -210,7 +224,8 @@ startButton.addEventListener('click', () => {
   character.style.width = '90px';
   character.style.height = '110px';
 
-  // 인게임 BGM 시작
+  window.parent.postMessage({ type: 'STOP_BGM' }, '*');
+
   gameBgm.currentTime = 0;
   gameBgm.play();
 
@@ -237,7 +252,7 @@ function updateScore(): void {
     updateSpeechBubblePosition(); // 말풍선 위치
 
     setTimeout(updateScore, 1000);
-    return; // 멘트 출력 시에는 이후 진화·배경 갱신 생략
+    return;
   }
 
   // 진화 로직은 유지 -> 멘트는 출력x
@@ -260,11 +275,11 @@ const evolutionWarnings: Record<number, string> = {
 };
 
 // 진화 단계 예고 말풍선
-const speechBubble = document.getElementById('speech-bubble') as HTMLDivElement;
-const bubbleText = speechBubble.querySelector('.bubble-text') as HTMLDivElement;
+const speechBubble = getElById('speech-bubble', HTMLDivElement);
+const bubbleText = queryEl('.bubble-text', HTMLDivElement);
 
 function showSpeechBubble(message: string): void {
-  if (!bubbleText) return; // 안정성 확인
+  if (!bubbleText) return;
 
   bubbleText.textContent = message;
   speechBubble.classList.remove('hidden');
@@ -396,7 +411,7 @@ function spawnObstacles(): void {
   const maxX = 900; // 전체 가로폭 기준
   const cells = Math.floor(maxX / gridSize); // 총 셀 개수: 9
 
-  // 이전 위치와 다르게 랜덤한 셀 인덱스를 정함
+  // 이전 위치와 다르게 랜덤한 셀 인덱스를 지정
   let cellIndex: number;
   do {
     cellIndex = Math.floor(Math.random() * cells);
@@ -499,8 +514,8 @@ function isColliding(a: HTMLElement, b: HTMLElement): boolean {
   return rectA.left < rectB.right && rectA.right > rectB.left && rectA.top < rectB.bottom && rectA.bottom > rectB.top;
 }
 
-const gameOverPopup = document.getElementById('game-over-popup') as HTMLDivElement;
-const finalScore = document.getElementById('finalScore') as HTMLElement;
+const gameOverPopup = getElById('game-over-popup', HTMLDivElement);
+const finalScore = getElById('finalScore', HTMLElement);
 
 /**
  * 충돌 시 게임을 종료 -> GAME OVER 팝업, 쓰러진 캐릭터로 교체
@@ -523,15 +538,15 @@ function endGame(): void {
 }
 
 // GAME OVER 팝업 -> RETRY 버튼 클릭 시 인트로로 복귀
-const retryButton = document.getElementById('retryButton') as HTMLButtonElement;
+const retryButton = getElById('retryButton', HTMLButtonElement);
 retryButton.addEventListener('click', resetGame);
 
-const saveScoreButton = document.getElementById('saveScoreButton') as HTMLButtonElement;
-const overlay = document.getElementById('overlay') as HTMLDivElement;
-const saveScorePopup = document.getElementById('save-score-popup') as HTMLInputElement;
-const playerNameInput = document.getElementById('playerName') as HTMLInputElement;
-const saveNameButton = document.getElementById('saveNameButton') as HTMLDivElement;
-const toast = document.getElementById('toast') as HTMLDivElement;
+const saveScoreButton = getElById('saveScoreButton', HTMLButtonElement);
+const overlay = getElById('overlay', HTMLDivElement);
+const saveScorePopup = getElById('save-score-popup', HTMLDivElement);
+const playerNameInput = getElById('playerName', HTMLInputElement);
+const saveNameButton = getElById('saveNameButton', HTMLButtonElement);
+const toast = getElById('toast', HTMLDivElement);
 
 /**
  * SAVE SCORE 버튼 클릭 시 저장 가능한 팝업을 표시
@@ -586,7 +601,7 @@ function validateName(name: string): boolean {
 /**
  * CANCEL 버튼 -> 점수 저장 취소 후 게임 초기화
  */
-const cancelSaveButton = document.getElementById('cancelSaveButton') as HTMLButtonElement;
+const cancelSaveButton = getElById('cancelSaveButton', HTMLButtonElement);
 cancelSaveButton.addEventListener('click', () => {
   overlay.classList.remove('show');
   saveScorePopup.classList.add('hidden');
@@ -615,7 +630,7 @@ function resetGame(): void {
   score = 0;
   characterX = (920 - 90) / 2;
   gameActive = false;
-  shownWarnings.clear(); // set 초기화 필요 (멘트 떠야함)
+  shownWarnings.clear(); // set 초기화 필요 (멘트 띄우기)
 
   gameScreen.classList.add('hidden');
   introScreen.classList.remove('hidden');
@@ -658,6 +673,11 @@ function resetGame(): void {
   starContainer.style.display = 'none';
   starContainer.style.opacity = '0';
   clouds.forEach(cloud => {
-    cloud.style.opacity = '1';
+    if (cloud instanceof HTMLElement) {
+      cloud.style.opacity = '1';
+    }
   });
+
+  // 인게임 BGM 정지 -> 메인 BGM 재생 요청
+  window.parent.postMessage({ type: 'PLAY_MAIN_BGM' }, '*');
 }
