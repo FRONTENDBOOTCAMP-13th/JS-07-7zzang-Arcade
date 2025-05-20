@@ -1,6 +1,18 @@
 import '../../style.css';
 import './space.css';
 import * as SAT from 'sat';
+import playerImgSrc from '../../assets/images/space-img/player.png';
+import bulletImgSrc from '../../assets/images/space-img/player-bullet.png';
+import enemyBulletImgSrc from '../../assets/images/space-img/enemy-bullet.png';
+import backgroundImgSrc from '../../assets/images/space-img/background.png';
+import explosionPlayerSrc from '../../assets/images/space-img/explosion-player.png';
+import explosionEnemySrc from '../../assets/images/space-img/explosion-enemy.png';
+import lifeIconSrc from '../../assets/images/space-img/heart.png';
+import bossImgSrc from '../../assets/images/space-img/boss.png';
+import enemy1ImgSrc from '../../assets/images/space-img/enemy1.png';
+import enemy2ImgSrc from '../../assets/images/space-img/enemy2.png';
+import enemy3ImgSrc from '../../assets/images/space-img/enemy3.png';
+import alienIconSrc from '../../assets/images/space-img/alien-icon.png';
 
 // ─── 사운드 로드 ─────────────────────────
 const bgm = new Audio('/sounds/space-bgm.mp3');
@@ -130,9 +142,11 @@ function renderScoreList() {
       ([nick, sc]) => `
       <li>
         <div>
-          <img src="../../assets/images/space-img/alien-icon.png"
-               alt="alien icon"
-               class="alien-icon" />
+          <img
+            src="${alienIconSrc}"
+            alt="alien icon"
+            class="alien-icon"
+          />
           ${nick}
         </div>
         <div>${sc}</div>
@@ -417,9 +431,9 @@ const EnemyManager = {
   fireInterval: 1000,
 
   configs: {
-    1: { rows: 3, cols: 7, spriteSrc: '../../assets/images/space-img/enemy1.png', paddingX: 20, paddingY: 10, offsetX: 0, offsetY: 30, descentY: 60 },
-    2: { rows: 3, cols: 7, spriteSrc: '../../assets/images/space-img/enemy2.png', paddingX: 30, paddingY: 20, offsetX: 0, offsetY: 30, descentY: 70 },
-    3: { rows: 3, cols: 6, spriteSrc: '../../assets/images/space-img/enemy3.png', paddingX: 40, paddingY: 30, offsetX: 0, offsetY: 35, descentY: 80 },
+    1: { rows: 3, cols: 7, spriteSrc: enemy1ImgSrc, paddingX: 20, paddingY: 10, offsetX: 0, offsetY: 30, descentY: 60 },
+    2: { rows: 3, cols: 7, spriteSrc: enemy2ImgSrc, paddingX: 30, paddingY: 20, offsetX: 0, offsetY: 30, descentY: 70 },
+    3: { rows: 3, cols: 6, spriteSrc: enemy3ImgSrc, paddingX: 40, paddingY: 30, offsetX: 0, offsetY: 35, descentY: 80 },
   } as Record<number, IEnemyConfig>,
 
   // ── 적 스폰 함수(gpt code) ──────────────────────
@@ -734,32 +748,32 @@ function handleEnemyBulletCollisions() {
 // ─── 애셋 로딩 & 키 바인딩 ────────────────────────────────────────
 // ─── 플레이어 이미지 생성
 const playerImg = new Image();
-playerImg.src = '../../assets/images/space-img/player.png';
+playerImg.src = playerImgSrc;
 Player.sprite = playerImg;
 
 // ─── 총알 이미지 생성
 const bulletImg = new Image();
-bulletImg.src = '../../assets/images/space-img/player-bullet.png';
+bulletImg.src = bulletImgSrc;
 const enemyBulletImg = new Image();
-enemyBulletImg.src = '../../assets/images/space-img/enemy-bullet.png';
+enemyBulletImg.src = enemyBulletImgSrc;
 
 // ─── 배경 이미지 생성
 const backgroundImg = new Image();
-backgroundImg.src = '../../assets/images/space-img/background.png';
+backgroundImg.src = backgroundImgSrc;
 
 // ─── 폭발 이미지 생성
 const explosionPlayer = new Image();
-explosionPlayer.src = '../../assets/images/space-img/explosion-player.png';
+explosionPlayer.src = explosionPlayerSrc;
 const explosionEnemy = new Image();
-explosionEnemy.src = '../../assets/images/space-img/explosion-enemy.png';
+explosionEnemy.src = explosionEnemySrc;
 
 // ─── 생명 이미지 생성
 const lifeIcon = new Image();
-lifeIcon.src = '../../assets/images/space-img/heart.png';
+lifeIcon.src = lifeIconSrc;
 
 // ─── 보스 이미지 생성
 const bossImg = new Image();
-bossImg.src = '../../assets/images/space-img/boss.png';
+bossImg.src = bossImgSrc;
 
 // ─── 키버튼
 const keys = { ArrowLeft: false, ArrowRight: false, Space: false };
