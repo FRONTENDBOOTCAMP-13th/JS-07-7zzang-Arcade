@@ -4,11 +4,11 @@ body {
   color: limegreen;
   text-align: center;
 
-  /* ✅ 중앙 정렬 */
+  /* ✅ 중앙 정렬 핵심 */
   display: flex;
-  justify-content: center; 
-  align-items: center; 
-  height: 100vh; 
+  justify-content: center; /* 가로 가운데 */
+  align-items: center; /* 세로 가운데 */
+  height: 100vh; /* 화면 높이 기준으로 */
   margin: 0;
   overflow: hidden;
 }
@@ -64,7 +64,7 @@ canvas {
 /* 📊 상단 상태바 - 점수, 타이머 */
 .status-bar {
   position: absolute;
-  top: 50px;
+  top: 28px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -97,7 +97,7 @@ canvas {
 
 /* 📦 팝업 기본 레이아웃 */
 .popup {
-  position: fixed; 
+  position: fixed; /* ✅ fixed로 바꾸기 */
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -114,9 +114,9 @@ canvas {
 /* 🏆 점수 팝업 테이블 배치 */
 .score-table {
   position: absolute;
-  top: 185px; 
-  left: 64px; 
-  width: 270px; 
+  top: 185px; /* ✅ 피그마 기준 조정 */
+  left: 64px; /* ✅ 좌측 여백에 맞춰 조정 */
+  width: 270px; /* ✅ 이미지 원본 사이즈로 수정 */
   height: 211px;
 }
 .score-bg {
@@ -171,7 +171,7 @@ canvas {
 .popup-close {
   position: absolute;
   top: 12px;
-  right: 12px; /
+  right: 12px;
   width: 36px;
   height: 36px;
   cursor: pointer;
@@ -265,8 +265,9 @@ canvas {
   pointer-events: none;
 }
 
- /* 💾 점수 저장 화면 (팝업) */
+/* 💾 점수 저장 화면 (팝업) */
 .save-popup {
+  /* 팝업 자체를 화면 정중앙에 위치시킴 */
   position: fixed;
   top: 50%;
   left: 50%;
@@ -286,7 +287,7 @@ canvas {
   height: 500px;
 }
 
-/* ✅ smash-hole-play.png:  */
+/* ✅ smash-hole-play.png: 맨 아래 배경 이미지 */
 .save-popup .hole-bg {
   position: absolute;
   top: 0;
@@ -361,25 +362,4 @@ canvas {
 /* ❌ display:none 처리용 클래스 */
 .hidden {
   display: none;
-}
-
-/* 🌟 토스트 기본 스타일 */
-.toast {
-  position: fixed;
-  bottom: 100px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.6);
-  color: white;
-  padding: 14px 24px;
-  border-radius: 8px;
-  font-size: 1.4rem;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.4s ease;
-  z-index: 999;
-}
-
-.toast.show {
-  opacity: 1;
 }

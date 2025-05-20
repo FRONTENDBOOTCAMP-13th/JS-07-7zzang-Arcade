@@ -163,7 +163,7 @@ class MoleGame {
   private startGame(): void {
     this.playBgm('/sounds/smash-bgm.mp3');
     this.score = 0;
-    this.timeLeft = 5;
+    this.timeLeft = 30;
     this.gameActive = true;
     this.hide('introScreen');
     this.hide('scorePopup');
