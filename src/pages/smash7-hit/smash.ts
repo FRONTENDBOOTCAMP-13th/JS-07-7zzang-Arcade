@@ -8,6 +8,7 @@ class MoleGame {
   private gameLoop: any;
   private timerLoop: any;
   private bat: HTMLImageElement;
+  private bgm: HTMLAudioElement | null = null;
   private molePositions = [
     // 🕳️ 9개 두더지 등장 위치
     { x: 120, y: 90 },
@@ -85,6 +86,41 @@ class MoleGame {
       this.gotoIntro();
       document.getElementById('bat')!.style.display = ''; // 뿅망치 다시 보이기
     });
+
+    // 🎯 닉네임 입력 시: 한글 + 영어만 허용하고 3글자까지 제한
+    const nicknameInput = document.getElementById('playerName') as HTMLInputElement;
+
+    let isComposing = false;
+
+    // 한글 입력 조합 시작
+    nicknameInput?.addEventListener('compositionstart', () => {
+      isComposing = true;
+    });
+
+    // 한글 입력 조합 종료
+    nicknameInput?.addEventListener('compositionend', () => {
+      isComposing = false;
+      limitNickname();
+    });
+
+    // 일반 입력 처리 (조합 중 아닐 때만)
+    nicknameInput?.addEventListener('input', () => {
+      if (!isComposing) {
+        limitNickname();
+      }
+    });
+
+    function limitNickname() {
+      const rawValue = nicknameInput.value;
+      const filtered = [...rawValue]
+        .filter(char => /[가-힣a-zA-Z]/.test(char))
+        .slice(0, 3)
+        .join('');
+      if (nicknameInput.value !== filtered) {
+        nicknameInput.value = filtered;
+      }
+    }
+
     // 🎯 게임 캔버스 클릭 시 두더지 맞추기 처리
     this.canvas.addEventListener('click', e => this.handleClick(e));
 
@@ -109,6 +145,7 @@ class MoleGame {
 
   // ▶️ 게임 시작 로직
   private startGame(): void {
+    this.playBgm('/sounds/smash-bgm.mp3');
     this.score = 0;
     this.timeLeft = 30;
     this.gameActive = true;
@@ -138,6 +175,11 @@ class MoleGame {
       this.gameActive = false;
       clearInterval(this.gameLoop);
       clearInterval(this.timerLoop);
+
+      this.stopBgm(); // ✅ 배경음 정지
+
+      this.playEffect('/sounds/smash-the-end.mp3');
+
       this.show('gameOverPopup');
       document.getElementById('score-display')!.textContent = `${this.score}`;
     }
@@ -154,6 +196,30 @@ class MoleGame {
     this.ctx.drawImage(this.moleImages[type], pos.x, pos.y, 200, 200);
   }
 
+  private playBgm(path: string): void {
+    this.bgm = new Audio(path);
+    this.bgm.loop = true;
+    this.bgm.volume = 0.5;
+    this.bgm.play().catch(err => {
+      console.warn('🎵 BGM 재생 실패:', err);
+    });
+  }
+
+  private stopBgm(): void {
+    if (this.bgm && !this.bgm.paused) {
+      this.bgm.pause();
+      this.bgm.currentTime = 0;
+    }
+  }
+
+  private playEffect(path: string): void {
+    const effect = new Audio(path);
+    effect.volume = 0.5;
+    effect.play().catch(err => {
+      console.warn('🔇 효과음 재생 실패:', err);
+    });
+  }
+
   // 🎯 두더지 맞췄는지 확인하고 점수 증가
   private handleClick(e: MouseEvent): void {
     if (!this.gameActive || this.currentMoleIdx === null) return;
@@ -166,7 +232,7 @@ class MoleGame {
       this.score += 10;
       this.updateScore();
       // ✨ 트윙클 효과 발생 위치
-      this.spawnStarEffect(clickX + 50, clickY - 16);
+      this.spawnStarEffect(clickX - 40, clickY - 56);
 
       // 두더지 맞춘 후에는 더 이상 클릭해도 점수 안 오르게!
       this.currentMoleIdx = null;
@@ -258,6 +324,7 @@ class MoleGame {
 
   // 🔁 저장 후 인트로 화면으로 복귀
   private gotoIntro(): void {
+    this.stopBgm();
     this.hide('savePopup');
     this.hide('gameOverPopup');
     this.hide('scorePopup');
