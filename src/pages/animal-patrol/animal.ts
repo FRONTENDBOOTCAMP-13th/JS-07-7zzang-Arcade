@@ -24,12 +24,8 @@ import evo3Right from '../../assets/images/animal-img/chick-evo3-right.png';
 import evo4Left from '../../assets/images/animal-img/chick-evo4-left.png';
 import evo4Right from '../../assets/images/animal-img/chick-evo4-right.png';
 
-const localKey = 'animal-bestScores';
-
-interface ScoreEntry {
-  name: string;
-  score: number;
-}
+// 파이어 베이스 파일 import
+import { fireScore, getTopScores } from '../../utilits/scoreService';
 
 function getElById<T extends HTMLElement>(id: string, type: { new (): T }): T {
   const el = document.getElementById(id);
@@ -161,23 +157,28 @@ document.addEventListener('keydown', e => {
 /**
  * 트로피 팝업 -> BEST SCORE 목록 보여주기
  */
-function showBestScores() {
+async function showBestScores() {
   const bestScoreList = getElById('bestScoreList', HTMLUListElement);
   bestScoreList.innerHTML = '';
 
-  const latestScores: ScoreEntry[] = JSON.parse(localStorage.getItem(localKey) || '[]');
   const characterImages = [scoreChick1, scoreChick2, scoreChick3, scoreChick4, scoreChick5];
 
-  latestScores.slice(0, 5).forEach((entry, index) => {
-    const li = document.createElement('li');
-    li.innerHTML = `
-      <img src="${characterImages[index]}" alt="캐릭터" class="score-character" />
-      <span class="score-name">${entry.name}</span>
-      <span class="score-value">${String(entry.score).padStart(5, '0')}</span>
-    `;
+  try {
+    // firestore 접근, animal-patrol 값 가진 데이터들 중 상위 5개 가져옴
+    const topScores = await getTopScores('animal-patrol');
 
-    bestScoreList.appendChild(li);
-  });
+    topScores.forEach((entry: any, index: number) => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <img src="${characterImages[index]}" alt="캐릭터" class="score-character" />
+        <span class="score-name">${entry.nickname}</span>
+        <span class="score-value">${String(entry.score).padStart(5, '0')}</span>
+      `;
+      bestScoreList.appendChild(li);
+    });
+  } catch (err) {
+    bestScoreList.innerHTML = '<li>점수 불러오기 실패</li>';
+  }
 }
 
 /**
@@ -561,7 +562,7 @@ saveScoreButton.addEventListener('click', (): void => {
 /**
  * SAVE 버튼 클릭 시 이름 정상 입력 확인 및 저장
  */
-saveNameButton.addEventListener('click', () => {
+saveNameButton.addEventListener('click', async () => {
   const rawInput = playerNameInput.value.trim();
 
   if (rawInput.length === 0) {
@@ -575,16 +576,13 @@ saveNameButton.addEventListener('click', () => {
   }
 
   const cleanName = rawInput.replace(/[^가-힣a-zA-Z]/g, '').toUpperCase();
-  const newEntry = { name: cleanName, score };
-  const stored = localStorage.getItem(localKey);
-  const bestScores = stored ? (JSON.parse(stored) as ScoreEntry[]) : [];
 
-  // 새 항목 추가 후 점수 기준 정렬
-  bestScores.unshift(newEntry);
-  bestScores.sort((a, b) => b.score - a.score);
-  bestScores.splice(5);
-
-  localStorage.setItem(localKey, JSON.stringify(bestScores));
+  try {
+    await fireScore(cleanName, score, 'animal-patrol'); // Firestore에 저장, 해당 파라미터로
+    showToast('기록이 저장되었습니다!');
+  } catch (err) {
+    return;
+  }
 
   saveScorePopup.classList.add('hidden');
   overlay.classList.remove('show');

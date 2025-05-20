@@ -2,6 +2,9 @@ import mole1Img from '../../assets/images/smash-img/smash-mole1.png';
 import mole2Img from '../../assets/images/smash-img/smash-mole2.png';
 import twinkleImg from '../../assets/images/smash-img/smash-twinkle.png';
 
+// 파이어 베이스 파일 import
+import { fireScore, getTopScores } from '../../utilits/scoreService';
+
 class MoleGame {
   // 🎯 상태 및 리소스 변수
   private score = 0;
@@ -285,31 +288,41 @@ class MoleGame {
     }
   }
 
-  // 💾 닉네임 입력 후 점수 저장 → localStorage 저장 (5명까지)
-  private saveScore(): void {
+  // 💾 닉네임 입력 후 점수 저장 → Firestore 저장 (5명까지)
+  private async saveScore() {
     const name = (document.getElementById('playerName') as HTMLInputElement).value.trim().slice(0, 3);
     if (!/^([가-힣]{3}|[A-Z]{3})$/.test(name)) {
       alert('닉네임을 다시 입력 해주세요!');
       return;
     }
+
     document.getElementById('savePopup')?.classList.add('hidden');
-    const scores = JSON.parse(localStorage.getItem('moleScores') || '[]');
-    scores.push({ name, score: this.score });
-    scores.sort((a: any, b: any) => b.score - a.score || a.name.localeCompare(b.name, 'ko'));
-    localStorage.setItem('moleScores', JSON.stringify(scores.slice(0, 5)));
+
+    try {
+      await fireScore(name, this.score, 'mole-game'); // Firestore에 저장, 해당 파라미터로
+      showToast('저장되었습니다!');
+    } catch (err) {}
+
     this.gotoIntro();
     showToast('저장되었습니다!');
   }
 
-  private renderScoreList(): void {
+  private async renderScoreList() {
     const list = document.getElementById('scoreList')!;
     list.innerHTML = '';
-    const scores = JSON.parse(localStorage.getItem('moleScores') || '[]');
-    scores.forEach((entry: { name: string; score: number }) => {
-      const li = document.createElement('li');
-      li.innerHTML = `<span class="name">${entry.name}</span><span class="score">${entry.score}</span>`;
-      list.appendChild(li);
-    });
+
+    try {
+      // firestore 접근, mole-game 값 가진 데이터들 중 상위 5개 가져옴
+      const scores = await getTopScores('mole-game');
+
+      scores.forEach((entry: any) => {
+        const li = document.createElement('li');
+        li.innerHTML = `<span class="name">${entry.nickname}</span><span class="score">${entry.score}</span>`;
+        list.appendChild(li);
+      });
+    } catch (err) {
+      list.innerHTML = '<li>점수 불러오기 실패</li>';
+    }
   }
 
   // 📦 화면 숨기기/보이기 공통 처리
