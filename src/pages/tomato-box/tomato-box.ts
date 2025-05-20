@@ -1,5 +1,7 @@
 import '../../style.css';
 import './tomato-box.css';
+import tomatoImg from '../../assets/images/tomato-img/tomato-empty.png';
+import tomatoSelectedSrc from '../../assets/images/tomato-img/select-tomato.png';
 
 // 실행
 document.addEventListener('DOMContentLoaded', main);
@@ -48,10 +50,10 @@ const flyingTomatoes: {
 }[] = [];
 
 const tomatoImage = new Image();
-tomatoImage.src = '/src/assets/images/tomato-img/tomato-empty.png';
+tomatoImage.src = tomatoImg;
 
 const tomatoSelectedImage = new Image();
-tomatoSelectedImage.src = '/src/assets/images/tomato-img/select-tomato.png';
+tomatoSelectedImage.src = tomatoSelectedSrc;
 
 interface ScoreArray {
   name: string;
@@ -90,12 +92,6 @@ function tomatoIntro() {
     intro?.classList.remove('show');
     play?.classList.remove('hide');
     play?.classList.add('show');
-
-    const bgm = (window as any).bgm as HTMLAudioElement | undefined;
-    if (bgm) {
-      bgm.pause();
-      bgm.currentTime = 0;
-    }
 
     playBgm('/sounds/tomato-bgm.wav');
     playIcon('/sounds/pointer.wav');
