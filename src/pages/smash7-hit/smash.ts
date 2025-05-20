@@ -1,3 +1,7 @@
+import mole1Img from '../../assets/images/smash-img/smash-mole1.png';
+import mole2Img from '../../assets/images/smash-img/smash-mole2.png';
+import twinkleImg from '../../assets/images/smash-img/smash-twinkle.png';
+
 class MoleGame {
   // 🎯 상태 및 리소스 변수
   private score = 0;
@@ -30,21 +34,24 @@ class MoleGame {
     this.ctx = this.canvas.getContext('2d')!;
     this.bat = document.getElementById('bat') as HTMLImageElement;
 
-    // 🐹 두더지 이미지 로딩 (1번, 2번 타입)
-    this.moleImages[0].src = '/src/assets/images/smash-img/smash-mole1.png';
-    this.moleImages[1].src = '/src/assets/images/smash-img/smash-mole2.png';
+    // 🐹 두더지 이미지 (1번, 2번)
+    this.moleImages[0].src = mole1Img;
+    this.moleImages[1].src = mole2Img;
 
     // ▶️ intro 화면의 "시작 버튼" 클릭 → 게임 시작
     document.getElementById('clickStart')?.addEventListener('click', () => this.startGame());
 
-    // 🏆 트로피 팝업 열기/닫기
+    // 🏆 트로피 팝업 열기 + 효과음 재생
     document.getElementById('trophyIcon')?.addEventListener('click', () => {
-      this.renderScoreList(); // 점수 리스트 로컬스토리지에서 불러오기
-      this.show('scorePopup'); // ✅ scorePopup을 보여줘야 해!!
+      this.playEffect('/sounds/smash-trophy-bgm.mp3'); // ✅ 효과음 추가!
+      this.renderScoreList();
+      this.show('scorePopup');
     });
 
     // 🏠 홈 아이콘 클릭 시 (향후 기능 추가 예정)
-    document.getElementById('homeIcon')?.addEventListener('click', () => alert('🏠 홈 이동 (나중에 연결 예정)'));
+    document.getElementById('homeIcon')?.addEventListener('click', () => {
+      this.playEffect('/sounds/smash-home.mp3'); // ✅ 효과음만 재생됨!
+    });
 
     // 📋 score 팝업 닫기
     document.getElementById('closeScore')?.addEventListener('click', () => this.hide('scorePopup'));
@@ -53,12 +60,6 @@ class MoleGame {
     document.getElementById('retry-btn')?.addEventListener('click', () => {
       this.hide('gameOverPopup');
       this.gotoIntro();
-    });
-
-    // 💾 게임 오버 → 닉네임 저장 팝업으로 전환
-    document.getElementById('save-btn')?.addEventListener('click', () => {
-      this.hide('gameOverPopup');
-      this.show('savePopup');
     });
 
     // ✅ 저장 팝업에서 점수 저장 버튼 클릭
@@ -72,6 +73,14 @@ class MoleGame {
       this.hide('gameOverPopup');
       this.show('savePopup');
       document.getElementById('bat')!.style.display = 'none'; // 뿅망치 숨기기
+      // ✨ 닉네임 입력창 초기화 + 자동 포커스
+      setTimeout(() => {
+        const input = document.getElementById('playerName') as HTMLInputElement;
+        if (input) {
+          input.value = ''; // ✅ 내용 비우기
+          input.focus(); // ✅ 커서 깜빡이기
+        }
+      }, 0);
     });
 
     // ✅ 저장 팝업에서 점수 저장 버튼 클릭
@@ -100,13 +109,20 @@ class MoleGame {
     // 한글 입력 조합 종료
     nicknameInput?.addEventListener('compositionend', () => {
       isComposing = false;
+      if (nicknameInput.value.length > 3) {
+        nicknameInput.value = nicknameInput.value.slice(0, 3);
+        nicknameInput.setSelectionRange(3, 3);
+      }
       limitNickname();
     });
 
-    // 일반 입력 처리 (조합 중 아닐 때만)
+    // 일반 입력 처리 (한글 입력 조합)
     nicknameInput?.addEventListener('input', () => {
       if (!isComposing) {
         limitNickname();
+      } else if (nicknameInput.value.length > 3) {
+        nicknameInput.value = nicknameInput.value.slice(0, 3);
+        nicknameInput.setSelectionRange(3, 3);
       }
     });
 
@@ -234,7 +250,7 @@ class MoleGame {
       // ✨ 트윙클 효과 발생 위치
       this.spawnStarEffect(clickX - 40, clickY - 56);
 
-      // 두더지 맞춘 후에는 더 이상 클릭해도 점수 안 오르게!
+      // 두더지 한번 이상 맞출시 점수 없음
       this.currentMoleIdx = null;
     }
   }
@@ -247,7 +263,7 @@ class MoleGame {
       const radius = 40 + Math.random() * 60;
       const scale = 1 + Math.random();
       const star = document.createElement('img');
-      star.src = '/src/assets/images/smash-img/smash-twinkle.png';
+      star.src = twinkleImg;
       star.className = 'star';
       star.style.position = 'absolute';
       star.style.left = `${x - 16}px`;
@@ -279,6 +295,7 @@ class MoleGame {
     scores.sort((a: any, b: any) => b.score - a.score || a.name.localeCompare(b.name, 'ko'));
     localStorage.setItem('moleScores', JSON.stringify(scores.slice(0, 5)));
     this.gotoIntro();
+    showToast('저장되었습니다!');
   }
 
   private renderScoreList(): void {
@@ -337,3 +354,15 @@ class MoleGame {
 window.addEventListener('DOMContentLoaded', () => {
   new MoleGame();
 });
+
+function showToast(message: string) {
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+
+  toast.textContent = message;
+  toast.classList.add('show');
+
+  setTimeout(() => {
+    toast.classList.remove('show');
+  }, 2000); // 2초 후 사라짐
+}

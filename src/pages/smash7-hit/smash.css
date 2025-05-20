@@ -170,8 +170,8 @@ canvas {
 /* ❌ 팝업 닫기 버튼 위치 */
 .popup-close {
   position: absolute;
-  top: 12px; /* 약간 더 위 */
-  right: 12px; /* 너무 바깥이면 잘림 */
+  top: 12px;
+  right: 12px;
   width: 36px;
   height: 36px;
   cursor: pointer;
