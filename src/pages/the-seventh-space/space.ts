@@ -167,14 +167,15 @@ saveBtn.addEventListener('click', async () => {
   try {
     await fireScore(nickRaw, Score.score, 'seven-space'); // Firestore에 저장, 해당 파라미터로
     showToast(`${nickRaw}님, ${Score.score}점이 저장되었습니다!`);
-  } catch {
-    showToast('점수 저장에 실패했습니다.');
-  }
 
-  // 모달 닫기 및 화면 전환
-  nameModal.classList.add('hidden');
-  canvasEl.style.display = 'none';
-  introEl.style.display = 'flex';
+    // 모달 닫기 및 화면 전환
+    nameModal.classList.add('hidden');
+    canvasEl.style.display = 'none';
+    introEl.style.display = 'flex';
+  } catch {
+    showToast('이미 존재하는 닉네임입니다.', 2000, false);
+    nicknameInput.focus();
+  }
 });
 
 // <ul>에 렌더링
@@ -203,7 +204,7 @@ async function renderScoreList() {
   }
 }
 
-function showToast(message: string, duration = 2000) {
+function showToast(message: string, duration = 2000, _shouldReset: boolean = true) {
   const container = document.getElementById('toast-container')!;
   const toast = document.createElement('div');
   toast.className = 'toast';
