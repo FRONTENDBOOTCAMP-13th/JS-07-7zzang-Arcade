@@ -22,7 +22,7 @@ const numHeight = 445 / rows;
 
 let scoreNum = 0;
 
-const timeLimit = 120;
+const timeLimit = 1;
 let timeLeft = timeLimit;
 const dragThreshold = 5;
 let isDragging = false;
@@ -413,23 +413,32 @@ function events() {
   // 취소
   cancel?.addEventListener('click', () => {
     playIcon('/sounds/pointer.wav');
-    if (saveScore?.classList.contains('show')) {
-      saveScore.classList.remove('show');
-      saveScore.classList.add('hide');
-    }
+    setTimeout(() => {
+      location.href = '/src/pages/tomato-box/tomato-box.html';
+    }, 200);
+    window.parent.postMessage({ type: 'PLAY_MAIN_BGM' }, '*');
   });
 
   // 닉네임 입력 받고 점수저장
   saveScoreBtn?.addEventListener('click', () => {
+    const value = nicknameInput?.value.trim();
+
     if (!nicknameInput || !nicknameInput.value.trim()) {
       playIcon('/sounds/pointer.wav');
       Toast('닉네임을 입력해주세요!');
 
       return;
     }
+    const isValid = /^[가-힣a-zA-Z]{1,3}$/.test(value);
+    if (!isValid) {
+      playIcon('/sounds/pointer.wav');
+      Toast('닉네임은 한글/영문 1~3자로 입력해주세요!');
+      return;
+    }
+
     playIcon('/sounds/pointer.wav');
 
-    const name = nicknameInput.value.trim().toUpperCase();
+    const name = nicknameInput.value.trim();
     const score = scoreNum;
 
     const newEntry: ScoreArray = { name, score };
@@ -511,7 +520,7 @@ function animateTomatoes() {
 function playBgm(soundPath: string) {
   bgm = new Audio(soundPath);
   bgm.loop = true;
-  bgm.volume = 0.3;
+  bgm.volume = 0.1;
 
   bgm.play().catch(err => {
     console.warn('배경음 재생 실패:', err);
@@ -521,7 +530,7 @@ function playBgm(soundPath: string) {
 // 토마토 떨어질 때 효과음
 function playEffect(soundPath: string) {
   const effect = new Audio(soundPath);
-  effect.volume = 0.3;
+  effect.volume = 0.1;
 
   effect.play().catch(err => {
     console.warn('효과음 재생 실패:', err);
@@ -531,7 +540,7 @@ function playEffect(soundPath: string) {
 // 게임오버 효과음
 function playGameover(soundPath: string) {
   const gameover = new Audio(soundPath);
-  gameover.volume = 0.3;
+  gameover.volume = 0.1;
 
   gameover.play().catch(err => {
     console.warn('효과음 재생 실패:', err);
@@ -541,7 +550,7 @@ function playGameover(soundPath: string) {
 // 홈, 트로피 클릭 효과음
 function playIcon(soundPath: string) {
   const pointer = new Audio(soundPath);
-  pointer.volume = 1;
+  pointer.volume = 0.7;
 
   pointer.play().catch(err => {
     console.warn('효과음 재생 실패', err);
