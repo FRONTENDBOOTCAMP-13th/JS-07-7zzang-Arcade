@@ -250,9 +250,13 @@ canvas {
   background-image: url('../../assets/icons/bgm-icon1.png');
   background-position: center center;
   background-repeat: no-repeat;
-  /* 회전 효과 */
   transform-origin: center center;
   animation: spin 2s linear infinite;
+  animation-play-state: running;
+}
+
+.game-music.paused {
+  animation-play-state: paused;
 }
 
 .music-onoff {
