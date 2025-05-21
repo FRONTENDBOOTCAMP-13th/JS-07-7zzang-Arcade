@@ -96,7 +96,6 @@ bgm.volume = bossBgm.volume = gameOverSound.volume = attackSound.volume = 0.1;
 
 // ──── 닉네임 패턴 && 스토리지 ────────────────────────────
 const nickPattern = /^([가-힣]{3}|[A-Z]{3})$/;
-const STORAGE_KEY = 'space-bestScores';
 
 // ─── overlay 클릭 시 닫기 ────────────
 scoreModal.addEventListener('click', () => {
