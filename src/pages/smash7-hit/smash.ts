@@ -296,15 +296,14 @@ class MoleGame {
       return;
     }
 
-    document.getElementById('savePopup')?.classList.add('hidden');
-
     try {
       await fireScore(name, this.score, 'mole-game'); // Firestore에 저장, 해당 파라미터로
+      document.getElementById('savePopup')?.classList.add('hidden');
+      this.gotoIntro();
       showToast('저장되었습니다!');
-    } catch (err) {}
-
-    this.gotoIntro();
-    showToast('저장되었습니다!');
+    } catch (err) {
+      showToast('이미 존재하는 닉네임입니다.', false);
+    }
   }
 
   private async renderScoreList() {
@@ -372,7 +371,7 @@ window.addEventListener('DOMContentLoaded', () => {
   new MoleGame();
 });
 
-function showToast(message: string) {
+function showToast(message: string, _shouldReset: boolean = true) {
   const toast = document.getElementById('toast');
   if (!toast) return;
 

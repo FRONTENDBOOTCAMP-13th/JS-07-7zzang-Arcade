@@ -435,15 +435,16 @@ function events() {
 
     try {
       await fireScore(name, score, 'tomato-box'); // Firestore에 저장, 해당 파라미터로
-    } catch (err) {}
 
-    nicknameInput.value = '';
+      setTimeout(() => {
+        window.location.href = '/src/pages/tomato-box/tomato-box.html';
+      }, 500);
 
-    Toast(`점수가 저장되었습니다!`);
-
-    setTimeout(() => {
-      window.location.href = '/src/pages/tomato-box/tomato-box.html';
-    }, 1500);
+      Toast(`점수가 저장되었습니다!`);
+    } catch (err) {
+      Toast(`이미 존재하는 닉네임입니다.`, false);
+      nicknameInput.focus();
+    }
   });
 
   nicknameInput?.addEventListener('input', () => {
@@ -457,7 +458,7 @@ function events() {
 }
 
 // 토스트
-function Toast(message: string) {
+function Toast(message: string, _shouldReset: boolean = true) {
   const toast = document.getElementById('toast');
   if (!toast) return;
 
