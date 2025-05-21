@@ -579,14 +579,13 @@ saveNameButton.addEventListener('click', async () => {
 
   try {
     await fireScore(cleanName, score, 'animal-patrol'); // Firestore에 저장, 해당 파라미터로
+    saveScorePopup.classList.add('hidden');
+    overlay.classList.remove('show');
     showToast('기록이 저장되었습니다!');
   } catch (err) {
-    return;
+    showToast(`이미 존재하는 닉네임입니다.`, false);
+    playerNameInput.focus();
   }
-
-  saveScorePopup.classList.add('hidden');
-  overlay.classList.remove('show');
-  showToast('기록이 저장되었습니다!');
 });
 
 /**
@@ -609,7 +608,7 @@ cancelSaveButton.addEventListener('click', () => {
 /**
  * 하단에 짧게 메시지를 보여준 후 게임을 초기화
  */
-function showToast(message: string): void {
+function showToast(message: string, _shouldReset: boolean = true): void {
   toast.textContent = message;
   toast.classList.remove('hidden');
   toast.classList.add('show');
@@ -617,7 +616,8 @@ function showToast(message: string): void {
   setTimeout(() => {
     toast.classList.remove('show');
     toast.classList.add('hidden');
-    resetGame();
+
+    // 닉네임 저장 성공 시 초기화 하도록 설정
   }, 1500);
 }
 
