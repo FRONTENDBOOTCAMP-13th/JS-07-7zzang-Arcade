@@ -209,18 +209,18 @@ body,
 }
 
 .audio-icon {
-  width: 90%;
-  height: 102%;
-  background-image: url('/images/audio-in.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center center;
-}
-.audio-icon.off {
-  background-image: url('/images/audio-out.png');
-  background-position: -360% center;
   width: 105%;
   height: 103%;
+  background-image: url('/images/audio-out.png');
+  background-position: -360% center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.audio-icon.on {
+  background-image: url('/images/audio-in.png');
+  background-position: center center;
+  width: 90%;
+  height: 102%;
 }
 .break-screen {
   position: absolute;
