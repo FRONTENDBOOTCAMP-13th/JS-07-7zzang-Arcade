@@ -189,7 +189,7 @@ let gameActive = false;
 let characterX = (920 - 90) / 2;
 
 // 인게임 캐릭터 방향 & 단계 변수
-// let characterDirection: 'left' | 'right' = 'right';
+let characterDirection: 'left' | 'right' = 'right';
 let evolutionStage: 0 | 1 | 2 | 3 | 4 = 0;
 
 const introScreen = getElById('intro', HTMLElement);
@@ -214,57 +214,9 @@ const popupMusicIcon = getElById('popupMusicIcon', HTMLImageElement);
 const popupMusicOnBtn = getElById('popupMusicOnBtn', HTMLButtonElement);
 const popupMusicOffBtn = getElById('popupMusicOffBtn', HTMLButtonElement);
 
-let popupMusicOn = true;
 let guideClosed = false;
 
-function applyMusicState(): void {
-  if (popupMusicOn) {
-    popupMusicIcon.classList.add('spin');
-    popupMusicOnBtn.classList.add('on');
-    popupMusicOffBtn.classList.remove('off');
-
-    gameBgm.play();
-    gameOverSfx.volume = sfxVolume;
-  } else {
-    popupMusicIcon.classList.remove('spin');
-    popupMusicOnBtn.classList.remove('on');
-    popupMusicOffBtn.classList.add('off');
-
-    gameBgm.pause();
-    gameOverSfx.volume = 0;
-  }
-}
-
-/**
- * 팝업 열기 (초기 ON 상태로 시작)
- */
-function openGameGuide(): void {
-  gameGuidePopup.classList.remove('hidden');
-
-  popupMusicOn = true;
-  applyMusicState();
-}
-
-/**
- * 팝업 내 음악 ON 버튼 클릭
- */
-function turnMusicOn(): void {
-  popupMusicOn = true;
-  applyMusicState();
-}
-
-/**
- * 팝업 내 음악 OFF 버튼 클릭
- */
-function turnMusicOff(): void {
-  popupMusicOn = false;
-  applyMusicState();
-}
-
-popupMusicOnBtn.addEventListener('click', turnMusicOn);
-popupMusicOffBtn.addEventListener('click', turnMusicOff);
-
-// START GAME 버튼 -> 인게임 전환, 인게임 BGM 재생, 팝업 표시
+// START GAME 버튼 클릭 → 인게임 전환 + BGM 재생 + 팝업 표시
 startButton.addEventListener('click', () => {
   introScreen.classList.add('hidden');
   gameScreen.classList.remove('hidden');
@@ -275,10 +227,44 @@ startButton.addEventListener('click', () => {
   gameBgm.currentTime = 0;
 
   gameBgm.play();
+
   openGameGuide();
 });
 
-// ESC키 -> 팝업 닫고 게임 시작
+// 팝업 열기
+function openGameGuide(): void {
+  gameGuidePopup.classList.remove('hidden');
+  popupMusicIcon.classList.add('spin');
+  popupMusicOnBtn.classList.add('on');
+  popupMusicOffBtn.classList.remove('off');
+
+  gameBgm.play();
+  gameOverSfx.volume = sfxVolume;
+}
+
+// 팝업 내 음악 제어
+function turnMusicOn(): void {
+  popupMusicIcon.classList.add('spin');
+  popupMusicOnBtn.classList.add('on');
+  popupMusicOffBtn.classList.remove('off');
+
+  gameBgm.play();
+  gameOverSfx.volume = sfxVolume;
+}
+
+function turnMusicOff(): void {
+  popupMusicIcon.classList.remove('spin');
+  popupMusicOnBtn.classList.remove('on');
+  popupMusicOffBtn.classList.add('off');
+
+  gameBgm.pause();
+  gameOverSfx.volume = 0;
+}
+
+popupMusicOnBtn.addEventListener('click', turnMusicOn);
+popupMusicOffBtn.addEventListener('click', turnMusicOff);
+
+// ESC → 팝업 닫고 게임 시작
 document.addEventListener('keydown', (e: KeyboardEvent) => {
   if (e.key === 'Escape' && !gameGuidePopup.classList.contains('hidden') && !guideClosed) {
     guideClosed = true;
@@ -286,7 +272,7 @@ document.addEventListener('keydown', (e: KeyboardEvent) => {
   }
 });
 
-// 팝업 닫기 -> 실제 게임 시작
+// 팝업 닫기 + 실제 게임 시작
 function closeGuideAndStartGame(): void {
   gameGuidePopup.classList.add('hidden');
 
@@ -301,7 +287,6 @@ function closeGuideAndStartGame(): void {
 
   updateScore();
   spawnObstacles();
-  moveCharacter(); // 반복 호출
 }
 
 // 이미 출력한 예고 멘트 점수 기록용 Set
@@ -374,13 +359,13 @@ function updateSpeechBubblePosition(): void {
 
   // 말풍선을 캐릭터 중심 위에 맞춤
   speechBubble.style.left = `${character.offsetLeft + character.offsetWidth / 2 - bubbleRect.width / 2}px`;
-  speechBubble.style.top = `${character.offsetTop - bubbleRect.height - 10}px`; // 캐릭터 위 10px 간격
+  speechBubble.style.top = `${character.offsetTop - bubbleRect.height - 10}px`;
 }
 
 let speechBubbleVisible = false;
 
 /**
- * 말풍선이 캐릭터 따라다니도록 위치 지속 갱신
+ * 말풍선이 보이는 동안 캐릭터 따라다니도록 위치 지속 갱신
  */
 function animateSpeechBubble(): void {
   if (!speechBubbleVisible) return;
@@ -400,37 +385,20 @@ function getEvolutionStage(score: number): 0 | 1 | 2 | 3 | 4 {
   return 4;
 }
 
-let movingLeft = false;
-let movingRight = false;
-let lastDirection: 'left' | 'right' = 'right'; // 이전 방향 기억
-const scaleSize = [1, 1.1, 1.2, 1.25, 1.3];
-let currentImageKey: string | null = null;
-
 /**
- * 키 상태 설정
- */
-document.addEventListener('keydown', (e: KeyboardEvent) => {
-  console.log('keydown:', e.key, 'left:', movingLeft, 'right:', movingRight);
-  if (!gameActive) return;
-  if (e.key === 'ArrowLeft') movingLeft = true;
-  if (e.key === 'ArrowRight') movingRight = true;
-});
-
-document.addEventListener('keyup', (e: KeyboardEvent) => {
-  if (e.key === 'ArrowLeft') movingLeft = false;
-  if (e.key === 'ArrowRight') movingRight = false;
-});
-
-/**
- * 캐릭터 이미지 업데이트 (진화단계 + 방향)
+ * 캐릭터 이미지 단계별 업데이트
  */
 function updateCharacterImage(): void {
   const stage = getEvolutionStage(score);
   evolutionStage = stage;
 
-  const scaleRatio = scaleSize[Math.min(stage, scaleSize.length - 1)];
-  const width = Math.round(90 * scaleRatio);
-  const height = Math.round(110 * scaleRatio);
+  const baseWidth = 90;
+  const baseHeight = 110;
+  const scaleSize = [1, 1.1, 1.2, 1.25, 1.3];
+
+  const scale = scaleSize[Math.min(stage, scaleSize.length - 1)];
+  const width = Math.round(baseWidth * scale);
+  const height = Math.round(baseHeight * scale);
 
   const characterImagesMap = {
     idle: {
@@ -456,103 +424,85 @@ function updateCharacterImage(): void {
   };
 
   const evoKey = stage === 0 ? 'idle' : (`evo${stage}` as keyof typeof characterImagesMap);
-  const newSrc = characterImagesMap[evoKey][lastDirection];
-  const newKey = `${evoKey}-${lastDirection}`;
+  const src = characterImagesMap[evoKey][characterDirection];
 
-  if (newKey === currentImageKey) return; // 중복 이미지 방지
-
-  character.src = newSrc;
+  character.src = src;
   character.style.width = `${width}px`;
   character.style.height = `${height}px`;
-  currentImageKey = newKey;
+  character.style.left = `${characterX}px`;
 }
 
 /**
- * 캐릭터 움직임을 프레임 단위로 반복
+ * 방향키로 캐릭터 조작
  */
-function moveCharacter(): void {
+document.addEventListener('keydown', (e: KeyboardEvent) => {
   if (!gameActive) return;
 
-  const step = 4;
+  const step = 15;
   const maxLeft = 920 - 90;
-  let newDirection: 'left' | 'right' | null = null;
 
-  if (movingLeft && !movingRight) {
+  if (e.key === 'ArrowLeft') {
     characterX = Math.max(0, characterX - step);
-    newDirection = 'left';
-  } else if (movingRight && !movingLeft) {
+    characterDirection = 'left';
+    updateCharacterImage();
+  } else if (e.key === 'ArrowRight') {
     characterX = Math.min(maxLeft, characterX + step);
-    newDirection = 'right';
-  }
-
-  // 방향 바뀔 때 이미지 갱신
-  if (newDirection !== null && newDirection !== lastDirection) {
-    lastDirection = newDirection;
+    characterDirection = 'right';
     updateCharacterImage();
   }
 
   character.style.left = `${characterX}px`;
-  requestAnimationFrame(moveCharacter);
-}
+});
 
 const obstacleImages = [bananaImg, canImg, fireImg, boom1Img, boom2Img, acornsImg];
 
-// 직전 사용 셀 인덱스 추적
-// const lastCells: number[] = [];
-
-// function getRandomCellIndex(cells: number): number {
-//   let cellIndex: number;
-//   let attempts = 0;
-
-//   do {
-//     cellIndex = Math.floor(Math.random() * cells);
-//     attempts++;
-//     // 혹시나 무한 루프 방지용
-//     if (attempts > 10) break;
-//   } while (lastCells.includes(cellIndex));
-
-//   lastCells.push(cellIndex);
-//   if (lastCells.length > 3) {
-//     lastCells.shift();
-//   }
-
-//   return cellIndex;
-// }
-
-// 장애물 위치를 순환할 순서 배열과 인덱스
-let cellOrder: number[] = [];
-let cellIndexNow = 0;
-
 /**
- * 랜덤 셀 하나 꺼내기 (모든 셀 다 쓰면 다시 섞기)
+ * 장애물 랜덤 위치 생성 및 낙하 처리
  */
-function getRandomCell(cells: number): number {
-  if (cellOrder.length !== cells || cellIndexNow >= cellOrder.length) {
-    cellOrder = [...Array(cells).keys()];
-    for (let i = cellOrder.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [cellOrder[i], cellOrder[j]] = [cellOrder[j], cellOrder[i]];
-    }
-    cellIndexNow = 0;
-  }
+function spawnObstacles(): void {
+  if (!gameActive) return;
 
-  const randomCell = cellOrder[cellIndexNow];
-  cellIndexNow++;
-  return randomCell;
+  const gridSize = 100; // 장애물은 100px 간격 셀에 위치
+  const maxX = 900; // 전체 가로폭 기준
+  const cells = Math.floor(maxX / gridSize); // 총 셀 개수: 9
+
+  // 이전 위치와 다르게 랜덤한 셀 인덱스를 지정
+  const cellIndex = getRandomCell(cells);
+  const posX = cellIndex * gridSize;
+
+  const obstacle = document.createElement('div');
+  obstacle.className = 'obstacle';
+
+  const randomIndex = Math.floor(Math.random() * obstacleImages.length);
+  obstacle.style.backgroundImage = `url('${obstacleImages[randomIndex]}')`;
+  obstacle.style.left = `${posX}px`;
+  obstacle.style.top = '-60px';
+
+  gameScreen.appendChild(obstacle);
+
+  // 랜덤 딜레이 -> 낙하 시작
+  const fallDelay = Math.floor(Math.random() * 300);
+  setTimeout(() => {
+    fallObstacle(obstacle);
+  }, fallDelay);
+
+  // 점수 구간별 생성
+  const interval = getSpawnInterval(score);
+  setTimeout(spawnObstacles, interval);
 }
 
 /**
- * 현재 점수에 따라 장애물 낙하 속도(px/frame)를 반환
+ * 현재 점수에 따라 다음 장애물 생성까지의 간격(ms)을 반환
  *
  * @param score 현재 점수
- * @returns 프레임당 이동 픽셀 수
+ * @returns 생성 대기 시간 (ms)
  */
-function getObstacleSpeed(score: number): number {
-  if (score < 20) return 3;
-  if (score < 40) return 4;
-  if (score < 65) return 5;
-  if (score < 90) return 6;
-  return 7;
+function getSpawnInterval(score: number): number {
+  if (score < 20) return 800;
+  if (score < 40) return 700;
+  if (score < 65) return 600;
+  if (score < 90) return 550;
+  return 450;
 }
 
 /**
@@ -579,12 +529,6 @@ function fallObstacle(obstacle: HTMLDivElement): void {
     if (y > 600) {
       obstacle.remove();
       clearInterval(interval);
-
-      // 장애물 제거 후, 제한보다 적으면 다시 생성
-      const remaining = gameScreen.querySelectorAll('.obstacle');
-      if (remaining.length < 4 && gameActive) {
-        setTimeout(spawnObstacles, 150);
-      }
     } else if (isColliding(obstacle, character)) {
       clearInterval(interval);
       endGame();
@@ -593,64 +537,38 @@ function fallObstacle(obstacle: HTMLDivElement): void {
 }
 
 /**
- * 장애물 랜덤 위치 생성 및 낙하 처리
- */
-function spawnObstacles(): void {
-  if (!gameActive) return;
-
-  // 최대 장애물 제한
-  const maxObstacles = 4;
-  const existingObstacles = gameScreen.querySelectorAll('.obstacle');
-  const visibleObstacles = Array.from(existingObstacles).filter(ob => {
-    const top = parseInt((ob as HTMLElement).style.top || '-100', 10);
-    return top < 600;
-  });
-
-  if (visibleObstacles.length >= maxObstacles) {
-    return;
-  }
-
-  const gridSize = 100; // 100px 간격
-  const maxX = 900; // 가로폭 제한
-  const cells = Math.floor(maxX / gridSize); // 총 셀 수: 9
-
-  // 중복 피한 셀 선택
-  const randomCell = getRandomCell(cells);
-  const posX = randomCell * gridSize;
-
-  const obstacle = document.createElement('div');
-  obstacle.className = 'obstacle';
-
-  const randomIndex = Math.floor(Math.random() * obstacleImages.length);
-  obstacle.style.backgroundImage = `url('${obstacleImages[randomIndex]}')`;
-  obstacle.style.left = `${posX}px`;
-  obstacle.style.top = '-60px';
-
-  gameScreen.appendChild(obstacle);
-
-  // 랜덤 딜레이 -> 낙하 시작
-  const fallDelay = Math.floor(Math.random() * 200) + 100;
-  setTimeout(() => {
-    fallObstacle(obstacle);
-  }, fallDelay);
-
-  // 점수 구간별 생성
-  const interval = getSpawnInterval(score);
-  setTimeout(spawnObstacles, interval);
-}
-
-/**
- * 현재 점수에 따라 다음 장애물 생성까지의 간격(ms)을 반환
+ * 현재 점수에 따라 장애물 낙하 속도(px/frame)를 반환
  *
  * @param score 현재 점수
- * @returns 생성 대기 시간 (ms)
+ * @returns 프레임당 이동 픽셀 수
  */
-function getSpawnInterval(score: number): number {
-  if (score < 20) return 900;
-  if (score < 40) return 800;
-  if (score < 65) return 700;
-  if (score < 90) return 600;
-  return 550;
+function getObstacleSpeed(score: number): number {
+  if (score < 20) return 4;
+  if (score < 40) return 5;
+  if (score < 65) return 6;
+  if (score < 90) return 7;
+  return 8;
+}
+
+let cellOrder: number[] = [];
+let cellIndexNow = 0;
+
+/**
+ * 한 바퀴 셀 다 돌기 전까지는 중복 없이 셀 인덱스를 순환
+ */
+function getRandomCell(cells: number): number {
+  if (cellOrder.length !== cells || cellIndexNow >= cellOrder.length) {
+    cellOrder = [...Array(cells).keys()];
+    for (let i = cellOrder.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [cellOrder[i], cellOrder[j]] = [cellOrder[j], cellOrder[i]];
+    }
+    cellIndexNow = 0;
+  }
+
+  const result = cellOrder[cellIndexNow];
+  cellIndexNow++;
+  return result;
 }
 
 /**
@@ -681,6 +599,7 @@ function endGame(): void {
   // 정지
   gameBgm.pause();
   gameBgm.currentTime = 0;
+  // GAME OVER 효과음
   gameOverSfx.currentTime = 0;
   gameOverSfx.play();
 
@@ -795,7 +714,7 @@ function resetGame(): void {
   character.style.height = '110px';
 
   // 방향, 진화 단계 초기화
-  // characterDirection = 'right';
+  characterDirection = 'right';
   evolutionStage = 0;
   character.src = chickIdleFront;
 
