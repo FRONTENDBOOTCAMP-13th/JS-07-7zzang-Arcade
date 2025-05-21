@@ -171,6 +171,10 @@ html,
   pointer-events: none;
   z-index: 20;
 }
+.play-wrap {
+  position: relative;
+  z-index: 100;
+}
 
 .gameover.show {
   transform: translate(-50%, -50%) scale(1);
@@ -284,7 +288,7 @@ input::placeholder {
   border-radius: 25px;
   opacity: 0;
   transition: opacity 0.3s ease-in-out;
-  z-index: 50;
+  z-index: 999;
 }
 
 .toast.show {
@@ -323,6 +327,69 @@ input::placeholder {
   clip-path: inset(50%);
   border: 0;
   clip: rect(0 0 0 0);
+}
+
+.start-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 0;
+}
+
+.popup-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.start-popup img {
+  width: 50%;
+  height: auto;
+}
+
+.start-popup.hide {
+  display: none;
+}
+
+.start-popup.show {
+  display: flex;
+}
+
+.bgm-toggle {
+  display: flex;
+  position: absolute;
+  align-items: center;
+  bottom: 77px;
+  left: 30%;
+}
+
+.cd {
+  width: 80px;
+  margin-left: 23px;
+  transition: transform 0.3s ease;
+}
+
+.onoff-buttons img {
+  padding-top: 10px;
+  margin-left: -20px;
+  cursor: pointer;
 }
 
 canvas {

@@ -1,7 +1,13 @@
 import '../../style.css';
 import './tomato-box.css';
+
+// 이미지 import
 import tomatoImg from '../../assets/images/tomato-img/tomato-empty.png';
 import tomatoSelectedSrc from '../../assets/images/tomato-img/select-tomato.png';
+
+import bgmOnImg from '../../assets/images/tomato-img/bgmon.png';
+import bgmOffImg from '../../assets/images/tomato-img/bgmoff.png';
+
 // 파이어베이스 컬렉션 import
 import { fireScore, getTopScores } from '../../utilits/scoreService';
 
@@ -24,7 +30,7 @@ const numHeight = 445 / rows;
 
 let scoreNum = 0;
 
-const timeLimit = 120;
+const timeLimit = 1;
 let timeLeft = timeLimit;
 const dragThreshold = 5;
 let isDragging = false;
@@ -93,21 +99,100 @@ function tomatoIntro() {
 
   // 스타트 버튼 클릭
   startBtn?.addEventListener('click', () => {
-    window.parent.postMessage({ type: 'STOP_BGM' }, '*');
+    const popup = document.querySelector('.start-popup') as HTMLElement;
 
-    intro?.classList.add('hide');
-    intro?.classList.remove('show');
-    play?.classList.remove('hide');
-    play?.classList.add('show');
+    popup.classList.remove('hide');
+    popup.classList.add('show');
 
-    setTimeout(() => {
-      main();
-    }, 50);
-
-    playBgm('/sounds/tomato-bgm.wav');
+    cdState();
     playIcon('/sounds/pointer.wav');
+  });
 
-    startTimer();
+  let isBgmOn = true;
+  let angle = 0;
+  let animationFrameId: number;
+  const cdImg = document.querySelector('.cd-img') as HTMLImageElement;
+  const onoffBtn = document.querySelector('.onoff-buttons img') as HTMLImageElement;
+
+  // CD 회전
+  function cdSpin() {
+    cancelAnimationFrame(animationFrameId); // 중복 방지
+    function rotateCD() {
+      angle = (angle + 2) % 360;
+      cdImg.style.transform = `rotate(${angle}deg)`;
+      animationFrameId = requestAnimationFrame(rotateCD); //브라우저가 애니메이션을 업데이트할 지정된 함수를 호출하도록 요청
+    }
+    rotateCD();
+  }
+
+  // 회전 중지
+  function stopCDSpin() {
+    cancelAnimationFrame(animationFrameId);
+  }
+
+  // CD 상태 설정, localStorage에 재생 상태 저장하여 반영
+  function cdState() {
+    isBgmOn = localStorage.getItem('bgm-enabled') !== 'false';
+
+    if (isBgmOn) {
+      cdSpin();
+      onoffBtn.src = bgmOnImg;
+    } else {
+      stopCDSpin();
+      onoffBtn.src = bgmOffImg;
+    }
+  }
+
+  onoffBtn.addEventListener('click', () => {
+    isBgmOn = !isBgmOn;
+
+    const parentBgm = (window.parent as any).bgm as HTMLAudioElement;
+
+    if (isBgmOn) {
+      localStorage.setItem('bgm-enabled', 'true');
+      cdSpin();
+      onoffBtn.src = bgmOnImg;
+      parentBgm?.play().catch(err => console.warn('부모 BGM 재생 실패:', err));
+    } else {
+      localStorage.setItem('bgm-enabled', 'false');
+      stopCDSpin();
+      onoffBtn.src = bgmOffImg;
+      parentBgm?.pause();
+    }
+  });
+
+  // esc 키보드 이벤트
+  // esc 키보드 이벤트
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      const popup = document.querySelector('.start-popup') as HTMLElement;
+      const overlay = document.querySelector('.overlay-bg') as HTMLElement;
+
+      if (!popup.classList.contains('hide')) {
+        popup.classList.add('hide');
+        popup.classList.remove('show');
+        overlay?.classList.remove('show');
+
+        window.parent.postMessage({ type: 'STOP_BGM' }, '*');
+
+        intro?.classList.add('hide');
+        intro?.classList.remove('show');
+        play?.classList.remove('hide');
+        play?.classList.add('show');
+
+        setTimeout(() => {
+          main();
+        }, 50);
+
+        if (isBgmOn) {
+          playBgm('/sounds/tomato-bgm.wav');
+        }
+
+        playIcon('/sounds/pointer.wav');
+
+        startTimer();
+      }
+    }
   });
 }
 
@@ -248,6 +333,7 @@ function gameOver() {
 
   const score = scoreNum;
   const scoreInGameOver = document.querySelector('.gameover-score .gamescore') as HTMLElement;
+
   isGameOver = true;
 
   scoreInGameOver.textContent = score.toString();
@@ -393,9 +479,10 @@ function events() {
   restart?.addEventListener('click', () => {
     playIcon('/sounds/pointer.wav');
 
-    setTimeout(() => {
+    const bgmEnabled = localStorage.getItem('bgm-enabled') !== 'false';
+    if (bgmEnabled) {
       window.parent.postMessage({ type: 'PLAY_MAIN_BGM' }, '*');
-    }, 200);
+    }
 
     setTimeout(() => {
       location.href = '/src/pages/tomato-box/tomato-box.html';
@@ -405,10 +492,15 @@ function events() {
   // 취소
   cancel?.addEventListener('click', () => {
     playIcon('/sounds/pointer.wav');
+
+    const bgmEnabled = localStorage.getItem('bgm-enabled') !== 'false';
+    if (bgmEnabled) {
+      window.parent.postMessage({ type: 'PLAY_MAIN_BGM' }, '*');
+    }
+
     setTimeout(() => {
       location.href = '/src/pages/tomato-box/tomato-box.html';
     }, 200);
-    window.parent.postMessage({ type: 'PLAY_MAIN_BGM' }, '*');
   });
 
   // 닉네임 입력 받고 점수저장, async 처리 -> await 하기 위함 (서버와의 통신)

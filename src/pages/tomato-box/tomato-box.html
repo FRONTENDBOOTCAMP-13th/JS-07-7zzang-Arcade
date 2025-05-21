@@ -32,9 +32,24 @@
         </div>
       </div>
 
+      <!-- 게임 시작 전 설명 팝업 -->
+      <div class="start-popup hide">
+        <div class="popup-overlay"></div>
+        <div class="popup-content">
+          <img src="/src/assets/images/tomato-img/tomato-description.png" alt="게임 설명 및 오디오 설정" />
+          <div class="bgm-toggle">
+            <div class="cd"><img class="cd-img" src="/src/assets/images/tomato-img/bgm-cd.png" alt="" /></div>
+            <div class="onoff-buttons">
+              <img class="on-img" src="/src/assets/images/tomato-img/bgmon.png" alt="BGM ON" />
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- 플레이 -->
       <div class="play-wrap hide">
         <div class="wrap">
+          <!-- 게임 화면 -->
           <div class="title">
             <img src="/src/assets/images/tomato-img/tomato-play.png" alt="게임 화면" />
           </div>
@@ -47,9 +62,7 @@
             </div>
           </div>
           <canvas width="785" height="485"></canvas>
-
           <div class="overlay-bg"></div>
-
           <!-- 게임 오버 -->
           <div class="gameover">
             <div class="score-section">
