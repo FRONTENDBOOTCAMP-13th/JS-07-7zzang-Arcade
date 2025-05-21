@@ -101,6 +101,10 @@ const musicToggleWrapperRaw = document.querySelector('.music-onoff');
 assertInstance(musicToggleWrapperRaw, HTMLDivElement, 'music-onoff');
 const musicToggleWrapper = musicToggleWrapperRaw;
 
+const gameMusicElRaw = document.querySelector('.game-music');
+assertInstance(gameMusicElRaw, HTMLDivElement, 'game-music');
+const gameMusicEl = gameMusicElRaw;
+
 // ─── 사운드 로드 ─────────────────────────
 const bgm = new Audio('/sounds/space-bgm.mp3');
 const bossBgm = new Audio('/sounds/space-boss.mp3');
@@ -122,6 +126,12 @@ scoreModal.addEventListener('click', () => {
 musicToggleWrapper.addEventListener('click', () => {
   toggleOnEl.classList.toggle('off');
   toggleOffEl.classList.toggle('on');
+
+  if (toggleOnEl.classList.contains('off')) {
+    gameMusicEl.classList.add('paused');
+  } else {
+    gameMusicEl.classList.remove('paused');
+  }
 });
 
 // ─── 트로피 클릭 시 ──────────────────
