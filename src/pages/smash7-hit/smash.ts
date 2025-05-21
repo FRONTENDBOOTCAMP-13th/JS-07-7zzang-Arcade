@@ -2,7 +2,7 @@ import mole1Img from '../../assets/images/smash-img/smash-mole1.png';
 import mole2Img from '../../assets/images/smash-img/smash-mole2.png';
 import twinkleImg from '../../assets/images/smash-img/smash-twinkle.png';
 
-// 파이어 베이스 파일 import
+// 파이어 베이스 파일 import (매우 중요)
 import { fireScore, getTopScores } from '../../utilits/scoreService';
 
 class MoleGame {
@@ -51,7 +51,7 @@ class MoleGame {
       this.show('scorePopup');
     });
 
-    // 🏠 홈 아이콘 클릭 시 (향후 기능 추가 예정)
+    // 🏠 홈 아이콘 클릭 시
     document.getElementById('homeIcon')?.addEventListener('click', () => {
       this.playEffect('/sounds/smash-home.mp3'); // ✅ 효과음만 재생됨!
     });
@@ -170,6 +170,10 @@ class MoleGame {
     this.updateTimer();
     this.updateScore();
 
+    // ✅ 게임 시작 시 뿅망치 보이기
+    const bat = document.getElementById('bat');
+    if (bat) bat.style.display = '';
+
     clearInterval(this.gameLoop);
     clearInterval(this.timerLoop);
 
@@ -186,7 +190,7 @@ class MoleGame {
     this.updateTimer();
     if (this.timeLeft === 10) {
       clearInterval(this.gameLoop); // 기존 루프 제거
-      this.gameLoop = setInterval(() => this.spawnMole(), 700); // 더 빠르게
+      this.gameLoop = setInterval(() => this.spawnMole(), 600); // 더 빠르게
     }
 
     if (this.timeLeft <= 0) {
@@ -249,6 +253,14 @@ class MoleGame {
     if (clickX >= pos.x && clickX <= pos.x + 200 && clickY >= pos.y && clickY <= pos.y + 200) {
       this.score += 10;
       this.updateScore();
+
+      // ✅ 망치 애니메이션 추가
+      this.bat.style.transition = 'transform 0.05s ease';
+      this.bat.style.transform = 'rotate(-40deg) scale(0.95)';
+      setTimeout(() => {
+        this.bat.style.transform = 'rotate(0deg) scale(1)';
+      }, 50);
+
       // ✨ 트윙클 효과 발생 위치
       this.spawnStarEffect(clickX - 40, clickY - 56);
 
@@ -292,21 +304,20 @@ class MoleGame {
   private async saveScore() {
     const name = (document.getElementById('playerName') as HTMLInputElement).value.trim().slice(0, 3);
     if (!/^([가-힣]{3}|[A-Z]{3})$/.test(name)) {
-      alert('닉네임을 다시 입력 해주세요!');
+      alert('한글 또는 영문으로 3글자 입력 해주세요!');
       return;
     }
 
-    document.getElementById('savePopup')?.classList.add('hidden');
-
     try {
       await fireScore(name, this.score, 'mole-game'); // Firestore에 저장, 해당 파라미터로
+      document.getElementById('savePopup')?.classList.add('hidden');
+      this.gotoIntro();
       showToast('저장되었습니다!');
-    } catch (err) {}
-
-    this.gotoIntro();
-    showToast('저장되었습니다!');
+    } catch (err) {
+      showToast('이미 존재하는 닉네임입니다.', false);
+    }
   }
-
+  // async api 저장 관련 코드
   private async renderScoreList() {
     const list = document.getElementById('scoreList')!;
     list.innerHTML = '';
@@ -361,9 +372,13 @@ class MoleGame {
     this.hide('savePopup');
     this.hide('gameOverPopup');
     this.hide('scorePopup');
-    this.hide('gameScreen'); // ✅ start 화면과 play 화면이 같이 붙어서 나오는 현상 방지
+    this.hide('gameScreen');
     this.show('introScreen');
     window.parent.postMessage({ type: 'PLAY_MAIN_BGM' }, '*');
+
+    // ✅ 인트로에서는 뿅망치 숨기기
+    const bat = document.getElementById('bat');
+    if (bat) bat.style.display = 'none';
   }
 }
 
@@ -372,7 +387,7 @@ window.addEventListener('DOMContentLoaded', () => {
   new MoleGame();
 });
 
-function showToast(message: string) {
+function showToast(message: string, _shouldReset: boolean = true) {
   const toast = document.getElementById('toast');
   if (!toast) return;
 

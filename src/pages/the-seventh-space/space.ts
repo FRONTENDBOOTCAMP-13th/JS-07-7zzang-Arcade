@@ -85,6 +85,26 @@ const scoreListElRaw = document.querySelector('#scoreModal ul');
 assertInstance(scoreListElRaw, HTMLUListElement, 'scoreModal ul');
 const scoreListEl = scoreListElRaw;
 
+const howPlayElRaw = document.getElementById('howPlay');
+assertInstance(howPlayElRaw, HTMLDivElement, 'howPlay');
+const howPlayEl = howPlayElRaw;
+
+const toggleOnRaw = document.querySelector('.music-on');
+assertInstance(toggleOnRaw, HTMLDivElement, 'music-on');
+const toggleOnEl = toggleOnRaw;
+
+const toggleOffRaw = document.querySelector('.music-off');
+assertInstance(toggleOffRaw, HTMLDivElement, 'music-off');
+const toggleOffEl = toggleOffRaw;
+
+const musicToggleWrapperRaw = document.querySelector('.music-onoff');
+assertInstance(musicToggleWrapperRaw, HTMLDivElement, 'music-onoff');
+const musicToggleWrapper = musicToggleWrapperRaw;
+
+const gameMusicElRaw = document.querySelector('.game-music');
+assertInstance(gameMusicElRaw, HTMLDivElement, 'game-music');
+const gameMusicEl = gameMusicElRaw;
+
 // ─── 사운드 로드 ─────────────────────────
 const bgm = new Audio('/sounds/space-bgm.mp3');
 const bossBgm = new Audio('/sounds/space-boss.mp3');
@@ -102,6 +122,18 @@ scoreModal.addEventListener('click', () => {
   scoreModal.classList.add('hidden');
 });
 
+// ─── 뮤직 on/off 토글 ────────────
+musicToggleWrapper.addEventListener('click', () => {
+  toggleOnEl.classList.toggle('off');
+  toggleOffEl.classList.toggle('on');
+
+  if (toggleOnEl.classList.contains('off')) {
+    gameMusicEl.classList.add('paused');
+  } else {
+    gameMusicEl.classList.remove('paused');
+  }
+});
+
 // ─── 트로피 클릭 시 ──────────────────
 trophyIcon.addEventListener('click', () => {
   renderScoreList();
@@ -114,10 +146,7 @@ startBtn.addEventListener('click', () => {
 
   if (!assetsLoaded) return;
   introEl.style.display = 'none';
-  canvasEl.style.display = 'block';
-  bgm.currentTime = 0;
-  bgm.play().catch(() => {});
-  init();
+  howPlayEl.classList.remove('hidden');
 });
 
 // ─── 취소 버튼 클릭 시 ──────────────────
@@ -167,14 +196,15 @@ saveBtn.addEventListener('click', async () => {
   try {
     await fireScore(nickRaw, Score.score, 'seven-space'); // Firestore에 저장, 해당 파라미터로
     showToast(`${nickRaw}님, ${Score.score}점이 저장되었습니다!`);
-  } catch {
-    showToast('점수 저장에 실패했습니다.');
-  }
 
-  // 모달 닫기 및 화면 전환
-  nameModal.classList.add('hidden');
-  canvasEl.style.display = 'none';
-  introEl.style.display = 'flex';
+    // 모달 닫기 및 화면 전환
+    nameModal.classList.add('hidden');
+    canvasEl.style.display = 'none';
+    introEl.style.display = 'flex';
+  } catch {
+    showToast('이미 존재하는 닉네임입니다.', 2000, false);
+    nicknameInput.focus();
+  }
 });
 
 // <ul>에 렌더링
@@ -203,7 +233,7 @@ async function renderScoreList() {
   }
 }
 
-function showToast(message: string, duration = 2000) {
+function showToast(message: string, duration = 2000, _shouldReset: boolean = true) {
   const container = document.getElementById('toast-container')!;
   const toast = document.createElement('div');
   toast.className = 'toast';
@@ -827,6 +857,21 @@ const keys = { ArrowLeft: false, ArrowRight: false, Space: false };
 document.addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Space') keys[e.key] = true;
   if (e.code === 'Space') Player.shoot();
+  if (e.key === 'Escape' && !howPlayEl.classList.contains('hidden')) {
+    howPlayEl.classList.add('hidden');
+    canvasEl.style.display = 'block';
+
+    const isMusicOn = !toggleOnEl.classList.contains('off');
+    if (isMusicOn) {
+      bgm.volume = bossBgm.volume = gameOverSound.volume = attackSound.volume = 0.1;
+      bgm.currentTime = 0;
+      bgm.play().catch(() => {});
+    } else {
+      bgm.volume = bossBgm.volume = gameOverSound.volume = attackSound.volume = 0;
+    }
+
+    init();
+  }
 });
 document.addEventListener('keyup', e => {
   if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Space') keys[e.key] = false;
