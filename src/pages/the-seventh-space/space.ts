@@ -14,6 +14,9 @@ import enemy2ImgSrc from '../../assets/images/space-img/enemy2.png';
 import enemy3ImgSrc from '../../assets/images/space-img/enemy3.png';
 import alienIconSrc from '../../assets/images/space-img/alien-icon.png';
 
+// 파이어 베이스 파일 import
+import { fireScore, getTopScores } from '../../utilits/scoreService';
+
 // ─── 타입 가드 헬퍼 ────────────────────────────────────────
 function assertInstance<T>(el: any, constructor: { new (...args: any[]): T }, name: string): asserts el is T {
   if (!(el instanceof constructor)) {
@@ -93,7 +96,6 @@ bgm.volume = bossBgm.volume = gameOverSound.volume = attackSound.volume = 0.1;
 
 // ──── 닉네임 패턴 && 스토리지 ────────────────────────────
 const nickPattern = /^([가-힣]{3}|[A-Z]{3})$/;
-const STORAGE_KEY = 'space-bestScores';
 
 // ─── overlay 클릭 시 닫기 ────────────
 scoreModal.addEventListener('click', () => {
@@ -145,7 +147,7 @@ openSaveBtn.addEventListener('click', () => {
 });
 
 // ─── SAVE 클릭 시 ───────────────────────────
-saveBtn.addEventListener('click', () => {
+saveBtn.addEventListener('click', async () => {
   const nickRaw = nicknameInput.value.trim().toUpperCase();
 
   // 빈 값 체크
@@ -162,56 +164,43 @@ saveBtn.addEventListener('click', () => {
     return;
   }
 
-  // 유효성 통과 시 저장
-  const currentScore = Score.score;
-  const data = localStorage.getItem(STORAGE_KEY);
-  const scores = data ? JSON.parse(data) : [];
-  scores.push({ name: nickRaw, score: currentScore });
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(scores));
+  try {
+    await fireScore(nickRaw, Score.score, 'seven-space'); // Firestore에 저장, 해당 파라미터로
+    showToast(`${nickRaw}님, ${Score.score}점이 저장되었습니다!`);
+  } catch {
+    showToast('점수 저장에 실패했습니다.');
+  }
 
   // 모달 닫기 및 화면 전환
   nameModal.classList.add('hidden');
   canvasEl.style.display = 'none';
   introEl.style.display = 'flex';
-
-  showToast(`${nickRaw}님, ${currentScore}점이 저장되었습니다!`);
 });
 
-// ─── 로컬스토리지 순위 불러오기 ──────────────────
-function getSortedScores(): [string, number][] {
-  const data = localStorage.getItem(STORAGE_KEY);
-  const scores: { name: string; score: number }[] = data ? JSON.parse(data) : [];
-
-  // 2) 점수 내림차순, 점수 같으면 닉네임 오름차순
-  scores.sort((a, b) => {
-    if (b.score !== a.score) return b.score - a.score;
-    return a.name.localeCompare(b.name);
-  });
-
-  // 3) [nick, score] 튜플로 변환 & 상위 5개만
-  return scores.slice(0, 5).map(item => [item.name, item.score] as [string, number]);
-}
 // <ul>에 렌더링
-function renderScoreList() {
-  const top5 = getSortedScores();
+async function renderScoreList() {
+  scoreListEl.innerHTML = '';
 
-  scoreListEl.innerHTML = top5
-    .map(
-      ([nick, sc]) => `
-      <li>
-        <div>
-          <img
-            src="${alienIconSrc}"
-            alt="alien icon"
-            class="alien-icon"
-          />
-          ${nick}
-        </div>
-        <div>${sc}</div>
-      </li>
-    `,
-    )
-    .join('');
+  try {
+    // firestore 접근, seven-space 값 가진 데이터들 중 상위 5개 가져옴
+    const top5 = await getTopScores('seven-space');
+
+    scoreListEl.innerHTML = top5
+      .map(
+        (entry: any) => `
+        <li>
+          <div>
+            <img src="${alienIconSrc}" alt="alien icon" class="alien-icon" />
+            ${entry.nickname}
+          </div>
+          <div>${entry.score}</div>
+        </li>
+      `,
+      )
+      .join('');
+  } catch {
+    scoreListEl.innerHTML = '<li>점수 불러오기 실패</li>';
+  }
 }
 
 function showToast(message: string, duration = 2000) {

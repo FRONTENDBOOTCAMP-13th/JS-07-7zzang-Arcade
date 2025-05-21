@@ -2,6 +2,8 @@ import '../../style.css';
 import './tomato-box.css';
 import tomatoImg from '../../assets/images/tomato-img/tomato-empty.png';
 import tomatoSelectedSrc from '../../assets/images/tomato-img/select-tomato.png';
+// 파이어베이스 컬렉션 import
+import { fireScore, getTopScores } from '../../utilits/scoreService';
 
 // 전역 변수
 const trophyBtn = document.querySelector('.trophy');
@@ -22,7 +24,7 @@ const numHeight = 445 / rows;
 
 let scoreNum = 0;
 
-const timeLimit = 1;
+const timeLimit = 120;
 let timeLeft = timeLimit;
 const dragThreshold = 5;
 let isDragging = false;
@@ -52,13 +54,6 @@ tomatoImage.src = tomatoImg;
 const tomatoSelectedImage = new Image();
 tomatoSelectedImage.src = tomatoSelectedSrc;
 
-interface ScoreArray {
-  name: string;
-  score: number;
-}
-
-const localKey = 'tomatobox_Score';
-
 let bgm: HTMLAudioElement;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -70,7 +65,6 @@ function main() {
   const canvasEl = document.querySelector('canvas');
 
   if (!canvasEl) {
-    console.error('Canvas not found');
     return;
   }
 
@@ -78,7 +72,6 @@ function main() {
 
   const maybeCtx = canvas.getContext('2d');
   if (!maybeCtx) {
-    console.error('getContext failed');
     return;
   }
 
@@ -131,25 +124,25 @@ function ScoreToggle(scoreEl: HTMLElement) {
 }
 
 // 최고 점수 상위 5명
-function bestFive() {
+async function bestFive() {
   const scoreListEl = document.querySelector('.bestscore .score-list');
 
   if (!scoreListEl) return;
 
-  const stored = localStorage.getItem(localKey);
-  const entries: ScoreArray[] = stored ? JSON.parse(stored) : [];
+  // firestore 접근, tomato-box 값 가진 데이터들 중 상위 5개 가져옴
+  try {
+    const top5 = await getTopScores('tomato-box');
 
-  const top5 = entries.sort((a, b) => b.score - a.score).slice(0, 5);
-
-  scoreListEl.innerHTML = top5
-    .map(
-      entry => `
-    <li>
-      <span class="rank-name">${entry.name}</span>
-      <span class="rank-score">${entry.score}</span>
-    </li>`,
-    )
-    .join('');
+    scoreListEl.innerHTML = top5
+      .map(
+        (entry: any) => `
+        <li>
+          <span class="rank-name">${entry.nickname}</span>
+          <span class="rank-score">${entry.score}</span>
+        </li>`,
+      )
+      .join('');
+  } catch (err) {}
 }
 
 // 숫자 스타일
@@ -398,7 +391,6 @@ function events() {
 
   // 다시하기
   restart?.addEventListener('click', () => {
-    localStorage.removeItem('tomatobox_lastScore');
     playIcon('/sounds/pointer.wav');
 
     setTimeout(() => {
@@ -419,8 +411,8 @@ function events() {
     window.parent.postMessage({ type: 'PLAY_MAIN_BGM' }, '*');
   });
 
-  // 닉네임 입력 받고 점수저장
-  saveScoreBtn?.addEventListener('click', () => {
+  // 닉네임 입력 받고 점수저장, async 처리 -> await 하기 위함 (서버와의 통신)
+  saveScoreBtn?.addEventListener('click', async () => {
     const value = nicknameInput?.value.trim();
 
     if (!nicknameInput || !nicknameInput.value.trim()) {
@@ -441,14 +433,9 @@ function events() {
     const name = nicknameInput.value.trim();
     const score = scoreNum;
 
-    const newEntry: ScoreArray = { name, score };
-    const stored = localStorage.getItem(localKey);
-    let scoreList: ScoreArray[] = stored ? JSON.parse(stored) : [];
-
-    scoreList = scoreList.filter(entry => entry.name !== name);
-    scoreList.unshift(newEntry);
-    scoreList.sort((a, b) => b.score - a.score);
-    localStorage.setItem(localKey, JSON.stringify(scoreList));
+    try {
+      await fireScore(name, score, 'tomato-box'); // Firestore에 저장, 해당 파라미터로
+    } catch (err) {}
 
     nicknameInput.value = '';
 
