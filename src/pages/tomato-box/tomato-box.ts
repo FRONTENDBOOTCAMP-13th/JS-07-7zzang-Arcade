@@ -438,7 +438,7 @@ function events() {
 
       setTimeout(() => {
         window.location.href = '/src/pages/tomato-box/tomato-box.html';
-      }, 1500);
+      }, 500);
 
       Toast(`점수가 저장되었습니다!`);
     } catch (err) {
