@@ -6,6 +6,8 @@ const gameScreen = document.querySelector<HTMLElement>('.game-screen')!;
 const sel = document.querySelector<HTMLElement>('.game-selection')!;
 const coin = document.querySelector<HTMLElement>('.coin-slot')!;
 const coinSlot = document.querySelector<HTMLElement>('.coin-slot')!;
+const gamePoster = document.querySelector<HTMLElement>('.game-poster')!;
+const easterEgg = gamePoster.querySelector<HTMLElement>('.easter-egg')!;
 const coinSound = new Audio('/sounds/coin-insert.mp3');
 const bgm = new Audio('/sounds/bg-music.mp3');
 bgm.loop = true;
@@ -25,7 +27,12 @@ let isZoomed = false;
 
 (window as any).bgm = bgm;
 
-// 메인-인트로 이후 개인 화면 진입 시 재생 멈춤
+easterEgg.classList.remove('active');
+
+gamePoster.addEventListener('click', () => {
+  easterEgg.classList.toggle('active');
+});
+
 window.addEventListener('message', event => {
   const bgm = (window as any).bgm as HTMLAudioElement;
 
