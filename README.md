@@ -9,6 +9,8 @@
 
 [![Static Badge](https://img.shields.io/badge/NOTION-black?style=flat&logo=notion&logoColor=white&link=https%3A%2F%2Fwww.notion.so%2F7lenge-1ed73873401a80339678cb9ca4d1fe82)](https://www.notion.so/7lenge-1ed73873401a80339678cb9ca4d1fe82) ![Static Badge](https://img.shields.io/badge/7%EC%A7%B1%EC%98%A4%EB%9D%BD%EC%8B%A4%20%EA%B2%8C%EC%9E%84%ED%95%98%EB%9F%AC%20%EA%B0%80%EA%B8%B0%20!-FF2929?style=flat&logo=netlify&logoColor=white) [![Static Badge](https://img.shields.io/badge/WIKI-%23181717?style=flat&logo=github&logoColor=white&link=https%3A%2F%2Fgithub.com%2FFRONTENDBOOTCAMP-13th%2FJS-07-7zzang-Arcade%2Fwiki)](https://github.com/FRONTENDBOOTCAMP-13th/JS-07-7zzang-Arcade/wiki)
 
+_가운데 뱃지 추후에 배포 사이트 링크 첨부 필요_
+
 </div>
 
 과거의 **레트로풍 오락실 게임기**를 모티브로 한 웹 기반 미니 게임 플랫폼입니다.  
@@ -34,15 +36,21 @@
 
 **7lenge** (7 + Challenge)
 
-### 👨‍👩‍👧‍👦 저희 7lenge를 소개할게요.
+### 👨‍👩‍👧‍👦 7lenge를 소개합니다
 
-|                                                이호정                                                |                                              황유빈                                              |                                            김지수                                             |                                               배동초                                               |
+|                                                이호정                                                |                                              황유빈                                              |                                            배동초                                             |                                               김지수                                               |
 | :--------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------: |
 | [<img src="./public/images/animal-profile.png" width="100"><br>Github](https://github.com/jeong0403) | [<img src="./public/images/space-profile.png" width="100"><br>Github](https://github.com/YouVin) | [<img src="public/images/smash-profile.png" width="100"><br>Github](https://github.com/sua17) | [<img src="public/images/tomato-profile.png" width="100"><br>Github](https://github.com/kimlog126) |
 |                                            Team Leader/PM                                            |                                                PL                                                |                                        Content Writer                                         |                                          Content Designer                                          |
 |                                               한마디 ~                                               |                                             한마디 ~                                             |                                           한마디 ~                                            |                                              한마디 ~                                              |
 
 <br>
+<hr>
+
+### 👥 역할 분배
+
+_노션 역할분배 페이지 참고하여 작성_
+
 <hr>
 
 ### ⚙️ 기술 스택 / 개발 환경
@@ -58,53 +66,13 @@
 
 <hr>
 
-### 👥 역할 분배
-
-| 이름   | 맡은 역할               |
-| ------ | ----------------------- |
-| 이호정 | 출동! 동물특공대        |
-| 황유빈 | 제 7우주, 인덱스 페이지 |
-| 배동초 | 뿅뿅 두더지             |
-| 김지수 | 토마토 박스             |
-
-<hr>
-
-### 💻 주요 기능
-
-_게임 대표 소개글을 간단하게 한줄만 작성해주세요._
-
-- **출동! 동물특공대** :
-- **제 7우주** :
-- **뿅뿅 두더지** :
-- **토마토 박스** :
-
-<hr>
-
 ### 📂 프로젝트 구조
 
-_이건 넣을지 말지 논의 필요_
+_트리 구조 만들어서 코드블럭으로_
 
 <hr>
 
-### 📥 설치 가이드
-
-```
-# 프로젝트 클론
-
-# 디렉토리 이동
-
-# 의존성 설치
-
-# 환경 변수 설정
-
-# 개발 서버 실행
-```
-
-<hr>
-
-### 🕹️ 실행 화면
-
-_넣을지 논의 필요. 위키에도 사용설명서로 들어가긴 합니다. 만약 들어간다면 다음과 같이 진행해주세요._
+## 💻 실행 화면
 
 > 1.  실행하는 화면 캡처 (영상 캡처 -> gif 변환)해서 넣어주세요.
 
@@ -151,14 +119,4 @@ _넣을지 논의 필요. 위키에도 사용설명서로 들어가긴 합니다
 
 ### ✨ 더 알아보기
 
-저희 프로젝트는 [🕹️7짱오락실 바로가기](/)에서 경험해보실 수 있어요.
-
-더 궁금하시다면 아래를 참고해주세요.
-
-- ~~주요 기능이 궁금해요. 👉 [7짱오락실 사용 설명서 바로가기](/)~~ -> 실행 화면 논의 후 결정
-- 프로젝트를 직접 설치하고 싶어요. 👉[설치 가이드 바로가기](/)
-- 협업 방식을 알아보고 싶어요. 👉 [협업 가이드 바로가기](/)
-- 사용한 기술이 궁금해요. 👉 [기술 스택 바로가기](/)
-- 프로젝트를 하면서 겪은 이야기가 궁금해요. 👉 [개발 기록 바로가기](/)
-
-다른 이야기는 📖[팀 위키](https://github.com/FRONTENDBOOTCAMP-13th/JS-07-7zzang-Arcade/wiki)에서 확인해 보실 수 있어요.
+더 자세한 내용은 📖[팀 위키 바로가기](https://github.com/FRONTENDBOOTCAMP-13th/JS-07-7zzang-Arcade/wiki)에서 확인해주세요.
