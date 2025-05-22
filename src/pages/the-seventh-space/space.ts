@@ -1018,6 +1018,7 @@ function gameLoop(ts: number) {
 
     // ─── 보스 격파
     if (boss.hitPoint <= 0) {
+      bossBgm.pause();
       spawnExplosion(boss.x + boss.width / 2, boss.y + boss.height / 2, explosionEnemy, 2000, boss.width * 1.2);
       bossPhase = false;
 
