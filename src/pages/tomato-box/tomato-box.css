@@ -173,7 +173,7 @@ html,
 }
 .play-wrap {
   position: relative;
-  z-index: 100;
+  z-index: 80;
 }
 
 .gameover.show {
@@ -305,7 +305,7 @@ input::placeholder {
   left: 0;
   width: 920px;
   height: 600px;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(0, 0, 0, 0.85);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease;
@@ -347,8 +347,8 @@ input::placeholder {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
-  z-index: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  z-index: 1;
 }
 
 .popup-content {

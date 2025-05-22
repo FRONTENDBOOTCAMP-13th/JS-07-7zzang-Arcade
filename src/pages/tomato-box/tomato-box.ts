@@ -12,6 +12,7 @@ import bgmOffImg from '../../assets/images/tomato-img/bgmoff.png';
 import { fireScore, getTopScores } from '../../utilits/scoreService';
 
 // 전역 변수
+const homeBtn = document.querySelector('.home');
 const trophyBtn = document.querySelector('.trophy');
 const bestScore = document.querySelector('.bestscore') as HTMLElement;
 const startBtn = document.querySelector('.start') as HTMLElement;
@@ -61,6 +62,7 @@ const tomatoSelectedImage = new Image();
 tomatoSelectedImage.src = tomatoSelectedSrc;
 
 let bgm: HTMLAudioElement;
+let isBgmOn = true;
 
 document.addEventListener('DOMContentLoaded', () => {
   tomatoIntro();
@@ -86,10 +88,22 @@ function main() {
   playGrid();
   events();
   animateTomatoes();
+
+  // 개발자 모드
+  initDevMode();
 }
 
 // 인트로
 function tomatoIntro() {
+  // 홈 버튼 클릭
+  homeBtn?.addEventListener('click', () => {
+    if (isBgmOn) {
+      playIcon('/sounds/pointer.wav');
+    }
+
+    window.parent.postMessage({ type: 'PLAY_MAIN_BGM' }, '*');
+  });
+
   // 트로피 클릭
   trophyBtn?.addEventListener('click', () => {
     bestFive();
@@ -101,14 +115,24 @@ function tomatoIntro() {
   startBtn?.addEventListener('click', () => {
     const popup = document.querySelector('.start-popup') as HTMLElement;
 
+    window.parent.postMessage({ type: 'STOP_BGM' }, '*');
+
+    if (isBgmOn) {
+      playBgm('/sounds/tomato-bgm.wav');
+    }
+    cdState();
+
+    intro?.classList.add('hide');
+    intro?.classList.remove('show');
+    play?.classList.remove('hide');
+    play?.classList.add('show');
+
     popup.classList.remove('hide');
     popup.classList.add('show');
 
-    cdState();
     playIcon('/sounds/pointer.wav');
   });
 
-  let isBgmOn = true;
   let angle = 0;
   let animationFrameId: number;
   const cdImg = document.querySelector('.cd-img') as HTMLImageElement;
@@ -132,8 +156,6 @@ function tomatoIntro() {
 
   // CD 상태 설정, localStorage에 재생 상태 저장하여 반영
   function cdState() {
-    isBgmOn = localStorage.getItem('bgm-enabled') !== 'false';
-
     if (isBgmOn) {
       cdSpin();
       onoffBtn.src = bgmOnImg;
@@ -146,18 +168,18 @@ function tomatoIntro() {
   onoffBtn.addEventListener('click', () => {
     isBgmOn = !isBgmOn;
 
-    const parentBgm = (window.parent as any).bgm as HTMLAudioElement;
-
     if (isBgmOn) {
       localStorage.setItem('bgm-enabled', 'true');
       cdSpin();
       onoffBtn.src = bgmOnImg;
-      parentBgm?.play().catch(err => console.warn('부모 BGM 재생 실패:', err));
+      playBgm('/sounds/tomato-bgm.wav');
     } else {
       localStorage.setItem('bgm-enabled', 'false');
       stopCDSpin();
       onoffBtn.src = bgmOffImg;
-      parentBgm?.pause();
+      if (bgm) {
+        bgm.pause();
+      }
     }
   });
 
@@ -173,11 +195,6 @@ function tomatoIntro() {
         overlay?.classList.remove('show');
 
         window.parent.postMessage({ type: 'STOP_BGM' }, '*');
-
-        intro?.classList.add('hide');
-        intro?.classList.remove('show');
-        play?.classList.remove('hide');
-        play?.classList.add('show');
 
         setTimeout(() => {
           main();
@@ -478,9 +495,15 @@ function events() {
   restart?.addEventListener('click', () => {
     playIcon('/sounds/pointer.wav');
 
-    const bgmEnabled = localStorage.getItem('bgm-enabled') !== 'false';
-    if (bgmEnabled) {
-      window.parent.postMessage({ type: 'PLAY_MAIN_BGM' }, '*');
+    if (bgm) {
+      bgm.pause();
+      bgm.currentTime = 0;
+    }
+
+    window.parent.postMessage({ type: 'PLAY_MAIN_BGM' }, '*');
+
+    if (isBgmOn) {
+      playIcon('/sounds/pointer.wav');
     }
 
     setTimeout(() => {
@@ -492,9 +515,15 @@ function events() {
   cancel?.addEventListener('click', () => {
     playIcon('/sounds/pointer.wav');
 
-    const bgmEnabled = localStorage.getItem('bgm-enabled') !== 'false';
-    if (bgmEnabled) {
-      window.parent.postMessage({ type: 'PLAY_MAIN_BGM' }, '*');
+    if (bgm) {
+      bgm.pause();
+      bgm.currentTime = 0;
+    }
+
+    window.parent.postMessage({ type: 'PLAY_MAIN_BGM' }, '*');
+
+    if (isBgmOn) {
+      playIcon('/sounds/pointer.wav');
     }
 
     setTimeout(() => {
@@ -527,6 +556,8 @@ function events() {
     try {
       await fireScore(name, score, 'tomato-box'); // Firestore에 저장, 해당 파라미터로
 
+      window.parent.postMessage({ type: 'PLAY_MAIN_BGM' }, '*');
+
       setTimeout(() => {
         window.location.href = '/src/pages/tomato-box/tomato-box.html';
       }, 500);
@@ -534,7 +565,6 @@ function events() {
       Toast(`점수가 저장되었습니다!`);
     } catch (err) {
       Toast(`이미 존재하는 닉네임입니다.`, false);
-      nicknameInput.focus();
     }
   });
 
@@ -597,6 +627,15 @@ function animateTomatoes() {
 
 // 배경음
 function playBgm(soundPath: string) {
+  if (!isBgmOn) return;
+
+  if (bgm) {
+    bgm.play().catch(err => {
+      console.warn('BGM resume 실패:', err);
+    });
+    return;
+  }
+
   bgm = new Audio(soundPath);
   bgm.loop = true;
   bgm.volume = 0.1;
@@ -608,6 +647,8 @@ function playBgm(soundPath: string) {
 
 // 토마토 떨어질 때 효과음
 function playEffect(soundPath: string) {
+  if (!isBgmOn) return;
+
   const effect = new Audio(soundPath);
   effect.volume = 0.1;
 
@@ -618,6 +659,8 @@ function playEffect(soundPath: string) {
 
 // 게임오버 효과음
 function playGameover(soundPath: string) {
+  if (!isBgmOn) return;
+
   const gameover = new Audio(soundPath);
   gameover.volume = 0.1;
 
@@ -628,10 +671,30 @@ function playGameover(soundPath: string) {
 
 // 홈, 트로피 클릭 효과음
 function playIcon(soundPath: string) {
+  if (!isBgmOn) return;
+
   const pointer = new Audio(soundPath);
   pointer.volume = 0.7;
 
   pointer.play().catch(err => {
     console.warn('효과음 재생 실패', err);
+  });
+}
+
+// 개발자 모드, p키 입력 시 10초씩 시간 줄어듬
+function initDevMode() {
+  document.addEventListener('keydown', e => {
+    if (e.key.toUpperCase() === 'P') {
+      if (!isGameOver && play?.classList.contains('show')) {
+        timeLeft = Math.max(0, timeLeft - 10);
+
+        const currTimeBar = document.querySelector('.curr') as HTMLDivElement;
+        if (currTimeBar) {
+          currTimeBar.style.height = `${(timeLeft / timeLimit) * 66}%`;
+        }
+
+        console.log('[DEV MODE] -10초 | 남은 시간:', timeLeft);
+      }
+    }
   });
 }
