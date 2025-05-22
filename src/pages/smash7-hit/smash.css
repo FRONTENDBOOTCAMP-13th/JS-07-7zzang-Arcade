@@ -423,6 +423,10 @@ canvas {
   image-rendering: pixelated;
 }
 
+.bgm-icon.paused {
+  animation-play-state: paused;
+}
+
 .bgm-btn {
   width: 40px;
   height: 40px;
