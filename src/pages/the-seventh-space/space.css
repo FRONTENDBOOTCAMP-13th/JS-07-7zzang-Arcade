@@ -231,3 +231,79 @@ canvas {
   opacity: 1;
   transform: translateY(0);
 }
+
+#howPlay {
+  width: 920px;
+  height: 600px;
+  background-image: url('../../assets/images/space-img/how-main.png');
+  background-size: contain;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-color: transparent;
+}
+.game-music {
+  position: absolute;
+  top: 70%;
+  left: 17%;
+  width: 55px;
+  height: 60px;
+  background-image: url('../../assets/icons/bgm-icon1.png');
+  background-position: center center;
+  background-repeat: no-repeat;
+  transform-origin: center center;
+  animation: spin 2s linear infinite;
+  animation-play-state: running;
+}
+
+.game-music.paused {
+  animation-play-state: paused;
+}
+
+.music-onoff {
+  position: absolute;
+  display: flex;
+  top: 70%;
+  left: 49%;
+  width: 140px;
+  height: 60px;
+}
+
+/* ON 상태 */
+.music-on {
+  flex: 1;
+  background-image: url('../../assets/images/space-img/how-oncolor.png');
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+/* OFF 상태 (same element에 붙은 off 클래스) */
+.music-on.off {
+  flex: 1;
+  background-image: url('../../assets/images/space-img/how-onblack.png');
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+/* OFF 상태 (기본) */
+.music-off {
+  flex: 1;
+  background-image: url('../../assets/images/space-img/how-offcolor.png');
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+/* ON 상태 (same element에 붙은 on 클래스) */
+.music-off.on {
+  flex: 1;
+  background-image: url('../../assets/images/space-img/how-offblack.png');
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

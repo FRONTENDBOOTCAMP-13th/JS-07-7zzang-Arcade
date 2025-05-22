@@ -85,6 +85,26 @@ const scoreListElRaw = document.querySelector('#scoreModal ul');
 assertInstance(scoreListElRaw, HTMLUListElement, 'scoreModal ul');
 const scoreListEl = scoreListElRaw;
 
+const howPlayElRaw = document.getElementById('howPlay');
+assertInstance(howPlayElRaw, HTMLDivElement, 'howPlay');
+const howPlayEl = howPlayElRaw;
+
+const toggleOnRaw = document.querySelector('.music-on');
+assertInstance(toggleOnRaw, HTMLDivElement, 'music-on');
+const toggleOnEl = toggleOnRaw;
+
+const toggleOffRaw = document.querySelector('.music-off');
+assertInstance(toggleOffRaw, HTMLDivElement, 'music-off');
+const toggleOffEl = toggleOffRaw;
+
+const musicToggleWrapperRaw = document.querySelector('.music-onoff');
+assertInstance(musicToggleWrapperRaw, HTMLDivElement, 'music-onoff');
+const musicToggleWrapper = musicToggleWrapperRaw;
+
+const gameMusicElRaw = document.querySelector('.game-music');
+assertInstance(gameMusicElRaw, HTMLDivElement, 'game-music');
+const gameMusicEl = gameMusicElRaw;
+
 // ─── 사운드 로드 ─────────────────────────
 const bgm = new Audio('/sounds/space-bgm.mp3');
 const bossBgm = new Audio('/sounds/space-boss.mp3');
@@ -102,6 +122,18 @@ scoreModal.addEventListener('click', () => {
   scoreModal.classList.add('hidden');
 });
 
+// ─── 뮤직 on/off 토글 ────────────
+musicToggleWrapper.addEventListener('click', () => {
+  toggleOnEl.classList.toggle('off');
+  toggleOffEl.classList.toggle('on');
+
+  if (toggleOnEl.classList.contains('off')) {
+    gameMusicEl.classList.add('paused');
+  } else {
+    gameMusicEl.classList.remove('paused');
+  }
+});
+
 // ─── 트로피 클릭 시 ──────────────────
 trophyIcon.addEventListener('click', () => {
   renderScoreList();
@@ -114,10 +146,7 @@ startBtn.addEventListener('click', () => {
 
   if (!assetsLoaded) return;
   introEl.style.display = 'none';
-  canvasEl.style.display = 'block';
-  bgm.currentTime = 0;
-  bgm.play().catch(() => {});
-  init();
+  howPlayEl.classList.remove('hidden');
 });
 
 // ─── 취소 버튼 클릭 시 ──────────────────
@@ -828,6 +857,21 @@ const keys = { ArrowLeft: false, ArrowRight: false, Space: false };
 document.addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Space') keys[e.key] = true;
   if (e.code === 'Space') Player.shoot();
+  if (e.key === 'Escape' && !howPlayEl.classList.contains('hidden')) {
+    howPlayEl.classList.add('hidden');
+    canvasEl.style.display = 'block';
+
+    const isMusicOn = !toggleOnEl.classList.contains('off');
+    if (isMusicOn) {
+      bgm.volume = bossBgm.volume = gameOverSound.volume = attackSound.volume = 0.1;
+      bgm.currentTime = 0;
+      bgm.play().catch(() => {});
+    } else {
+      bgm.volume = bossBgm.volume = gameOverSound.volume = attackSound.volume = 0;
+    }
+
+    init();
+  }
 });
 document.addEventListener('keyup', e => {
   if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Space') keys[e.key] = false;

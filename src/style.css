@@ -164,7 +164,12 @@ body,
   transform: scale(1.05);
   transition: transform 0.2s ease;
 }
-
+.index-selection .readme a,
+.index-selection .wiki a {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
 .index-selection .wiki {
   background-image: url('/images/icon-wiki.png');
   background-size: contain;
@@ -204,18 +209,18 @@ body,
 }
 
 .audio-icon {
-  width: 90%;
-  height: 102%;
-  background-image: url('/images/audio-in.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center center;
-}
-.audio-icon.off {
-  background-image: url('/images/audio-out.png');
-  background-position: -360% center;
   width: 105%;
   height: 103%;
+  background-image: url('/images/audio-out.png');
+  background-position: -360% center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.audio-icon.on {
+  background-image: url('/images/audio-in.png');
+  background-position: center center;
+  width: 90%;
+  height: 102%;
 }
 .break-screen {
   position: absolute;
@@ -285,8 +290,8 @@ body,
 }
 
 .profile-img {
-  width: 45%;
-  height: 45%;
+  width: 40%;
+  height: 40%;
   height: auto;
   display: block;
 }

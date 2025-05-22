@@ -14,27 +14,27 @@
       <!-- 공통 배경 920x600 -->
       <div class="background-layer" id="bg1"></div>
       <div class="background-layer" id="bg2"></div>
-      <img src="/src/assets/images/animal-img/cloud.png" class="cloud cloud1" />
-      <img src="/src/assets/images/animal-img/cloud.png" class="cloud cloud2" />
-      <img src="/src/assets/images/animal-img/cloud.png" class="cloud cloud3" />
-      <img src="/src/assets/images/animal-img/bg-grass1.png" class="intro-grass" alt="잔디" />
+      <img src="/src/assets/images/animal-img/cloud.webp" class="cloud cloud1" />
+      <img src="/src/assets/images/animal-img/cloud.webp" class="cloud cloud2" />
+      <img src="/src/assets/images/animal-img/cloud.webp" class="cloud cloud3" />
+      <img src="/src/assets/images/animal-img/bg-grass1.webp" class="intro-grass" alt="잔디" />
 
       <!-- 인트로 화면 UI -->
       <div id="intro" class="intro-container">
         <!-- 헤더 -->
         <div class="intro-header">
           <a href="/index.html" class="intro-button">
-            <img src="/src/assets/icons/home.png" class="home-button" alt="홈으로 이동" />
+            <img src="/src/assets/icons/home.webp" class="home-button" alt="홈으로 이동" />
           </a>
           <div class="intro-title-wrapper">
-            <img src="/src/assets/images/animal-img/go-animal-patrol-t.png" class="intro-title" alt="출동! 동물특공대" />
+            <img src="/src/assets/images/animal-img/go-animal-patrol-t.webp" class="intro-title" alt="출동! 동물특공대" />
           </div>
-          <img src="/src/assets/icons/trophy.png" class="intro-button trophy-button" alt="트로피" />
+          <img src="/src/assets/icons/trophy.webp" class="intro-button trophy-button" alt="트로피" />
         </div>
 
         <!-- 메인 캐릭터 -->
         <div>
-          <img src="/src/assets/images/animal-img/intro-animal.png" class="intro-character" alt="병아리 캐릭터" />
+          <img src="/src/assets/images/animal-img/intro-animal.webp" class="intro-character" alt="병아리 캐릭터" />
         </div>
 
         <!-- START GAME 텍스트 -->
@@ -42,13 +42,22 @@
 
         <!-- Best Score 팝업 -->
         <div id="bestScorePopup" class="best-score-popup hidden">
-          <img src="/src/assets/images/animal-img/score-frame.png" alt="최고 점수 게시판" />
+          <img src="/src/assets/images/animal-img/score-frame.webp" alt="최고 점수 게시판" />
           <ul id="bestScoreList" class="best-score-entries"></ul>
         </div>
       </div>
 
       <!-- 게임 화면 UI -->
       <div id="game" class="game-container hidden">
+        <div id="gameGuidePopup" class="game-guide-popup hidden">
+          <img src="/src/assets/images/animal-img/animal-game-guide.webp" alt="게임 가이드" class="guide-img" />
+          <div class="music-btn-wrapper">
+            <img src="/src/assets/icons/bgm-icon4.png" id="popupMusicIcon" />
+            <button id="popupMusicOnBtn" class="music-btn on">ON</button>
+            <button id="popupMusicOffBtn" class="music-btn off">OFF</button>
+          </div>
+        </div>
+
         <!-- 캐릭터 진화 예고 말풍선 -->
         <div id="speech-bubble" class="speech-bubble hidden">
           <div class="bubble-text"></div>
@@ -58,7 +67,7 @@
         <div id="star-container" class="star-container"></div>
 
         <!-- 캐릭터 (병아리) -->
-        <img id="character" class="character" src="/src/assets/images/animal-img/chick-idle-front.png" alt="캐릭터" />
+        <img id="character" class="character" src="/src/assets/images/animal-img/chick-idle-front.webp" alt="캐릭터" />
 
         <!-- 점수 표시 -->
         <div id="score" class="score-ui">Score: 0</div>
