@@ -397,6 +397,7 @@ canvas {
   left: 35px;
   bottom: 100px;
   display: flex;
+  padding: 0;
   gap: 7px;
   align-items: center;
   z-index: 5;
@@ -413,7 +414,12 @@ canvas {
 }
 
 .bgm-button-wrap img {
-  pointer-events: none;
+  filter: brightness(0.6);
+  transition: filter 0.3s ease;
+}
+
+.bgm-button-wrap img.selected {
+  filter: brightness(1);
 }
 
 .bgm-icon {
