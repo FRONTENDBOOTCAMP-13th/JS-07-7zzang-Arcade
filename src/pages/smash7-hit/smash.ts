@@ -16,6 +16,7 @@ class MoleGame {
   private timerLoop: any;
   private bat: HTMLImageElement;
   private bgm: HTMLAudioElement | null = null;
+  private currentMoleType: number = 0;
   private molePositions = [
     // 9개 두더지 등장 위치
     { x: 120, y: 90 },
@@ -240,6 +241,7 @@ class MoleGame {
     const idx = Math.floor(Math.random() * 9);
     this.currentMoleIdx = idx;
     const type = Math.random() < 0.8 ? 0 : 1;
+    this.currentMoleType = type;
     const pos = this.molePositions[idx];
     this.ctx.drawImage(this.moleImages[type], pos.x, pos.y, 200, 200);
   }
@@ -261,7 +263,12 @@ class MoleGame {
     const pos = this.molePositions[this.currentMoleIdx];
 
     if (clickX >= pos.x && clickX <= pos.x + 200 && clickY >= pos.y && clickY <= pos.y + 200) {
-      this.score += 10;
+      // 두더지 타입에 따라 점수 다르게
+      if (this.currentMoleType === 0) {
+        this.score += 10; // mole1 점수
+      } else {
+        this.score += 20; // mole2 점수
+      }
       this.updateScore();
 
       // 망치 애니메이션 추가
@@ -429,11 +436,17 @@ window.addEventListener('DOMContentLoaded', () => {
       bgmOffBtn?.addEventListener('click', () => {
         (window as any).soundMuted = true;
         game.stopBgm();
+
+        const icon = document.getElementById('bgmIcon');
+        icon?.classList.add('paused'); // 회전 정지
       });
 
       bgmOnBtn?.addEventListener('click', () => {
         (window as any).soundMuted = false;
         game.playBgm('/sounds/smash-bgm.mp3');
+
+        const icon = document.getElementById('bgmIcon');
+        icon?.classList.remove('paused'); // 회전 재시작
       });
     }, 0);
   });
