@@ -30,7 +30,7 @@ const numHeight = 445 / rows;
 
 let scoreNum = 0;
 
-const timeLimit = 1;
+const timeLimit = 120;
 let timeLeft = timeLimit;
 const dragThreshold = 5;
 let isDragging = false;
