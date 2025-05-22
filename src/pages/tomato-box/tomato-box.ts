@@ -2,16 +2,17 @@ import '../../style.css';
 import './tomato-box.css';
 
 // 이미지 import
-import tomatoImg from '../../assets/images/tomato-img/tomato-empty.png';
-import tomatoSelectedSrc from '../../assets/images/tomato-img/select-tomato.png';
+import tomatoImg from '../../assets/images/tomato-img/tomato-empty.webp';
+import tomatoSelectedSrc from '../../assets/images/tomato-img/select-tomato.webp';
 
-import bgmOnImg from '../../assets/images/tomato-img/bgmon.png';
-import bgmOffImg from '../../assets/images/tomato-img/bgmoff.png';
+import bgmOnImg from '../../assets/images/tomato-img/bgmon.webp';
+import bgmOffImg from '../../assets/images/tomato-img/bgmoff.webp';
 
 // 파이어베이스 컬렉션 import
 import { fireScore, getTopScores } from '../../utilits/scoreService';
 
 // 전역 변수
+const homeBtn = document.querySelector('.home');
 const trophyBtn = document.querySelector('.trophy');
 const bestScore = document.querySelector('.bestscore') as HTMLElement;
 const startBtn = document.querySelector('.start') as HTMLElement;
@@ -61,6 +62,7 @@ const tomatoSelectedImage = new Image();
 tomatoSelectedImage.src = tomatoSelectedSrc;
 
 let bgm: HTMLAudioElement;
+let isBgmOn = true;
 
 document.addEventListener('DOMContentLoaded', () => {
   tomatoIntro();
@@ -86,10 +88,85 @@ function main() {
   playGrid();
   events();
   animateTomatoes();
+
+  // 개발자 모드
+  initDevMode();
+}
+
+// 게임 상태 초기화 함수
+function resetGameState() {
+  scoreNum = 0;
+  timeLeft = timeLimit;
+  isGameOver = false;
+  isVisible = false;
+  draggable = false;
+  isDragging = false;
+
+  gridData.length = 0;
+  flyingTomatoes.length = 0;
+
+  if (ctx) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+}
+
+// UI 상태 초기화 함수
+function resetUIState() {
+  const scoreInGame = document.querySelector('.overlay .score') as HTMLElement;
+  if (scoreInGame) scoreInGame.textContent = '0';
+
+  const currTimeBar = document.querySelector('.curr') as HTMLDivElement;
+  if (currTimeBar) currTimeBar.style.height = '100%';
+
+  const gameoverPopup = document.querySelector('.gameover');
+  const overlayBg = document.querySelector('.overlay-bg');
+  const saveScore = document.querySelector('.savescore') as HTMLElement;
+  const startPopup = document.querySelector('.start-popup') as HTMLElement;
+
+  gameoverPopup?.classList.remove('show');
+  overlayBg?.classList.remove('show');
+  saveScore?.classList.remove('show');
+  saveScore?.classList.add('hide');
+  startPopup?.classList.remove('show');
+  startPopup?.classList.add('hide');
+
+  const nicknameInput = document.querySelector('.nickname-input') as HTMLInputElement;
+  if (nicknameInput) nicknameInput.value = '';
+}
+
+// 화면 전환
+function showIntroScreen() {
+  intro?.classList.remove('hide');
+  intro?.classList.add('show');
+  play?.classList.add('hide');
+  play?.classList.remove('show');
+}
+
+// 게임 초기화
+function restartGame() {
+  if (bgm) {
+    bgm.pause();
+    bgm.currentTime = 0;
+  }
+
+  resetGameState();
+  resetUIState();
+  showIntroScreen();
+
+  window.parent.postMessage({ type: 'PLAY_MAIN_BGM' }, '*');
 }
 
 // 인트로
 function tomatoIntro() {
+  // 홈 버튼 클릭
+  homeBtn?.addEventListener('click', () => {
+    if (isBgmOn) {
+      playIcon('/sounds/pointer.wav');
+    }
+
+    window.parent.postMessage({ type: 'PLAY_MAIN_BGM' }, '*');
+  });
+
   // 트로피 클릭
   trophyBtn?.addEventListener('click', () => {
     bestFive();
@@ -101,14 +178,24 @@ function tomatoIntro() {
   startBtn?.addEventListener('click', () => {
     const popup = document.querySelector('.start-popup') as HTMLElement;
 
+    window.parent.postMessage({ type: 'STOP_BGM' }, '*');
+
+    if (isBgmOn) {
+      playBgm('/sounds/tomato-bgm.wav');
+    }
+    cdState();
+
+    intro?.classList.add('hide');
+    intro?.classList.remove('show');
+    play?.classList.remove('hide');
+    play?.classList.add('show');
+
     popup.classList.remove('hide');
     popup.classList.add('show');
 
-    cdState();
     playIcon('/sounds/pointer.wav');
   });
 
-  let isBgmOn = true;
   let angle = 0;
   let animationFrameId: number;
   const cdImg = document.querySelector('.cd-img') as HTMLImageElement;
@@ -130,10 +217,8 @@ function tomatoIntro() {
     cancelAnimationFrame(animationFrameId);
   }
 
-  // CD 상태 설정, localStorage에 재생 상태 저장하여 반영
+  // CD 상태 설정, 재생 상태 저장하여 반영
   function cdState() {
-    isBgmOn = localStorage.getItem('bgm-enabled') !== 'false';
-
     if (isBgmOn) {
       cdSpin();
       onoffBtn.src = bgmOnImg;
@@ -146,18 +231,18 @@ function tomatoIntro() {
   onoffBtn.addEventListener('click', () => {
     isBgmOn = !isBgmOn;
 
-    const parentBgm = (window.parent as any).bgm as HTMLAudioElement;
-
     if (isBgmOn) {
       localStorage.setItem('bgm-enabled', 'true');
       cdSpin();
       onoffBtn.src = bgmOnImg;
-      parentBgm?.play().catch(err => console.warn('부모 BGM 재생 실패:', err));
+      playBgm('/sounds/tomato-bgm.wav');
     } else {
       localStorage.setItem('bgm-enabled', 'false');
       stopCDSpin();
       onoffBtn.src = bgmOffImg;
-      parentBgm?.pause();
+      if (bgm) {
+        bgm.pause();
+      }
     }
   });
 
@@ -173,11 +258,6 @@ function tomatoIntro() {
         overlay?.classList.remove('show');
 
         window.parent.postMessage({ type: 'STOP_BGM' }, '*');
-
-        intro?.classList.add('hide');
-        intro?.classList.remove('show');
-        play?.classList.remove('hide');
-        play?.classList.add('show');
 
         setTimeout(() => {
           main();
@@ -459,7 +539,7 @@ function events() {
     redrawGrid();
   });
 
-  // 점수 저장
+  // 점수 저장 팝업 토글
   saveBtn?.addEventListener('click', () => {
     playIcon('/sounds/pointer.wav');
     if (!isVisible) {
@@ -478,28 +558,14 @@ function events() {
   restart?.addEventListener('click', () => {
     playIcon('/sounds/pointer.wav');
 
-    const bgmEnabled = localStorage.getItem('bgm-enabled') !== 'false';
-    if (bgmEnabled) {
-      window.parent.postMessage({ type: 'PLAY_MAIN_BGM' }, '*');
-    }
-
-    setTimeout(() => {
-      location.href = '/src/pages/tomato-box/tomato-box.html';
-    }, 200);
+    restartGame();
   });
 
   // 취소
   cancel?.addEventListener('click', () => {
     playIcon('/sounds/pointer.wav');
 
-    const bgmEnabled = localStorage.getItem('bgm-enabled') !== 'false';
-    if (bgmEnabled) {
-      window.parent.postMessage({ type: 'PLAY_MAIN_BGM' }, '*');
-    }
-
-    setTimeout(() => {
-      location.href = '/src/pages/tomato-box/tomato-box.html';
-    }, 200);
+    restartGame();
   });
 
   // 닉네임 입력 받고 점수저장, async 처리 -> await 하기 위함 (서버와의 통신)
@@ -527,14 +593,13 @@ function events() {
     try {
       await fireScore(name, score, 'tomato-box'); // Firestore에 저장, 해당 파라미터로
 
-      setTimeout(() => {
-        window.location.href = '/src/pages/tomato-box/tomato-box.html';
-      }, 500);
-
       Toast(`점수가 저장되었습니다!`);
+
+      setTimeout(() => {
+        restartGame();
+      }, 2000);
     } catch (err) {
       Toast(`이미 존재하는 닉네임입니다.`, false);
-      nicknameInput.focus();
     }
   });
 
@@ -597,6 +662,15 @@ function animateTomatoes() {
 
 // 배경음
 function playBgm(soundPath: string) {
+  if (!isBgmOn) return;
+
+  if (bgm) {
+    bgm.play().catch(err => {
+      console.warn('BGM resume 실패:', err);
+    });
+    return;
+  }
+
   bgm = new Audio(soundPath);
   bgm.loop = true;
   bgm.volume = 0.1;
@@ -608,6 +682,8 @@ function playBgm(soundPath: string) {
 
 // 토마토 떨어질 때 효과음
 function playEffect(soundPath: string) {
+  if (!isBgmOn) return;
+
   const effect = new Audio(soundPath);
   effect.volume = 0.1;
 
@@ -618,6 +694,8 @@ function playEffect(soundPath: string) {
 
 // 게임오버 효과음
 function playGameover(soundPath: string) {
+  if (!isBgmOn) return;
+
   const gameover = new Audio(soundPath);
   gameover.volume = 0.1;
 
@@ -628,10 +706,30 @@ function playGameover(soundPath: string) {
 
 // 홈, 트로피 클릭 효과음
 function playIcon(soundPath: string) {
+  if (!isBgmOn) return;
+
   const pointer = new Audio(soundPath);
   pointer.volume = 0.7;
 
   pointer.play().catch(err => {
     console.warn('효과음 재생 실패', err);
+  });
+}
+
+// 개발자 모드, p키 입력 시 10초씩 시간 줄어듬
+function initDevMode() {
+  document.addEventListener('keydown', e => {
+    if (e.key.toUpperCase() === 'P') {
+      if (!isGameOver && play?.classList.contains('show')) {
+        timeLeft = Math.max(0, timeLeft - 10);
+
+        const currTimeBar = document.querySelector('.curr') as HTMLDivElement;
+        if (currTimeBar) {
+          currTimeBar.style.height = `${(timeLeft / timeLimit) * 66}%`;
+        }
+
+        console.log('[DEV MODE] -10초 | 남은 시간:', timeLeft);
+      }
+    }
   });
 }

@@ -41,7 +41,7 @@ body,
   height: 2600px;
   perspective: 750px;
   background-color: #000;
-  background-image: url('/images/main.png');
+  background-image: url('/images/main.webp');
   transform: translate(-50%, -50%) scale(1);
   background-size: 5200px 2600px;
   background-position: center center;
@@ -81,7 +81,7 @@ body,
   place-items: center;
   padding: 20px;
   box-sizing: border-box;
-  background-image: url('/images/maingame-bg.png');
+  background-image: url('/images/maingame-bg.webp');
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -98,25 +98,25 @@ body,
 }
 
 .game-selection .animal {
-  background-image: url('/images/icon-animal.png');
+  background-image: url('/images/icon-animal.webp');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center center;
 }
 .game-selection .space {
-  background-image: url('/images/icon-space.png');
+  background-image: url('/images/icon-space.webp');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center center;
 }
 .game-selection .smash {
-  background-image: url('/images/icon-smash.png');
+  background-image: url('/images/icon-smash.webp');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center center;
 }
 .game-selection .tomato {
-  background-image: url('/images/icon-tomato.png');
+  background-image: url('/images/icon-tomato.webp');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center center;
@@ -148,7 +148,7 @@ body,
   place-items: center;
   padding: 20px;
   box-sizing: border-box;
-  background-image: url('/images/index-bg.png');
+  background-image: url('/images/index-bg.webp');
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -171,13 +171,13 @@ body,
   height: 100%;
 }
 .index-selection .wiki {
-  background-image: url('/images/icon-wiki.png');
+  background-image: url('/images/icon-wiki.webp');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center center;
 }
 .index-selection .readme {
-  background-image: url('/images/icon-readme.png');
+  background-image: url('/images/icon-readme.webp');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center center;
@@ -185,7 +185,7 @@ body,
 
 .coin-slot:hover {
   cursor:
-    url('/images/coin-front.png') 16 16,
+    url('/images/coin-front.webp') 16 16,
     auto;
 }
 
@@ -202,24 +202,26 @@ body,
 
 .set-audio {
   position: absolute;
-  top: 160px;
-  left: 3520px;
-  width: 600px;
-  height: 600px;
+  top: 310px;
+  left: 3590px;
+  width: 450px;
+  height: 300px;
 }
 
 .audio-icon {
-  width: 105%;
-  height: 103%;
-  background-image: url('/images/audio-out.png');
-  background-position: -360% center;
+  width: 100%;
+  height: 100%;
+  background-image: url('/images/audio-out.webp');
+  background-position: center center;
   background-size: contain;
   background-repeat: no-repeat;
 }
 .audio-icon.on {
-  background-image: url('/images/audio-in.png');
+  background-image: url('/images/audio-in.webp');
+  background-size: contain;
   background-position: center center;
-  width: 90%;
+  background-repeat: no-repeat;
+  width: 100;
   height: 102%;
 }
 .break-screen {
@@ -240,7 +242,7 @@ body,
   width: 750px;
   height: 1000px;
   clip-path: polygon(10% 0%, 100% 0%, 95% 100%, 0% 100%);
-  background-image: url('/images/break.png');
+  background-image: url('/images/break.webp');
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -248,12 +250,12 @@ body,
 
 .game-poster {
   position: absolute;
-  top: 700px;
-  left: 4610px;
-  width: 400px;
-  height: 1100px;
+  top: 900px;
+  left: 4600px;
+  width: 430px;
+  height: 600px;
   cursor: pointer;
-  background-image: url('/images/game-poster.png');
+  background-image: url('/images/game-poster.webp');
   background-position: center center;
   background-repeat: no-repeat;
   background-size: contain;

@@ -54,7 +54,7 @@ body {
 
 /* 캔버스 설정 - 두더지 배경 + 테두리 */
 canvas {
-  background-image: url('/src/assets/images/smash-img/smash-play.png');
+  background-image: url('/src/assets/images/smash-img/smash-play.webp');
   background-size: cover;
   background-repeat: no-repeat;
   border: none;
@@ -394,7 +394,7 @@ canvas {
 /* BGM 팝업 내 컨트롤 */
 .popup-bgm-controls {
   position: absolute;
-  left: 25px;
+  left: 35px;
   bottom: 100px;
   display: flex;
   gap: 7px;
@@ -421,6 +421,10 @@ canvas {
   height: 78px;
   animation: rotate 2s linear infinite;
   image-rendering: pixelated;
+}
+
+.bgm-icon.paused {
+  animation-play-state: paused;
 }
 
 .bgm-btn {

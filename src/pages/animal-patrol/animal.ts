@@ -371,7 +371,7 @@ function animateSpeechBubble(): void {
   if (!speechBubbleVisible) return;
 
   updateSpeechBubblePosition();
-  requestAnimationFrame(animateSpeechBubble);
+  speechBubbleFrameId = requestAnimationFrame(animateSpeechBubble);
 }
 
 /**
@@ -455,6 +455,9 @@ document.addEventListener('keydown', (e: KeyboardEvent) => {
 });
 
 const obstacleImages = [bananaImg, canImg, fireImg, boom1Img, boom2Img, acornsImg];
+let obstacleTimeoutId: number | undefined;
+const activeIntervals: number[] = [];
+let speechBubbleFrameId: number | undefined;
 
 /**
  * 장애물 랜덤 위치 생성 및 낙하 처리
@@ -488,7 +491,7 @@ function spawnObstacles(): void {
 
   // 점수 구간별 생성
   const interval = getSpawnInterval(score);
-  setTimeout(spawnObstacles, interval);
+  obstacleTimeoutId = window.setTimeout(spawnObstacles, interval);
 }
 
 /**
@@ -534,6 +537,7 @@ function fallObstacle(obstacle: HTMLDivElement): void {
       endGame();
     }
   }, 16); // 약 60fps 주기로 실행
+  // activeIntervals.push(interval);
 }
 
 /**
@@ -666,7 +670,7 @@ function validateName(name: string): boolean {
 }
 
 /**
- * CANCEL 버튼 -> 점수 저장 취소 후 게임 초기화
+ * CANCEL 버튼 -> 점수 저장 팝업 닫기 후 게임 초기화
  */
 const cancelSaveButton = getElById('cancelSaveButton', HTMLButtonElement);
 cancelSaveButton.addEventListener('click', () => {
@@ -676,9 +680,11 @@ cancelSaveButton.addEventListener('click', () => {
 });
 
 /**
- * 하단에 짧게 메시지를 보여준 후 게임을 초기화
+ * 토스트 메시지를 표시한 후, 1.5초 후 숨깁
+ * @param message 표시할 메시지
+ * @param shouldReset - 메시지 표시 후 게임 초기화를 실행할지 여부 (기본값: true)
  */
-function showToast(message: string, _shouldReset: boolean = true): void {
+function showToast(message: string, shouldReset: boolean = true): void {
   toast.textContent = message;
   toast.classList.remove('hidden');
   toast.classList.add('show');
@@ -688,6 +694,7 @@ function showToast(message: string, _shouldReset: boolean = true): void {
     toast.classList.add('hidden');
 
     // 닉네임 저장 성공 시 초기화 하도록 설정
+    if (shouldReset) resetGame();
   }, 1500);
 }
 
@@ -699,6 +706,22 @@ function resetGame(): void {
   characterX = (920 - 90) / 2;
   gameActive = false;
   shownWarnings.clear(); // set 초기화 필요 (멘트 띄우기)
+
+  // spawnObstacles setTimeout 중단
+  if (obstacleTimeoutId !== undefined) {
+    clearTimeout(obstacleTimeoutId);
+    obstacleTimeoutId = undefined;
+  }
+
+  // 장애물 낙하 setInterval 중단
+  activeIntervals.forEach(id => clearInterval(id));
+  activeIntervals.length = 0; // 배열 초기화
+
+  // 말풍선 애니메이션 중단
+  if (speechBubbleFrameId !== undefined) {
+    cancelAnimationFrame(speechBubbleFrameId);
+    speechBubbleFrameId = undefined;
+  }
 
   gameScreen.classList.add('hidden');
   introScreen.classList.remove('hidden');
@@ -716,7 +739,6 @@ function resetGame(): void {
   // 방향, 진화 단계 초기화
   characterDirection = 'right';
   evolutionStage = 0;
-  character.src = chickIdleFront;
 
   // 점수 UI 초기화
   scoreUI.textContent = 'Score: 0';
