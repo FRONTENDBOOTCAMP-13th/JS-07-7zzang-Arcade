@@ -434,6 +434,8 @@ window.addEventListener('DOMContentLoaded', () => {
       const bgmOnBtn = document.getElementById('bgmOnBtn');
 
       bgmOffBtn?.addEventListener('click', () => {
+        bgmOffBtn.querySelector('img')?.classList.add('selected');
+        bgmOnBtn?.querySelector('img')?.classList.remove('selected');
         (window as any).soundMuted = true;
         game.stopBgm();
 
@@ -442,6 +444,8 @@ window.addEventListener('DOMContentLoaded', () => {
       });
 
       bgmOnBtn?.addEventListener('click', () => {
+        bgmOnBtn.querySelector('img')?.classList.add('selected');
+        bgmOffBtn?.querySelector('img')?.classList.remove('selected');
         (window as any).soundMuted = false;
         game.playBgm('/sounds/smash-bgm.mp3');
 
