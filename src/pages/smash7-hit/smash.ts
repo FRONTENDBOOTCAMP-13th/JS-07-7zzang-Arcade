@@ -6,7 +6,7 @@ import twinkleImg from '../../assets/images/smash-img/smash-twinkle.png';
 import { fireScore, getTopScores } from '../../utilits/scoreService';
 
 class MoleGame {
-  // 🎯 상태 및 리소스 변수
+  // 상태 및 리소스 변수
   private score = 0;
   private timeLeft = 30;
   private canvas: HTMLCanvasElement;
@@ -17,7 +17,7 @@ class MoleGame {
   private bat: HTMLImageElement;
   private bgm: HTMLAudioElement | null = null;
   private molePositions = [
-    // 🕳️ 9개 두더지 등장 위치
+    // 9개 두더지 등장 위치
     { x: 120, y: 90 },
     { x: 350, y: 90 },
     { x: 570, y: 90 },
@@ -32,67 +32,64 @@ class MoleGame {
   private gameActive = false;
 
   constructor() {
-    // ✅ smash-play 화면의 캔버스 요소 및 뿅망치 이미지 참조
+    // smash-play 화면의 캔버스 요소 및 뿅망치 이미지 참조
     this.canvas = document.getElementById('gameCanvas') as HTMLCanvasElement;
     this.ctx = this.canvas.getContext('2d')!;
     this.bat = document.getElementById('bat') as HTMLImageElement;
 
-    // 🐹 두더지 이미지 (1번, 2번)
+    // 두더지 이미지 (1번, 2번)
     this.moleImages[0].src = mole1Img;
     this.moleImages[1].src = mole2Img;
 
-    // ▶️ intro 화면의 "시작 버튼" 클릭 → 게임 시작
-    document.getElementById('clickStart')?.addEventListener('click', () => this.startGame());
-
-    // 🏆 트로피 팝업 열기 + 효과음 재생
+    // 트로피 팝업 열기 + 효과음 재생
     document.getElementById('trophyIcon')?.addEventListener('click', () => {
-      this.playEffect('/sounds/smash-trophy-bgm.mp3'); // ✅ 효과음 추가!
+      this.playEffect('/sounds/smash-trophy-bgm.mp3'); // 효과음 추가!
       this.renderScoreList();
       this.show('scorePopup');
     });
 
-    // 🏠 홈 아이콘 클릭 시
+    // 홈 아이콘 클릭 시
     document.getElementById('homeIcon')?.addEventListener('click', () => {
-      this.playEffect('/sounds/smash-home.mp3'); // ✅ 효과음만 재생됨!
+      this.playEffect('/sounds/smash-home.mp3'); // 효과음만 재생됨!
     });
 
-    // 📋 score 팝업 닫기
+    // score 팝업 닫기
     document.getElementById('closeScore')?.addEventListener('click', () => this.hide('scorePopup'));
 
-    // 🔁 게임 오버 후 다시 시작
+    // 게임 오버 후 다시 시작
     document.getElementById('retry-btn')?.addEventListener('click', () => {
       this.hide('gameOverPopup');
       this.gotoIntro();
     });
 
-    // 💾 게임 오버 → 닉네임 저장 팝업으로 전환
+    // 게임 오버 → 닉네임 저장 팝업으로 전환
     document.getElementById('save-btn')?.addEventListener('click', () => {
       this.hide('gameOverPopup');
       this.show('savePopup');
       document.getElementById('bat')!.style.display = 'none'; // 뿅망치 숨기기
-      // ✨ 닉네임 입력창 초기화 + 자동 포커스
+      // 닉네임 입력창 초기화 + 자동 포커스
       setTimeout(() => {
         const input = document.getElementById('playerName') as HTMLInputElement;
         if (input) {
-          input.value = ''; // ✅ 내용 비우기
-          input.focus(); // ✅ 커서 깜빡이기
+          input.value = '';
+          input.focus();
         }
       }, 0);
     });
 
-    // ✅ 저장 팝업에서 점수 저장 버튼 클릭
+    // 저장 팝업에서 점수 저장 버튼 클릭
     document.getElementById('saveButton')?.addEventListener('click', () => {
       this.saveScore();
       // document.getElementById('savePopup')?.classList.add('hidden');
     });
 
-    // ⛔ 저장 팝업에서 게임 나가기 → 인트로 화면
+    // 저장 팝업에서 게임 나가기 → 인트로 화면
     document.getElementById('exitGame')?.addEventListener('click', () => {
       this.gotoIntro();
       window.parent.postMessage({ type: 'PLAY_MAIN_BGM' }, '*');
     });
 
-    // 🎯 닉네임 입력 시: 한글 + 영어만 허용하고 3글자까지 제한
+    // 닉네임 입력 시: 한글 + 영어만 허용하고 3글자까지 제한
     const nicknameInput = document.getElementById('playerName') as HTMLInputElement;
 
     let isComposing = false;
@@ -133,19 +130,42 @@ class MoleGame {
       }
     }
 
-    // 🎯 게임 캔버스 클릭 시 두더지 맞추기 처리
+    // 게임 캔버스 클릭 시 두더지 맞추기 처리
     this.canvas.addEventListener('click', e => this.handleClick(e));
 
-    // 🔨 마우스 이동 시 뿅망치 따라다니기
+    // 마우스 이동 시 뿅망치 따라다니기
     document.addEventListener('mousemove', e => this.moveBat(e));
 
-    // ⌨️ 키보드 Enter 누르면 게임 시작
+    // 키보드 Enter 누르면 게임 시작
     document.addEventListener('keydown', event => {
       if (event.key === 'Enter') this.startGame();
     });
   }
 
-  // 🔨 뿅망치 따라다니는 위치 조정 (smash-hat.png 위치 설정)
+  public playBgm(path: string): void {
+    if ((window as any).soundMuted) {
+      console.log('음소거 상태 — BGM 재생 안 함');
+      return;
+    }
+
+    if (this.bgm && !this.bgm.paused) return;
+
+    this.bgm = new Audio(path);
+    this.bgm.loop = true;
+    this.bgm.volume = 0.1;
+    this.bgm.play().catch(err => {
+      console.warn('BGM 재생 실패:', err);
+    });
+  }
+
+  public stopBgm(): void {
+    if (this.bgm && !this.bgm.paused) {
+      this.bgm.pause();
+      this.bgm.currentTime = 0;
+    }
+  }
+
+  // 뿅망치 따라다니는 위치 조정 (smash-hat.png 위치 설정)
   private moveBat(event: MouseEvent): void {
     const gameScreen = document.getElementById('gameScreen');
     const rect = gameScreen?.getBoundingClientRect();
@@ -155,10 +175,16 @@ class MoleGame {
     this.bat.style.top = `${offsetY - 107}px`;
   }
 
-  // ▶️ 게임 시작 로직
-  private startGame(): void {
+  // 게임 시작 로직
+  public startGame(): void {
+    if (this.gameActive) return;
+
+    this.gameActive = true;
     window.parent.postMessage({ type: 'STOP_BGM' }, '*');
-    this.playBgm('/sounds/smash-bgm.mp3');
+
+    if (!(window as any).soundMuted) {
+      this.playBgm('/sounds/smash-bgm.mp3');
+    }
     this.score = 0;
     this.timeLeft = 30;
     this.gameActive = true;
@@ -170,20 +196,20 @@ class MoleGame {
     this.updateTimer();
     this.updateScore();
 
-    // ✅ 게임 시작 시 뿅망치 보이기
+    // 게임 시작 시 뿅망치 보이기
     const bat = document.getElementById('bat');
     if (bat) bat.style.display = '';
 
     clearInterval(this.gameLoop);
     clearInterval(this.timerLoop);
 
-    // 🐹 두더지 등장 주기
+    // 두더지 등장 주기
     this.gameLoop = setInterval(() => this.spawnMole(), 800);
-    // ⏳ 타이머 감소
+    // 타이머 감소
     this.timerLoop = setInterval(() => this.countdown(), 1000);
   }
 
-  // ⏳ 타이머 감소 처리
+  // 타이머 감소 처리
   private countdown(): void {
     if (!this.gameActive) return;
     this.timeLeft--;
@@ -198,7 +224,7 @@ class MoleGame {
       clearInterval(this.gameLoop);
       clearInterval(this.timerLoop);
 
-      this.stopBgm(); // ✅ 배경음 정지
+      this.stopBgm(); // 배경음 정지
 
       this.playEffect('/sounds/smash-the-end.mp3');
 
@@ -207,7 +233,7 @@ class MoleGame {
     }
   }
 
-  // 🐹 두더지 등장 (확률적으로 1번/2번 두더지)
+  // 두더지 등장 (확률적으로 1번/2번 두더지)
   private spawnMole(): void {
     if (!this.gameActive) return;
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -218,22 +244,6 @@ class MoleGame {
     this.ctx.drawImage(this.moleImages[type], pos.x, pos.y, 200, 200);
   }
 
-  private playBgm(path: string): void {
-    this.bgm = new Audio(path);
-    this.bgm.loop = true;
-    this.bgm.volume = 0.1;
-    this.bgm.play().catch(err => {
-      console.warn('🎵 BGM 재생 실패:', err);
-    });
-  }
-
-  private stopBgm(): void {
-    if (this.bgm && !this.bgm.paused) {
-      this.bgm.pause();
-      this.bgm.currentTime = 0;
-    }
-  }
-
   private playEffect(path: string): void {
     const effect = new Audio(path);
     effect.volume = 0.1;
@@ -242,7 +252,7 @@ class MoleGame {
     });
   }
 
-  // 🎯 두더지 맞췄는지 확인하고 점수 증가
+  // 두더지 맞췄는지 확인하고 점수 증가
   private handleClick(e: MouseEvent): void {
     if (!this.gameActive || this.currentMoleIdx === null) return;
     const rect = this.canvas.getBoundingClientRect();
@@ -254,14 +264,14 @@ class MoleGame {
       this.score += 10;
       this.updateScore();
 
-      // ✅ 망치 애니메이션 추가
+      // 망치 애니메이션 추가
       this.bat.style.transition = 'transform 0.05s ease';
       this.bat.style.transform = 'rotate(-40deg) scale(0.95)';
       setTimeout(() => {
         this.bat.style.transform = 'rotate(0deg) scale(1)';
       }, 50);
 
-      // ✨ 트윙클 효과 발생 위치
+      // 트윙클 효과 발생 위치
       this.spawnStarEffect(clickX - 40, clickY - 56);
 
       // 두더지 한번 이상 맞출시 점수 없음
@@ -269,7 +279,7 @@ class MoleGame {
     }
   }
 
-  // ✨ 두더지 맞췄을 때 트윙클 임팩트 애니메이션
+  // 두더지 맞췄을 때 트윙클 임팩트 애니메이션
   private spawnStarEffect(x: number, y: number): void {
     const particleCount = 18;
     for (let i = 0; i < particleCount; i++) {
@@ -300,7 +310,7 @@ class MoleGame {
     }
   }
 
-  // 💾 닉네임 입력 후 점수 저장 → Firestore 저장 (5명까지)
+  // 닉네임 입력 후 점수 저장 → Firestore 저장 (5명까지)
   private async saveScore() {
     const name = (document.getElementById('playerName') as HTMLInputElement).value.trim().slice(0, 3);
     if (!/^([가-힣]{3}|[A-Z]{3})$/.test(name)) {
@@ -336,16 +346,16 @@ class MoleGame {
     }
   }
 
-  // 📦 화면 숨기기/보이기 공통 처리
-  private hide(id: string): void {
+  // 화면 숨기기/보이기 공통 처리
+  public hide(id: string): void {
     document.getElementById(id)?.classList.add('hidden');
   }
 
-  private show(id: string): void {
+  public show(id: string): void {
     document.getElementById(id)?.classList.remove('hidden');
   }
 
-  // ⏳ 남은 시간 표시 및 경고 처리
+  // 남은 시간 표시 및 경고 처리
   private updateTimer(): void {
     const timer = document.getElementById('timer');
     if (timer) {
@@ -358,7 +368,7 @@ class MoleGame {
     }
   }
 
-  // 🏆 현재 점수 표시
+  // 현재 점수 표시
   private updateScore(): void {
     const scoreElement = document.getElementById('score');
     if (scoreElement) {
@@ -366,7 +376,7 @@ class MoleGame {
     }
   }
 
-  // 🔁 저장 후 인트로 화면으로 복귀
+  // 저장 후 인트로 화면으로 복귀
   private gotoIntro(): void {
     this.stopBgm();
     this.hide('savePopup');
@@ -376,16 +386,11 @@ class MoleGame {
     this.show('introScreen');
     window.parent.postMessage({ type: 'PLAY_MAIN_BGM' }, '*');
 
-    // ✅ 인트로에서는 뿅망치 숨기기
+    // 인트로에서는 뿅망치 숨기기
     const bat = document.getElementById('bat');
     if (bat) bat.style.display = 'none';
   }
 }
-
-// 🔄 페이지 로딩 후 게임 인스턴스 생성
-window.addEventListener('DOMContentLoaded', () => {
-  new MoleGame();
-});
 
 function showToast(message: string, _shouldReset: boolean = true) {
   const toast = document.getElementById('toast');
@@ -400,3 +405,44 @@ function showToast(message: string, _shouldReset: boolean = true) {
     toast.classList.add('hidden'); // 다시 숨김 처리
   }, 2000);
 }
+
+// DOMContentLoaded
+window.addEventListener('DOMContentLoaded', () => {
+  const game = new MoleGame();
+  const infoPopup = document.getElementById('infoPopup');
+
+  // clickStart 버튼 클릭 시 팝업 띄우기 + 버튼 바인딩
+  document.getElementById('clickStart')?.addEventListener('click', () => {
+    window.parent.postMessage({ type: 'STOP_BGM' }, '*');
+    game.hide('introScreen');
+    game.show('gameScreen');
+    infoPopup?.classList.remove('hidden');
+
+    if (!(window as any).soundMuted) {
+      game.playBgm('/sounds/smash-bgm.mp3');
+    }
+
+    setTimeout(() => {
+      const bgmOffBtn = document.getElementById('bgmOffBtn');
+      const bgmOnBtn = document.getElementById('bgmOnBtn');
+
+      bgmOffBtn?.addEventListener('click', () => {
+        (window as any).soundMuted = true;
+        game.stopBgm();
+      });
+
+      bgmOnBtn?.addEventListener('click', () => {
+        (window as any).soundMuted = false;
+        game.playBgm('/sounds/smash-bgm.mp3');
+      });
+    }, 0);
+  });
+
+  // ESC 키로 팝업 닫기 + 게임 시작
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && !infoPopup?.classList.contains('hidden')) {
+      infoPopup?.classList.add('hidden');
+      game.startGame();
+    }
+  });
+});

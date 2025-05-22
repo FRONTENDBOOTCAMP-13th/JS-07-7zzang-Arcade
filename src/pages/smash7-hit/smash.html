@@ -13,15 +13,15 @@
     <!------------===================== 인트로 화면 =====================-------------->
     <div id="introScreen" style="position: relative">
       <img src="/src/assets/images/smash-img/smash-start.png" width="920" height="600" alt="인트로 화면" />
-      <!-- 🏆 트로피 아이콘 (왼쪽 위) -->
+      <!-- 트로피 아이콘 (왼쪽 위) -->
       <img src="/src/assets/images/smash-img/smash-trophy.png" id="trophyIcon" class="intro-trophy" />
-      <!-- 🏠 홈 아이콘 (오른쪽 위) -->
+      <!-- 홈 아이콘 (오른쪽 위) -->
       <a href="/home.html" class="home">
         <img src="/src/assets/images/smash-img/smash-home.png" id="homeIcon" class="intro-home" alt="홈으로 돌아가기" />
       </a>
       <!-- 게임 시작 버튼 -->
       <img src="/src/assets/images/smash-img/smash-click.png" id="clickStart" alt="게임 시작 버튼" style="cursor: pointer; position: absolute; top: 495px; left: 700px; width: 100px; height: 100px" />
-      <!-- 트로피 팝업 (인트로 화면 위에 오버레이) -->
+      <!-- 트로피 팝업 -->
       <div id="trophyPopup" class="popup hidden">
         <div class="trophy-img-wrap" style="position: relative; display: inline-block">
           <img src="/src/assets/images/smash-img/smash-score.png" alt="트로피 팝업" />
@@ -30,8 +30,8 @@
       </div>
     </div>
 
-    <!------------=============== 인트로 화면 ===============-------------->
-    <!-- 🎮 게임 화면 -->
+    <!------------===================== 게임 시작 화면 =====================-------------->
+    <!-- 게임 화면 -->
     <div id="gameScreen" class="hidden" style="position: relative">
       <div class="status-bar">
         <span id="timer">⏳ 30초</span>
@@ -40,7 +40,7 @@
       <canvas id="gameCanvas" width="920" height="600"></canvas>
       <img id="bat" src="/src/assets/images/smash-img/smash-bat.png" />
 
-      <!-- ☠️ 게임 오버 팝업 -->
+      <!-- 게임 오버 팝업 -->
       <div id="gameOverPopup" class="gameover-overlay hidden">
         <div class="gameover-center">
           <img src="/src/assets/images/smash-img/smash-over.png" class="gameover-img" alt="게임 오버" />
@@ -58,7 +58,7 @@
       </div>
     </div>
 
-    <!-- 🏆 최고 점수 팝업 -->
+    <!-- 최고 점수 팝업 -->
     <div id="scorePopup" class="popup hidden">
       <img src="/src/assets/images/smash-img/smash-score.png" class="score-bg" />
       <div class="score-table">
@@ -76,7 +76,7 @@
       <div class="save-inner">
         <img src="/src/assets/images/smash-img/smash-save-nik.png" class="save-nik-bg" />
 
-        <!-- 👤 닉네임 입력 UI -->
+        <!-- 닉네임 입력 UI -->
         <div class="nickname-container">
           <img src="/src/assets/images/smash-img/smash-name.png" class="nickname-box" />
           <input type="text" id="playerName" maxlength="3" class="nickname-input" autocomplete="off" />
@@ -91,10 +91,28 @@
       </div>
     </div>
 
-    <!-- ✨ 트윙클 효과 (동적 생성용, 필요시만 사용) -->
+    <!-- 트윙클 효과 -->
     <img src="/src/assets/images/smash-img/smash-twinkle.png" id="twinkleEffect" style="display: none" />
 
-    <!-- ✅ 토스트 메시지 -->
+    <!-- 게임 설명서 팝업 (smash-play 진입 시 보여짐) -->
+    <div id="infoPopup" class="popup hidden">
+      <img src="/src/assets/images/smash-img/smash-popup.webp" class="popup-bg" />
+
+      <!-- popup-bgm-controls-->
+      <div class="popup-bgm-controls">
+        <img id="bgmIcon" src="/src/assets/icons/bgm-icon3.webp" class="bgm-icon" />
+
+        <button id="bgmOffBtn" class="bgm-button-wrap">
+          <img src="/src/assets/images/smash-img/smash-popoff.webp" width="40" height="40" />
+        </button>
+
+        <button id="bgmOnBtn" class="bgm-button-wrap">
+          <img src="/src/assets/images/smash-img/smash-popon.webp" width="40" height="40" />
+        </button>
+      </div>
+    </div>
+
+    <!-- 토스트 메시지 -->
     <div id="toast" class="toast hidden">저장되었습니다!</div>
   </body>
 </html>

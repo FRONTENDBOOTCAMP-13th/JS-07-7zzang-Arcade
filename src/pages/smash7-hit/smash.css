@@ -1,10 +1,10 @@
-/* 🌑 전체 페이지 기본 설정 */
+/* 전체 페이지 기본 설정 */
 body {
   background-color: black;
   color: limegreen;
   text-align: center;
 
-  /* ✅ 중앙 정렬 핵심 */
+  /* 중앙 정렬 핵심 */
   display: flex;
   justify-content: center; /* 가로 가운데 */
   align-items: center; /* 세로 가운데 */
@@ -13,7 +13,7 @@ body {
   overflow: hidden;
 }
 
-/* 🎬 인트로 화면 스타일 */
+/* 인트로 화면 스타일 */
 #introScreen {
   width: 920px;
   height: 600px;
@@ -21,7 +21,7 @@ body {
   position: relative;
 }
 
-/* 🏠 인트로 - 왼쪽 상단 집 아이콘 */
+/* 인트로 - 왼쪽 상단 집 아이콘 */
 .intro-home {
   position: absolute;
   top: 40px;
@@ -32,7 +32,7 @@ body {
   z-index: 10;
 }
 
-/* 🏆 인트로 - 오른쪽 상단 트로피 아이콘 */
+/* 인트로 - 오른쪽 상단 트로피 아이콘 */
 .intro-trophy {
   position: absolute;
   top: 40px;
@@ -43,7 +43,7 @@ body {
   z-index: 10;
 }
 
-/* 🎮 게임 화면 (캔버스 포함) */
+/* 게임 화면 (캔버스 포함) */
 #gameScreen {
   width: 920px;
   height: 600px;
@@ -52,7 +52,7 @@ body {
   cursor: none;
 }
 
-/* 🖼️ 캔버스 설정 - 두더지 배경 + 테두리 */
+/* 캔버스 설정 - 두더지 배경 + 테두리 */
 canvas {
   background-image: url('/src/assets/images/smash-img/smash-play.png');
   background-size: cover;
@@ -61,7 +61,7 @@ canvas {
   display: block;
 }
 
-/* 📊 상단 상태바 - 점수, 타이머 */
+/* 상단 상태바 - 점수, 타이머 */
 .status-bar {
   position: absolute;
   top: 50px;
@@ -76,7 +76,7 @@ canvas {
   align-items: center;
 }
 
-/* ⏳ 타이머 및 🏆 점수 텍스트 스타일 */
+/* 타이머 및 점수 텍스트 스타일 */
 #timer,
 #score {
   font-size: 30px;
@@ -84,7 +84,7 @@ canvas {
   text-shadow: 0 0 6px #000;
 }
 
-/* 🔨 뿅망치 이미지 (마우스 따라다님) */
+/* 뿅망치 이미지 (마우스 따라다님) */
 #bat {
   width: 205px;
   height: 215px;
@@ -95,9 +95,9 @@ canvas {
   top: 0;
 }
 
-/* 📦 팝업 기본 레이아웃 */
+/* 팝업 기본 레이아웃 */
 .popup {
-  position: fixed; /* ✅ fixed로 바꾸기 */
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -111,12 +111,12 @@ canvas {
   justify-content: center;
 }
 
-/* 🏆 점수 팝업 테이블 배치 */
+/* 점수 팝업 테이블 배치 */
 .score-table {
   position: absolute;
-  top: 185px; /* ✅ 피그마 기준 조정 */
-  left: 64px; /* ✅ 좌측 여백에 맞춰 조정 */
-  width: 270px; /* ✅ 이미지 원본 사이즈로 수정 */
+  top: 185px;
+  left: 64px;
+  width: 270px;
   height: 211px;
 }
 .score-bg {
@@ -167,7 +167,7 @@ canvas {
   text-align: center;
 }
 
-/* ❌ 팝업 닫기 버튼 위치 */
+/* 팝업 닫기 버튼 위치 */
 .popup-close {
   position: absolute;
   top: 12px;
@@ -178,7 +178,7 @@ canvas {
   z-index: 20;
 }
 
-/* ☠️ 게임 오버 팝업 전체 덮는 오버레이 */
+/* 게임 오버 팝업 전체 덮는 오버레이 */
 .gameover-overlay {
   position: absolute;
   top: 0;
@@ -265,7 +265,7 @@ canvas {
   pointer-events: none;
 }
 
-/* 💾 점수 저장 화면 (팝업) */
+/* 점수 저장 화면 (팝업) */
 .save-popup {
   /* 팝업 자체를 화면 정중앙에 위치시킴 */
   position: fixed;
@@ -287,7 +287,7 @@ canvas {
   height: 500px;
 }
 
-/* ✅ smash-hole-play.png: 맨 아래 배경 이미지 */
+/* smash-hole-play.png: 맨 아래 배경 이미지 */
 .save-popup .hole-bg {
   position: absolute;
   top: 0;
@@ -297,7 +297,7 @@ canvas {
   z-index: 1;
 }
 
-/* ✅ smash-save-nik.png: 중앙 내용 프레임 이미지 */
+/* smash-save-nik.png: 중앙 내용 프레임 이미지 */
 .save-inner .save-nik-bg {
   position: absolute;
   top: 0;
@@ -359,12 +359,12 @@ canvas {
   top: 396px;
 }
 
-/* ❌ display:none 처리용 클래스 */
+/* display:none 처리용 클래스 */
 .hidden {
   display: none;
 }
 
-/* 🌟 토스트 메시지 스타일 */
+/* 토스트 메시지 스타일 */
 .toast {
   position: fixed;
   bottom: 100px;
@@ -389,4 +389,52 @@ canvas {
 .toast.hidden {
   display: none;
   opacity: 0 !important;
+}
+
+/* BGM 팝업 내 컨트롤 */
+.popup-bgm-controls {
+  position: absolute;
+  left: 25px;
+  bottom: 100px;
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  z-index: 5;
+}
+
+.bgm-button-wrap {
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.bgm-button-wrap img {
+  pointer-events: none;
+}
+
+.bgm-icon {
+  width: 78px;
+  height: 78px;
+  animation: rotate 2s linear infinite;
+  image-rendering: pixelated;
+}
+
+.bgm-btn {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  image-rendering: pixelated;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
