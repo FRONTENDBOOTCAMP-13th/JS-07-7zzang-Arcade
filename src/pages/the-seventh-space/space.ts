@@ -129,8 +129,11 @@ musicToggleWrapper.addEventListener('click', () => {
 
   if (toggleOnEl.classList.contains('off')) {
     gameMusicEl.classList.add('paused');
+    bgm.pause();
   } else {
     gameMusicEl.classList.remove('paused');
+    bgm.currentTime = 0;
+    bgm.play().catch(() => {});
   }
 });
 
@@ -143,6 +146,17 @@ trophyIcon.addEventListener('click', () => {
 // ─── 게임 시작 버튼 클릭 시 ────────────
 startBtn.addEventListener('click', () => {
   window.parent.postMessage({ type: 'STOP_BGM' }, '*');
+  bgm.volume = bossBgm.volume = gameOverSound.volume = attackSound.volume = 0.1;
+
+  // 1) 토글 UI를 ON으로 리셋
+  toggleOnEl.classList.remove('off');
+  toggleOffEl.classList.add('on');
+  gameMusicEl.classList.remove('paused');
+
+  // 2) bgm 리셋 & 재생
+  bgm.pause();
+  bgm.currentTime = 0;
+  bgm.play().catch(() => {});
 
   if (!assetsLoaded) return;
   introEl.style.display = 'none';
@@ -857,18 +871,22 @@ bossImg.src = bossImgSrc;
 const keys = { ArrowLeft: false, ArrowRight: false, Space: false };
 document.addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Space') keys[e.key] = true;
-  if (e.code === 'Space') Player.shoot();
+  if (e.code === 'Space' && howPlayEl.classList.contains('hidden') && scoreModal.classList.contains('hidden') && nameModal.classList.contains('hidden') && gameOverModal.classList.contains('hidden')) {
+    Player.shoot();
+  }
   if (e.key === 'Escape' && !howPlayEl.classList.contains('hidden')) {
     howPlayEl.classList.add('hidden');
     canvasEl.style.display = 'block';
 
     const isMusicOn = !toggleOnEl.classList.contains('off');
     if (isMusicOn) {
+      bgm.pause();
       bgm.volume = bossBgm.volume = gameOverSound.volume = attackSound.volume = 0.1;
       bgm.currentTime = 0;
       bgm.play().catch(() => {});
     } else {
       bgm.volume = bossBgm.volume = gameOverSound.volume = attackSound.volume = 0;
+      bgm.pause();
     }
 
     init();
