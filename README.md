@@ -18,14 +18,22 @@
 
 ---
 
-<div align="center">
-  <img alt="Static Badge" src="https://img.shields.io/badge/%EC%9D%B4%ED%98%B8%EC%A0%95%2C%20%ED%99%A9%EC%9C%A0%EB%B9%88%2C%20%EA%B9%80%EC%A7%80%EC%88%98%2C%20%EB%B0%B0%EB%8F%99%EC%B4%88-EE66A6?style=flat&label=made%20by&labelColor=light%20gray&link=https%3A%2F%2Fgithub.com%2FFRONTENDBOOTCAMP-13th%2FJS-07-7zzang-Arcade%2Fwiki"> <img alt="Static Badge" src="https://img.shields.io/badge/2025.05.09%20~%202025.05.23-0D92F4?style=flat&label=duration&labelColor=light%20gray&link=https%3A%2F%2Fgithub.com%2FFRONTENDBOOTCAMP-13th%2FJS-07-7zzang-Arcade%2Fwiki">
+<p align="center">
+  <img alt="Static Badge" src="https://img.shields.io/badge/이호정,%20황유빈,%20김지수,%20배동초-EE66A6?style=flat&label=made%20by&labelColor=lightgray">
+  <img alt="Static Badge" src="https://img.shields.io/badge/2025.05.09%20~%202025.05.23-0D92F4?style=flat&label=duration&labelColor=lightgray">
+</p>
 
-[![Static Badge](https://img.shields.io/badge/NOTION-black?style=flat&logo=notion&logoColor=white&link=https%3A%2F%2Fwww.notion.so%2F7lenge-1ed73873401a80339678cb9ca4d1fe82)](https://www.notion.so/7lenge-1ed73873401a80339678cb9ca4d1fe82)
-[![Static Badge](https://img.shields.io/badge/7짱오락실%20게임하러%20가기-FF2929?style=flat&logo=netlify&logoColor=white)](https://7zzang-arcade.netlify.app/)
-[![Static Badge](https://img.shields.io/badge/WIKI-%23181717?style=flat&logo=github&logoColor=white&link=https%3A%2F%2Fgithub.com%2FFRONTENDBOOTCAMP-13th%2FJS-07-7zzang-Arcade%2Fwiki)](https://github.com/FRONTENDBOOTCAMP-13th/JS-07-7zzang-Arcade/wiki)
-
-</div>
+<p align="center">
+  <a href="https://www.notion.so/7lenge-1ed73873401a80339678cb9ca4d1fe82">
+    <img alt="Notion" src="https://img.shields.io/badge/NOTION-black?style=flat&logo=notion&logoColor=white">
+  </a>
+  <a href="https://7zzang-arcade.netlify.app/">
+    <img alt="Go to Game" src="https://img.shields.io/badge/7짱오락실%20게임하러%20가기-FF2929?style=flat&logo=netlify&logoColor=white">
+  </a>
+  <a href="https://github.com/FRONTENDBOOTCAMP-13th/JS-07-7zzang-Arcade/wiki">
+    <img alt="Wiki" src="https://img.shields.io/badge/WIKI-181717?style=flat&logo=github&logoColor=white">
+  </a>
+</p>
 
 <br>
 
