@@ -202,24 +202,26 @@ body,
 
 .set-audio {
   position: absolute;
-  top: 160px;
-  left: 3520px;
-  width: 600px;
-  height: 600px;
+  top: 310px;
+  left: 3590px;
+  width: 450px;
+  height: 300px;
 }
 
 .audio-icon {
-  width: 105%;
-  height: 103%;
+  width: 100%;
+  height: 100%;
   background-image: url('/images/audio-out.webp');
-  background-position: -360% center;
+  background-position: center center;
   background-size: contain;
   background-repeat: no-repeat;
 }
 .audio-icon.on {
   background-image: url('/images/audio-in.webp');
+  background-size: contain;
   background-position: center center;
-  width: 90%;
+  background-repeat: no-repeat;
+  width: 100;
   height: 102%;
 }
 .break-screen {
@@ -248,10 +250,10 @@ body,
 
 .game-poster {
   position: absolute;
-  top: 700px;
-  left: 4610px;
-  width: 400px;
-  height: 1100px;
+  top: 900px;
+  left: 4600px;
+  width: 430px;
+  height: 600px;
   cursor: pointer;
   background-image: url('/images/game-poster.webp');
   background-position: center center;
