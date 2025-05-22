@@ -1,12 +1,37 @@
-// 점수 관련 db
-
 import { db } from './firebase.ts';
 import { doc, getDoc, setDoc, collection, query, where, orderBy, limit, getDocs, Timestamp } from 'firebase/firestore';
+import { getAuth, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
 
-// 파이어스토어에 해당 데이터 문서에 추가
+// 인증 객체 가져오기
+const auth = getAuth();
+
+// 익명 로그인 보장 함수
+function ensureAuthReady(): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (auth.currentUser) return resolve();
+
+    onAuthStateChanged(auth, user => {
+      if (user) resolve();
+    });
+
+    signInAnonymously(auth).catch(reject);
+  });
+}
+
+// 중복 닉네임 처리 위해 문서 id 설정 (닉네임 대문자 처리로 표준화)
+function normalizeNickname(nickname: string) {
+  return nickname
+    .trim()
+    .replace(/[^가-힣a-zA-Z]/g, '')
+    .toUpperCase();
+}
+
+// Firestore에 사용자 점수 저장 위한 함수.
 export async function fireScore(nickname: string, score: number, game: string) {
-  const safeNickname = nickname.trim().toLowerCase();
-  const docId = `${safeNickname}_${game}`; // 문서 ID -> 닉네임, 게임 하나의 id로 묶어서 중복 방지
+  await ensureAuthReady(); // 익명 로그인 설정
+
+  const safeNickname = normalizeNickname(nickname);
+  const docId = `${safeNickname}_${game}`;
 
   const docRef = doc(db, 'scores', docId);
   const existing = await getDoc(docRef);
@@ -23,11 +48,9 @@ export async function fireScore(nickname: string, score: number, game: string) {
   });
 }
 
-// 쿼리 사용 통해 파이어베이스에서 scores 컬렉션 가져오고, game 필드의 파라미터 game이 같을 경우, 내림차순 한 상위 5개
+// 파이어베이스에서 점수 조회 위한 함수
 export async function getTopScores(game: string) {
   const q = query(collection(db, 'scores'), where('game', '==', game), orderBy('score', 'desc'), limit(5));
-
-  // 쿼리 거쳐서 해당 문서의 데이터 리턴
   const snapshot = await getDocs(q);
   return snapshot.docs.map(doc => doc.data());
 }
