@@ -201,6 +201,7 @@ saveBtn.addEventListener('click', async () => {
     nameModal.classList.add('hidden');
     canvasEl.style.display = 'none';
     introEl.style.display = 'flex';
+    window.parent.postMessage({ type: 'PLAY_MAIN_BGM' }, '*');
   } catch {
     showToast('이미 존재하는 닉네임입니다.', 2000, false);
     nicknameInput.focus();
@@ -460,7 +461,7 @@ const Player: IPlayer = {
     this.canShoot = false;
     setTimeout(() => {
       this.canShoot = true;
-    }, 700);
+    }, 0);
   },
 
   // ── 폭발 함수 ─────────────────────────
