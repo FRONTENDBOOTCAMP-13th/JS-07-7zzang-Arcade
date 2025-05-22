@@ -22,7 +22,7 @@
   <img alt="Static Badge" src="https://img.shields.io/badge/이호정,%20황유빈,%20김지수,%20배동초-EE66A6?style=flat&label=made%20by&labelColor=lightgray">
   <img alt="Static Badge" src="https://img.shields.io/badge/2025.05.09%20~%202025.05.23-0D92F4?style=flat&label=duration&labelColor=lightgray">
 </p>
-
+<br>
 <p align="center">
   <a href="https://www.notion.so/7lenge-1ed73873401a80339678cb9ca4d1fe82">
     <img alt="Notion" src="https://img.shields.io/badge/NOTION-black?style=flat&logo=notion&logoColor=white">
@@ -104,9 +104,9 @@
 
 ### 🚀 제 7우주
 
-|                                          실행 화면                                          |
-| :-----------------------------------------------------------------------------------------: |
-| <img src="https://github.com/user-attachments/assets/458c2f7e-768b-4224-b49e-4f310fe95460"> |
+|                                                실행 화면                                                 |
+| :------------------------------------------------------------------------------------------------------: |
+| <img src="https://github.com/user-attachments/assets/458c2f7e-768b-4224-b49e-4f310fe95460" width="450"/> |
 
 - **주요 설명** : '스페이스 인베이더'를 오마주한 고전풍 슈팅 게임으로, 적을 제거하며 다음 라운드로 진입하는 구조입니다.
   - 적 전멸 시 다음 라운드가 진행되며, **적이 지면에 닿거나 피격되면 게임 오버**가 됩니다.
