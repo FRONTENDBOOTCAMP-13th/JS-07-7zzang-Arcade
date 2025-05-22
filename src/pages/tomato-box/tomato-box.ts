@@ -70,12 +70,18 @@ let animationFrameId: number;
 let pointerSound: HTMLAudioElement | null = null;
 let effectSound: HTMLAudioElement | null = null;
 
+let isAnimating = false;
+
 document.addEventListener('DOMContentLoaded', () => {
   tomatoIntro();
+
+  trophyBtn?.addEventListener('click', handleTrophyClick);
 });
 
 // 메인, 게임 실행 함수
 function main() {
+  cancelAnimationFrame(animationFrameId);
+
   const canvasEl = document.querySelector('canvas');
 
   if (!canvasEl) {
@@ -93,6 +99,8 @@ function main() {
 
   playGrid();
   events();
+
+  isAnimating = true;
   animateTomatoes();
 
   // 개발자 모드
@@ -138,6 +146,13 @@ function resetUIState() {
 
   const nicknameInput = document.querySelector('.nickname-input') as HTMLInputElement;
   if (nicknameInput) nicknameInput.value = '';
+
+  const bestScoreList = document.querySelector('.bestscore') as HTMLElement;
+  if (bestScoreList) {
+    bestScoreList.classList.remove('show');
+    bestScoreList.classList.add('hide');
+  }
+  isVisible = false;
 }
 
 // 화면 전환
@@ -148,8 +163,11 @@ function showIntroScreen() {
   play?.classList.remove('show');
 }
 
-// 게임 초기화
+// 게임 초기화, 게임 마무리하고 되돌아갈때 사용
 function restartGame() {
+  cancelAnimationFrame(animationFrameId); // 토마토 애니메이션 초기화
+  isAnimating = false;
+
   if (bgm) {
     bgm.pause();
     bgm.currentTime = 0;
@@ -163,6 +181,7 @@ function restartGame() {
   showIntroScreen();
 
   tomatoIntro();
+
   window.parent.postMessage({ type: 'PLAY_MAIN_BGM' }, '*');
   events();
 }
@@ -179,11 +198,8 @@ function tomatoIntro() {
   });
 
   // 트로피 클릭
-  trophyBtn?.addEventListener('click', () => {
-    bestFive();
-    ScoreToggle(bestScore);
-    playIcon('/sounds/pointer.wav');
-  });
+  trophyBtn?.removeEventListener('click', handleTrophyClick);
+  trophyBtn?.addEventListener('click', handleTrophyClick);
 
   // 스타트 버튼 클릭
   startBtn?.addEventListener('click', () => {
@@ -241,16 +257,10 @@ function tomatoIntro() {
   });
 }
 
-// 스코어 리스트 보이기
 function ScoreToggle(scoreEl: HTMLElement) {
-  if (!isVisible) {
-    scoreEl.classList.remove('hide');
-    scoreEl.classList.add('show');
-  } else {
-    scoreEl.classList.remove('show');
-    scoreEl.classList.add('hide');
-  }
-  isVisible = !isVisible;
+  const isNowVisible = scoreEl.classList.contains('show');
+  scoreEl.classList.toggle('show', !isNowVisible);
+  scoreEl.classList.toggle('hide', isNowVisible);
 }
 
 // 최고 점수 상위 5명
@@ -391,7 +401,10 @@ function gameOver() {
   if (bgm) {
     bgm.pause();
     bgm.currentTime = 0;
-    playGameover('/sounds/tomato-gameover.wav');
+
+    if (isBgmOn) {
+      playGameover('/sounds/tomato-gameover.wav');
+    }
   }
 }
 
@@ -576,6 +589,8 @@ function clearSelect() {
 
 // 토마토 애니메이션, 드래그 표시
 function animateTomatoes() {
+  if (!isAnimating) return;
+
   for (let i = flyingTomatoes.length - 1; i >= 0; i--) {
     const t = flyingTomatoes[i];
 
@@ -676,13 +691,12 @@ function initDevMode() {
         if (currTimeBar) {
           currTimeBar.style.height = `${(timeLeft / timeLimit) * 66}%`;
         }
-
-        console.log('[DEV MODE] -10초 | 남은 시간:', timeLeft);
       }
     }
   });
 }
 
+// 점수저장 함수
 async function handleSaveScoreClick() {
   const nicknameInput = document.querySelector('.nickname-input') as HTMLInputElement;
   const value = nicknameInput?.value.trim();
@@ -716,6 +730,7 @@ async function handleSaveScoreClick() {
   }
 }
 
+// cd 돌아가기 애니메이션
 function cdSpin() {
   cancelAnimationFrame(animationFrameId);
   function rotateCD() {
@@ -731,6 +746,7 @@ function stopCDSpin() {
   cancelAnimationFrame(animationFrameId);
 }
 
+// cd 상태 반영 위한 함수
 function cdState() {
   const onoffBtn = document.querySelector('.onoff-buttons img') as HTMLImageElement;
 
@@ -743,6 +759,7 @@ function cdState() {
   }
 }
 
+// 온오프 함수
 function handleOnoffClick() {
   isBgmOn = !isBgmOn;
 
@@ -760,4 +777,11 @@ function handleOnoffClick() {
       bgm.pause();
     }
   }
+}
+
+// 트로피 클릭 함수
+function handleTrophyClick() {
+  bestFive();
+  ScoreToggle(bestScore);
+  playIcon('/sounds/pointer.wav');
 }
