@@ -394,7 +394,7 @@ canvas {
 /* BGM 팝업 내 컨트롤 */
 .popup-bgm-controls {
   position: absolute;
-  left: 25px;
+  left: 35px;
   bottom: 100px;
   display: flex;
   gap: 7px;
