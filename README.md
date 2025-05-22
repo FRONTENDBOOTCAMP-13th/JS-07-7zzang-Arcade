@@ -1,16 +1,21 @@
 <h1 align="center"><b>🕹️7짱오락실</b></h1>
-
 <p align="center"><i>by Team 7lenge</i></p>
 
 <br/>
 
-<div align="center">
-<p>처음이라 서툴렀지만<br/>
-  끝까지 해보자는 마음으로 달렸습니다.</p>
-  <p><strong>7lenge</strong>의 '<strong>Challenge</strong>'가 반영된 이름처럼 도전했고, 끝까지 해냈습니다.</p>
-  <p>이제, 다음 스테이지로 갑니다. 🚀</p>
+<p align="center">
+처음이라 서툴렀지만,<br/>
+끝까지 해보자는 마음으로 달렸습니다.
+</p>
 
-</div>
+<p align="center">
+<b>7lenge</b>의 '<b>Challenge</b>'가 반영된 이름처럼 도전했고,<br/>
+끝까지 해냈습니다.
+</p>
+
+<p align="center">
+이제, 다음 스테이지로 갑니다. 🚀
+</p>
 
 ---
 
@@ -22,7 +27,7 @@
 [![Static Badge](https://img.shields.io/badge/7짱오락실%20게임하러%20가기-FF2929?style=flat&logo=netlify&logoColor=white)](https://7zzang-arcade.netlify.app/)
 [![Static Badge](https://img.shields.io/badge/WIKI-%23181717?style=flat&logo=github&logoColor=white&link=https%3A%2F%2Fgithub.com%2FFRONTENDBOOTCAMP-13th%2FJS-07-7zzang-Arcade%2Fwiki)](https://github.com/FRONTENDBOOTCAMP-13th/JS-07-7zzang-Arcade/wiki)
 
-## </div>
+</div>
 
 <br>
 
@@ -93,11 +98,9 @@
 
 ### 🚀 제 7우주
 
-| 실행 화면 |
-| :-------: |
-
-| <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/129257235/446761661-e142ec06-3161-4dd7-b583-7390a3be0cbb.gif?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20250522%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250522T210632Z&X-Amz-Expires=300&X-Amz-Signature=098d465a3eb26cfd48c9ecca82f6b842cd27355d6b6ce444960c850ba6579da0&X-Amz-SignedHeaders=host" width="450">
-|
+|                                          실행 화면                                          |
+| :-----------------------------------------------------------------------------------------: |
+| <img src="https://github.com/user-attachments/assets/458c2f7e-768b-4224-b49e-4f310fe95460"> |
 
 - **주요 설명** : '스페이스 인베이더'를 오마주한 고전풍 슈팅 게임으로, 적을 제거하며 다음 라운드로 진입하는 구조입니다.
   - 적 전멸 시 다음 라운드가 진행되며, **적이 지면에 닿거나 피격되면 게임 오버**가 됩니다.
