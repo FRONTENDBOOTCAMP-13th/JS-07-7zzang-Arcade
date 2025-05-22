@@ -129,8 +129,11 @@ musicToggleWrapper.addEventListener('click', () => {
 
   if (toggleOnEl.classList.contains('off')) {
     gameMusicEl.classList.add('paused');
+    bgm.pause();
   } else {
     gameMusicEl.classList.remove('paused');
+    bgm.currentTime = 0;
+    bgm.play().catch(() => {});
   }
 });
 
@@ -143,6 +146,17 @@ trophyIcon.addEventListener('click', () => {
 // ─── 게임 시작 버튼 클릭 시 ────────────
 startBtn.addEventListener('click', () => {
   window.parent.postMessage({ type: 'STOP_BGM' }, '*');
+  bgm.volume = bossBgm.volume = gameOverSound.volume = attackSound.volume = 0.1;
+
+  // 1) 토글 UI를 ON으로 리셋
+  toggleOnEl.classList.remove('off');
+  toggleOffEl.classList.add('on');
+  gameMusicEl.classList.remove('paused');
+
+  // 2) bgm 리셋 & 재생
+  bgm.pause();
+  bgm.currentTime = 0;
+  bgm.play().catch(() => {});
 
   if (!assetsLoaded) return;
   introEl.style.display = 'none';
@@ -201,6 +215,7 @@ saveBtn.addEventListener('click', async () => {
     nameModal.classList.add('hidden');
     canvasEl.style.display = 'none';
     introEl.style.display = 'flex';
+    window.parent.postMessage({ type: 'PLAY_MAIN_BGM' }, '*');
   } catch {
     showToast('이미 존재하는 닉네임입니다.', 2000, false);
     nicknameInput.focus();
@@ -362,6 +377,7 @@ let bgOffset = 0;
 const bgSpeed = 1.5; // 원하는 스크롤 속도
 let lives = 3;
 let score = 0;
+let devMode = false;
 
 // ─── 라이프 정의 ─────────────────────────────────────────────
 const Life: ILife = {
@@ -457,10 +473,12 @@ const Player: IPlayer = {
     });
     this.bullets.push(bullet);
 
-    this.canShoot = false;
-    setTimeout(() => {
-      this.canShoot = true;
-    }, 700);
+    if (!devMode) {
+      this.canShoot = false;
+      setTimeout(() => {
+        this.canShoot = true;
+      }, 700); // 원하는 쿨타임(ms)
+    }
   },
 
   // ── 폭발 함수 ─────────────────────────
@@ -855,19 +873,27 @@ bossImg.src = bossImgSrc;
 // ─── 키버튼
 const keys = { ArrowLeft: false, ArrowRight: false, Space: false };
 document.addEventListener('keydown', e => {
+  if (e.key.toLowerCase() === 'p') {
+    devMode = !devMode;
+    showToast(`개발자 모드 ${devMode ? 'ON (무한총알)' : 'OFF'}`, 1000);
+  }
   if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Space') keys[e.key] = true;
-  if (e.code === 'Space') Player.shoot();
+  if (e.code === 'Space' && howPlayEl.classList.contains('hidden') && scoreModal.classList.contains('hidden') && nameModal.classList.contains('hidden') && gameOverModal.classList.contains('hidden')) {
+    Player.shoot();
+  }
   if (e.key === 'Escape' && !howPlayEl.classList.contains('hidden')) {
     howPlayEl.classList.add('hidden');
     canvasEl.style.display = 'block';
 
     const isMusicOn = !toggleOnEl.classList.contains('off');
     if (isMusicOn) {
+      bgm.pause();
       bgm.volume = bossBgm.volume = gameOverSound.volume = attackSound.volume = 0.1;
       bgm.currentTime = 0;
       bgm.play().catch(() => {});
     } else {
       bgm.volume = bossBgm.volume = gameOverSound.volume = attackSound.volume = 0;
+      bgm.pause();
     }
 
     init();
@@ -1017,6 +1043,7 @@ function gameLoop(ts: number) {
 
     // ─── 보스 격파
     if (boss.hitPoint <= 0) {
+      bossBgm.pause();
       spawnExplosion(boss.x + boss.width / 2, boss.y + boss.height / 2, explosionEnemy, 2000, boss.width * 1.2);
       bossPhase = false;
 
