@@ -6,12 +6,16 @@ const gameScreen = document.querySelector<HTMLElement>('.game-screen')!;
 const sel = document.querySelector<HTMLElement>('.game-selection')!;
 const coin = document.querySelector<HTMLElement>('.coin-slot')!;
 const coinSlot = document.querySelector<HTMLElement>('.coin-slot')!;
+const gamePoster = document.querySelector<HTMLElement>('.game-poster')!;
+const easterEgg = gamePoster.querySelector<HTMLElement>('.easter-egg')!;
 const coinSound = new Audio('/sounds/coin-insert.mp3');
 const bgm = new Audio('/sounds/bg-music.mp3');
 bgm.loop = true;
-bgm.volume = 0.2;
+bgm.volume = 0.1;
 bgm.preload = 'auto';
 let bgmStarted = false;
+let coinBgmPlayed = false;
+
 let currentObj: HTMLObjectElement | null = null;
 coinSound.preload = 'auto'; // 미리 로드해 두기
 
@@ -25,7 +29,12 @@ let isZoomed = false;
 
 (window as any).bgm = bgm;
 
-// 메인-인트로 이후 개인 화면 진입 시 재생 멈춤
+easterEgg.classList.remove('active');
+
+gamePoster.addEventListener('click', () => {
+  easterEgg.classList.toggle('active');
+});
+
 window.addEventListener('message', event => {
   const bgm = (window as any).bgm as HTMLAudioElement;
 
@@ -36,7 +45,7 @@ window.addEventListener('message', event => {
     }
   }
 
-  if (event.data?.type === 'PLAY_MAIN_BGM') {
+  if (event.data?.type === 'PLAY_MAIN_BGM' && bgmStarted) {
     if (bgm && bgm.paused) {
       bgm.play().catch(() => {
         console.warn('BGM 재생 실패');
@@ -157,26 +166,23 @@ selection.querySelectorAll<HTMLElement>(':scope > div').forEach(icon => {
 });
 
 function toggleBgm() {
-  if (bgmStarted) {
-    bgm.pause();
-    audioIcon.classList.add('off');
-  } else {
-    bgm.play();
-    audioIcon.classList.remove('off');
-  }
+  bgmStarted ? bgm.pause() : bgm.play().catch(() => {});
+  audioIcon.classList.toggle('on');
   bgmStarted = !bgmStarted;
 }
 
 function playCoinAnimation() {
-  // 1) 동전 삽입 효과 사운드
+  if (!coinBgmPlayed) {
+    bgm.play().catch(() => {
+      console.warn('BGM 자동 재생 실패');
+    });
+    audioIcon.classList.add('on'); // 아이콘 상태도 켬
+    coinBgmPlayed = true;
+    bgmStarted = true;
+  }
   const coinSound = new Audio('/sounds/coin-insert.mp3');
-  coinSound.play().catch(() => {
-    /* 자동 재생 차단 무시 */
-  });
+  coinSound.play().catch(() => {});
 
-  toggleBgm();
-
-  // 3) 동전 애니메이션
   const img = document.createElement('img');
   img.src = '/images/coin.png';
   img.classList.add('insert-coin');

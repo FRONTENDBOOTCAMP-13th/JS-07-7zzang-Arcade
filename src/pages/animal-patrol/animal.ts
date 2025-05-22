@@ -1,35 +1,31 @@
 import '../../style.css';
 import './animal.css';
-import bananaImg from '../../assets/images/animal-img/banana.png';
-import canImg from '../../assets/images/animal-img/can.png';
-import fireImg from '../../assets/images/animal-img/fire.png';
-import boom1Img from '../../assets/images/animal-img/boom1.png';
-import boom2Img from '../../assets/images/animal-img/boom2.png';
-import acornsImg from '../../assets/images/animal-img/acorns.png';
-import scoreChick1 from '../../assets/images/animal-img/score-chick1.png';
-import scoreChick2 from '../../assets/images/animal-img/score-chick2.png';
-import scoreChick3 from '../../assets/images/animal-img/score-chick3.png';
-import scoreChick4 from '../../assets/images/animal-img/score-chick4.png';
-import scoreChick5 from '../../assets/images/animal-img/score-chick5.png';
-import chickIdleFront from '../../assets/images/animal-img/chick-idle-front.png';
-import chickFallen from '../../assets/images/animal-img/chick-fallen.png';
-import idleLeft from '../../assets/images/animal-img/chick-idle-left.png';
-import idleRight from '../../assets/images/animal-img/chick-idle-right.png';
-import evo1Left from '../../assets/images/animal-img/chick-evo1-left.png';
-import evo1Right from '../../assets/images/animal-img/chick-evo1-right.png';
-import evo2Left from '../../assets/images/animal-img/chick-evo2-left.png';
-import evo2Right from '../../assets/images/animal-img/chick-evo2-right.png';
-import evo3Left from '../../assets/images/animal-img/chick-evo3-left.png';
-import evo3Right from '../../assets/images/animal-img/chick-evo3-right.png';
-import evo4Left from '../../assets/images/animal-img/chick-evo4-left.png';
-import evo4Right from '../../assets/images/animal-img/chick-evo4-right.png';
+import bananaImg from '../../assets/images/animal-img/banana.webp';
+import canImg from '../../assets/images/animal-img/can.webp';
+import fireImg from '../../assets/images/animal-img/fire.webp';
+import boom1Img from '../../assets/images/animal-img/boom1.webp';
+import boom2Img from '../../assets/images/animal-img/boom2.webp';
+import acornsImg from '../../assets/images/animal-img/acorns.webp';
+import scoreChick1 from '../../assets/images/animal-img/score-chick1.webp';
+import scoreChick2 from '../../assets/images/animal-img/score-chick2.webp';
+import scoreChick3 from '../../assets/images/animal-img/score-chick3.webp';
+import scoreChick4 from '../../assets/images/animal-img/score-chick4.webp';
+import scoreChick5 from '../../assets/images/animal-img/score-chick5.webp';
+import chickIdleFront from '../../assets/images/animal-img/chick-idle-front.webp';
+import chickFallen from '../../assets/images/animal-img/chick-fallen.webp';
+import idleLeft from '../../assets/images/animal-img/chick-idle-left.webp';
+import idleRight from '../../assets/images/animal-img/chick-idle-right.webp';
+import evo1Left from '../../assets/images/animal-img/chick-evo1-left.webp';
+import evo1Right from '../../assets/images/animal-img/chick-evo1-right.webp';
+import evo2Left from '../../assets/images/animal-img/chick-evo2-left.webp';
+import evo2Right from '../../assets/images/animal-img/chick-evo2-right.webp';
+import evo3Left from '../../assets/images/animal-img/chick-evo3-left.webp';
+import evo3Right from '../../assets/images/animal-img/chick-evo3-right.webp';
+import evo4Left from '../../assets/images/animal-img/chick-evo4-left.webp';
+import evo4Right from '../../assets/images/animal-img/chick-evo4-right.webp';
 
-const localKey = 'animal-bestScores';
-
-interface ScoreEntry {
-  name: string;
-  score: number;
-}
+// 파이어 베이스 파일 import
+import { fireScore, getTopScores } from '../../utilits/scoreService';
 
 function getElById<T extends HTMLElement>(id: string, type: { new (): T }): T {
   const el = document.getElementById(id);
@@ -161,23 +157,28 @@ document.addEventListener('keydown', e => {
 /**
  * 트로피 팝업 -> BEST SCORE 목록 보여주기
  */
-function showBestScores() {
+async function showBestScores() {
   const bestScoreList = getElById('bestScoreList', HTMLUListElement);
   bestScoreList.innerHTML = '';
 
-  const latestScores: ScoreEntry[] = JSON.parse(localStorage.getItem(localKey) || '[]');
   const characterImages = [scoreChick1, scoreChick2, scoreChick3, scoreChick4, scoreChick5];
 
-  latestScores.slice(0, 5).forEach((entry, index) => {
-    const li = document.createElement('li');
-    li.innerHTML = `
-      <img src="${characterImages[index]}" alt="캐릭터" class="score-character" />
-      <span class="score-name">${entry.name}</span>
-      <span class="score-value">${String(entry.score).padStart(5, '0')}</span>
-    `;
+  try {
+    // firestore 접근, animal-patrol 값 가진 데이터들 중 상위 5개 가져옴
+    const topScores = await getTopScores('animal-patrol');
 
-    bestScoreList.appendChild(li);
-  });
+    topScores.forEach((entry: any, index: number) => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <img src="${characterImages[index]}" alt="캐릭터" class="score-character" />
+        <span class="score-name">${entry.nickname}</span>
+        <span class="score-value">${String(entry.score).padStart(5, '0')}</span>
+      `;
+      bestScoreList.appendChild(li);
+    });
+  } catch (err) {
+    bestScoreList.innerHTML = '<li>점수 불러오기 실패</li>';
+  }
 }
 
 /**
@@ -203,17 +204,77 @@ gameBgm.loop = true;
 gameBgm.volume = 0.1;
 
 // 게임 오버 효과음
+const sfxVolume = 0.1;
 const gameOverSfx = new Audio('/sounds/animal-gameover.wav');
-gameOverSfx.volume = 0.3;
+gameOverSfx.volume = sfxVolume;
 
-/**
- * START 버튼 클릭 -> 인트로에서 게임 화면으로 전환
- * 캐릭터 위치와 상태를 초기화
- */
+// 안전한 DOM 요소 연결 (초기 정의 필수)
+const gameGuidePopup = getElById('gameGuidePopup', HTMLDivElement);
+const popupMusicIcon = getElById('popupMusicIcon', HTMLImageElement);
+const popupMusicOnBtn = getElById('popupMusicOnBtn', HTMLButtonElement);
+const popupMusicOffBtn = getElById('popupMusicOffBtn', HTMLButtonElement);
+
+let guideClosed = false;
+
+// START GAME 버튼 클릭 → 인게임 전환 + BGM 재생 + 팝업 표시
 startButton.addEventListener('click', () => {
-  // 인게임 화면 진입 & 음악 재생
   introScreen.classList.add('hidden');
   gameScreen.classList.remove('hidden');
+
+  // 외부 BGM 정지
+  window.parent.postMessage({ type: 'STOP_BGM' }, '*');
+  gameBgm.pause();
+  gameBgm.currentTime = 0;
+
+  gameBgm.play();
+
+  openGameGuide();
+});
+
+// 팝업 열기
+function openGameGuide(): void {
+  gameGuidePopup.classList.remove('hidden');
+  popupMusicIcon.classList.add('spin');
+  popupMusicOnBtn.classList.add('on');
+  popupMusicOffBtn.classList.remove('off');
+
+  gameBgm.play();
+  gameOverSfx.volume = sfxVolume;
+}
+
+// 팝업 내 음악 제어
+function turnMusicOn(): void {
+  popupMusicIcon.classList.add('spin');
+  popupMusicOnBtn.classList.add('on');
+  popupMusicOffBtn.classList.remove('off');
+
+  gameBgm.play();
+  gameOverSfx.volume = sfxVolume;
+}
+
+function turnMusicOff(): void {
+  popupMusicIcon.classList.remove('spin');
+  popupMusicOnBtn.classList.remove('on');
+  popupMusicOffBtn.classList.add('off');
+
+  gameBgm.pause();
+  gameOverSfx.volume = 0;
+}
+
+popupMusicOnBtn.addEventListener('click', turnMusicOn);
+popupMusicOffBtn.addEventListener('click', turnMusicOff);
+
+// ESC → 팝업 닫고 게임 시작
+document.addEventListener('keydown', (e: KeyboardEvent) => {
+  if (e.key === 'Escape' && !gameGuidePopup.classList.contains('hidden') && !guideClosed) {
+    guideClosed = true;
+    closeGuideAndStartGame();
+  }
+});
+
+// 팝업 닫기 + 실제 게임 시작
+function closeGuideAndStartGame(): void {
+  gameGuidePopup.classList.add('hidden');
 
   gameActive = true;
   score = 0;
@@ -224,14 +285,9 @@ startButton.addEventListener('click', () => {
   character.style.width = '90px';
   character.style.height = '110px';
 
-  window.parent.postMessage({ type: 'STOP_BGM' }, '*');
-
-  gameBgm.currentTime = 0;
-  gameBgm.play();
-
   updateScore();
   spawnObstacles();
-});
+}
 
 // 이미 출력한 예고 멘트 점수 기록용 Set
 const shownWarnings = new Set<number>();
@@ -303,7 +359,7 @@ function updateSpeechBubblePosition(): void {
 
   // 말풍선을 캐릭터 중심 위에 맞춤
   speechBubble.style.left = `${character.offsetLeft + character.offsetWidth / 2 - bubbleRect.width / 2}px`;
-  speechBubble.style.top = `${character.offsetTop - bubbleRect.height - 10}px`; // 캐릭터 위 10px 간격
+  speechBubble.style.top = `${character.offsetTop - bubbleRect.height - 10}px`;
 }
 
 let speechBubbleVisible = false;
@@ -334,7 +390,7 @@ function getEvolutionStage(score: number): 0 | 1 | 2 | 3 | 4 {
  */
 function updateCharacterImage(): void {
   const stage = getEvolutionStage(score);
-  evolutionStage = stage; // 현재 진화 단계 저장
+  evolutionStage = stage;
 
   const baseWidth = 90;
   const baseHeight = 110;
@@ -367,7 +423,8 @@ function updateCharacterImage(): void {
     },
   };
 
-  const src = evolutionStage === 0 ? characterImagesMap.idle[characterDirection] : characterImagesMap[`evo${evolutionStage}`][characterDirection];
+  const evoKey = stage === 0 ? 'idle' : (`evo${stage}` as keyof typeof characterImagesMap);
+  const src = characterImagesMap[evoKey][characterDirection];
 
   character.src = src;
   character.style.width = `${width}px`;
@@ -399,8 +456,6 @@ document.addEventListener('keydown', (e: KeyboardEvent) => {
 
 const obstacleImages = [bananaImg, canImg, fireImg, boom1Img, boom2Img, acornsImg];
 
-let lastCellIndex = -1; // 연속된 위치 중복 방지용
-
 /**
  * 장애물 랜덤 위치 생성 및 낙하 처리
  */
@@ -412,12 +467,7 @@ function spawnObstacles(): void {
   const cells = Math.floor(maxX / gridSize); // 총 셀 개수: 9
 
   // 이전 위치와 다르게 랜덤한 셀 인덱스를 지정
-  let cellIndex: number;
-  do {
-    cellIndex = Math.floor(Math.random() * cells);
-  } while (cellIndex === lastCellIndex);
-  lastCellIndex = cellIndex;
-
+  const cellIndex = getRandomCell(cells);
   const posX = cellIndex * gridSize;
 
   const obstacle = document.createElement('div');
@@ -448,11 +498,11 @@ function spawnObstacles(): void {
  * @returns 생성 대기 시간 (ms)
  */
 function getSpawnInterval(score: number): number {
-  if (score < 20) return 850;
-  if (score < 40) return 800;
-  if (score < 65) return 750;
-  if (score < 90) return 700;
-  return 650;
+  if (score < 20) return 800;
+  if (score < 40) return 700;
+  if (score < 65) return 600;
+  if (score < 90) return 550;
+  return 450;
 }
 
 /**
@@ -498,6 +548,27 @@ function getObstacleSpeed(score: number): number {
   if (score < 65) return 6;
   if (score < 90) return 7;
   return 8;
+}
+
+let cellOrder: number[] = [];
+let cellIndexNow = 0;
+
+/**
+ * 한 바퀴 셀 다 돌기 전까지는 중복 없이 셀 인덱스를 순환
+ */
+function getRandomCell(cells: number): number {
+  if (cellOrder.length !== cells || cellIndexNow >= cellOrder.length) {
+    cellOrder = [...Array(cells).keys()];
+    for (let i = cellOrder.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [cellOrder[i], cellOrder[j]] = [cellOrder[j], cellOrder[i]];
+    }
+    cellIndexNow = 0;
+  }
+
+  const result = cellOrder[cellIndexNow];
+  cellIndexNow++;
+  return result;
 }
 
 /**
@@ -561,7 +632,7 @@ saveScoreButton.addEventListener('click', (): void => {
 /**
  * SAVE 버튼 클릭 시 이름 정상 입력 확인 및 저장
  */
-saveNameButton.addEventListener('click', () => {
+saveNameButton.addEventListener('click', async () => {
   const rawInput = playerNameInput.value.trim();
 
   if (rawInput.length === 0) {
@@ -575,20 +646,16 @@ saveNameButton.addEventListener('click', () => {
   }
 
   const cleanName = rawInput.replace(/[^가-힣a-zA-Z]/g, '').toUpperCase();
-  const newEntry = { name: cleanName, score };
-  const stored = localStorage.getItem(localKey);
-  const bestScores = stored ? (JSON.parse(stored) as ScoreEntry[]) : [];
 
-  // 새 항목 추가 후 점수 기준 정렬
-  bestScores.unshift(newEntry);
-  bestScores.sort((a, b) => b.score - a.score);
-  bestScores.splice(5);
-
-  localStorage.setItem(localKey, JSON.stringify(bestScores));
-
-  saveScorePopup.classList.add('hidden');
-  overlay.classList.remove('show');
-  showToast('기록이 저장되었습니다!');
+  try {
+    await fireScore(cleanName, score, 'animal-patrol'); // Firestore에 저장, 해당 파라미터로
+    saveScorePopup.classList.add('hidden');
+    overlay.classList.remove('show');
+    showToast('기록이 저장되었습니다!');
+  } catch (err) {
+    showToast(`이미 존재하는 닉네임입니다.`, false);
+    playerNameInput.focus();
+  }
 });
 
 /**
@@ -611,7 +678,7 @@ cancelSaveButton.addEventListener('click', () => {
 /**
  * 하단에 짧게 메시지를 보여준 후 게임을 초기화
  */
-function showToast(message: string): void {
+function showToast(message: string, _shouldReset: boolean = true): void {
   toast.textContent = message;
   toast.classList.remove('hidden');
   toast.classList.add('show');
@@ -619,7 +686,8 @@ function showToast(message: string): void {
   setTimeout(() => {
     toast.classList.remove('show');
     toast.classList.add('hidden');
-    resetGame();
+
+    // 닉네임 저장 성공 시 초기화 하도록 설정
   }, 1500);
 }
 
@@ -680,4 +748,7 @@ function resetGame(): void {
 
   // 인게임 BGM 정지 -> 메인 BGM 재생 요청
   window.parent.postMessage({ type: 'PLAY_MAIN_BGM' }, '*');
+
+  // Game guide 팝업 ESC키 초기화
+  guideClosed = false;
 }
