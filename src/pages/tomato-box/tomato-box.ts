@@ -93,6 +93,69 @@ function main() {
   initDevMode();
 }
 
+// 게임 상태 초기화 함수
+function resetGameState() {
+  scoreNum = 0;
+  timeLeft = timeLimit;
+  isGameOver = false;
+  isVisible = false;
+  draggable = false;
+  isDragging = false;
+
+  gridData.length = 0;
+  flyingTomatoes.length = 0;
+
+  if (ctx) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+}
+
+// UI 상태 초기화 함수
+function resetUIState() {
+  const scoreInGame = document.querySelector('.overlay .score') as HTMLElement;
+  if (scoreInGame) scoreInGame.textContent = '0';
+
+  const currTimeBar = document.querySelector('.curr') as HTMLDivElement;
+  if (currTimeBar) currTimeBar.style.height = '100%';
+
+  const gameoverPopup = document.querySelector('.gameover');
+  const overlayBg = document.querySelector('.overlay-bg');
+  const saveScore = document.querySelector('.savescore') as HTMLElement;
+  const startPopup = document.querySelector('.start-popup') as HTMLElement;
+
+  gameoverPopup?.classList.remove('show');
+  overlayBg?.classList.remove('show');
+  saveScore?.classList.remove('show');
+  saveScore?.classList.add('hide');
+  startPopup?.classList.remove('show');
+  startPopup?.classList.add('hide');
+
+  const nicknameInput = document.querySelector('.nickname-input') as HTMLInputElement;
+  if (nicknameInput) nicknameInput.value = '';
+}
+
+// 화면 전환
+function showIntroScreen() {
+  intro?.classList.remove('hide');
+  intro?.classList.add('show');
+  play?.classList.add('hide');
+  play?.classList.remove('show');
+}
+
+// 게임 초기화
+function restartGame() {
+  if (bgm) {
+    bgm.pause();
+    bgm.currentTime = 0;
+  }
+
+  resetGameState();
+  resetUIState();
+  showIntroScreen();
+
+  window.parent.postMessage({ type: 'PLAY_MAIN_BGM' }, '*');
+}
+
 // 인트로
 function tomatoIntro() {
   // 홈 버튼 클릭
@@ -154,7 +217,7 @@ function tomatoIntro() {
     cancelAnimationFrame(animationFrameId);
   }
 
-  // CD 상태 설정, localStorage에 재생 상태 저장하여 반영
+  // CD 상태 설정, 재생 상태 저장하여 반영
   function cdState() {
     if (isBgmOn) {
       cdSpin();
@@ -476,7 +539,7 @@ function events() {
     redrawGrid();
   });
 
-  // 점수 저장
+  // 점수 저장 팝업 토글
   saveBtn?.addEventListener('click', () => {
     playIcon('/sounds/pointer.wav');
     if (!isVisible) {
@@ -495,40 +558,14 @@ function events() {
   restart?.addEventListener('click', () => {
     playIcon('/sounds/pointer.wav');
 
-    if (bgm) {
-      bgm.pause();
-      bgm.currentTime = 0;
-    }
-
-    window.parent.postMessage({ type: 'PLAY_MAIN_BGM' }, '*');
-
-    if (isBgmOn) {
-      playIcon('/sounds/pointer.wav');
-    }
-
-    setTimeout(() => {
-      location.href = '/src/pages/tomato-box/tomato-box.html';
-    }, 200);
+    restartGame();
   });
 
   // 취소
   cancel?.addEventListener('click', () => {
     playIcon('/sounds/pointer.wav');
 
-    if (bgm) {
-      bgm.pause();
-      bgm.currentTime = 0;
-    }
-
-    window.parent.postMessage({ type: 'PLAY_MAIN_BGM' }, '*');
-
-    if (isBgmOn) {
-      playIcon('/sounds/pointer.wav');
-    }
-
-    setTimeout(() => {
-      location.href = '/src/pages/tomato-box/tomato-box.html';
-    }, 200);
+    restartGame();
   });
 
   // 닉네임 입력 받고 점수저장, async 처리 -> await 하기 위함 (서버와의 통신)
@@ -556,13 +593,11 @@ function events() {
     try {
       await fireScore(name, score, 'tomato-box'); // Firestore에 저장, 해당 파라미터로
 
-      window.parent.postMessage({ type: 'PLAY_MAIN_BGM' }, '*');
+      Toast(`점수가 저장되었습니다!`);
 
       setTimeout(() => {
-        window.location.href = '/src/pages/tomato-box/tomato-box.html';
-      }, 500);
-
-      Toast(`점수가 저장되었습니다!`);
+        restartGame();
+      }, 2000);
     } catch (err) {
       Toast(`이미 존재하는 닉네임입니다.`, false);
     }
