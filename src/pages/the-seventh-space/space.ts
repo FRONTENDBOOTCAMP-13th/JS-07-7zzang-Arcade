@@ -377,6 +377,7 @@ let bgOffset = 0;
 const bgSpeed = 1.5; // 원하는 스크롤 속도
 let lives = 3;
 let score = 0;
+let devMode = false;
 
 // ─── 라이프 정의 ─────────────────────────────────────────────
 const Life: ILife = {
@@ -472,10 +473,12 @@ const Player: IPlayer = {
     });
     this.bullets.push(bullet);
 
-    this.canShoot = false;
-    setTimeout(() => {
-      this.canShoot = true;
-    }, 0);
+    if (!devMode) {
+      this.canShoot = false;
+      setTimeout(() => {
+        this.canShoot = true;
+      }, 700); // 원하는 쿨타임(ms)
+    }
   },
 
   // ── 폭발 함수 ─────────────────────────
@@ -870,6 +873,10 @@ bossImg.src = bossImgSrc;
 // ─── 키버튼
 const keys = { ArrowLeft: false, ArrowRight: false, Space: false };
 document.addEventListener('keydown', e => {
+  if (e.key.toLowerCase() === 'p') {
+    devMode = !devMode;
+    showToast(`개발자 모드 ${devMode ? 'ON (무한총알)' : 'OFF'}`, 1000);
+  }
   if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Space') keys[e.key] = true;
   if (e.code === 'Space' && howPlayEl.classList.contains('hidden') && scoreModal.classList.contains('hidden') && nameModal.classList.contains('hidden') && gameOverModal.classList.contains('hidden')) {
     Player.shoot();
