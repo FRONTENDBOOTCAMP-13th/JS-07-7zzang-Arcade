@@ -1,6 +1,6 @@
-import mole1Img from '../../assets/images/smash-img/smash-mole1.png';
-import mole2Img from '../../assets/images/smash-img/smash-mole2.png';
-import twinkleImg from '../../assets/images/smash-img/smash-twinkle.png';
+import mole1Img from '../../assets/images/smash-img/smash-mole1.webp';
+import mole2Img from '../../assets/images/smash-img/smash-mole2.webp';
+import twinkleImg from '../../assets/images/smash-img/smash-twinkle.webp';
 
 // 파이어 베이스 파일 import (매우 중요)
 import { fireScore, getTopScores } from '../../utilits/scoreService';

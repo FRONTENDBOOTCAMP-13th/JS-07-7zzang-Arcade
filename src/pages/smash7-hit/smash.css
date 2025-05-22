@@ -54,7 +54,7 @@ body {
 
 /* 캔버스 설정 - 두더지 배경 + 테두리 */
 canvas {
-  background-image: url('/src/assets/images/smash-img/smash-play.png');
+  background-image: url('/src/assets/images/smash-img/smash-play.webp');
   background-size: cover;
   background-repeat: no-repeat;
   border: none;

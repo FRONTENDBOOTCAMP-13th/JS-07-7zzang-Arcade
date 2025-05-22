@@ -1,18 +1,18 @@
 import '../../style.css';
 import './space.css';
 import * as SAT from 'sat';
-import playerImgSrc from '../../assets/images/space-img/player.png';
-import bulletImgSrc from '../../assets/images/space-img/player-bullet.png';
-import enemyBulletImgSrc from '../../assets/images/space-img/enemy-bullet.png';
-import backgroundImgSrc from '../../assets/images/space-img/background.png';
-import explosionPlayerSrc from '../../assets/images/space-img/explosion-player.png';
-import explosionEnemySrc from '../../assets/images/space-img/explosion-enemy.png';
-import lifeIconSrc from '../../assets/images/space-img/heart.png';
-import bossImgSrc from '../../assets/images/space-img/boss.png';
-import enemy1ImgSrc from '../../assets/images/space-img/enemy1.png';
-import enemy2ImgSrc from '../../assets/images/space-img/enemy2.png';
-import enemy3ImgSrc from '../../assets/images/space-img/enemy3.png';
-import alienIconSrc from '../../assets/images/space-img/alien-icon.png';
+import playerImgSrc from '../../assets/images/space-img/player.webp';
+import bulletImgSrc from '../../assets/images/space-img/player-bullet.webp';
+import enemyBulletImgSrc from '../../assets/images/space-img/enemy-bullet.webp';
+import backgroundImgSrc from '../../assets/images/space-img/background.webp';
+import explosionPlayerSrc from '../../assets/images/space-img/explosion-player.webp';
+import explosionEnemySrc from '../../assets/images/space-img/explosion-enemy.webp';
+import lifeIconSrc from '../../assets/images/space-img/heart.webp';
+import bossImgSrc from '../../assets/images/space-img/boss.webp';
+import enemy1ImgSrc from '../../assets/images/space-img/enemy1.webp';
+import enemy2ImgSrc from '../../assets/images/space-img/enemy2.webp';
+import enemy3ImgSrc from '../../assets/images/space-img/enemy3.webp';
+import alienIconSrc from '../../assets/images/space-img/alien-icon.webp';
 
 // 파이어 베이스 파일 import
 import { fireScore, getTopScores } from '../../utilits/scoreService';

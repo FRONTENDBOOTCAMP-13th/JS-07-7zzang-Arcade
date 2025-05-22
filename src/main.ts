@@ -184,7 +184,7 @@ function playCoinAnimation() {
   coinSound.play().catch(() => {});
 
   const img = document.createElement('img');
-  img.src = '/images/coin.png';
+  img.src = '/images/coin.webp';
   img.classList.add('insert-coin');
   coinSlot.appendChild(img);
 
