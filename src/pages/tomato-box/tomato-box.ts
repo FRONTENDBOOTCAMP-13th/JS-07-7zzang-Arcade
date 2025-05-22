@@ -162,7 +162,6 @@ function tomatoIntro() {
   });
 
   // esc 키보드 이벤트
-  // esc 키보드 이벤트
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
       const popup = document.querySelector('.start-popup') as HTMLElement;
