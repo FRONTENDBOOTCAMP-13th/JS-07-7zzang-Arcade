@@ -41,9 +41,6 @@ class MoleGame {
     this.moleImages[0].src = mole1Img;
     this.moleImages[1].src = mole2Img;
 
-    // intro 화면의 "시작 버튼" 클릭 → 게임 시작(popup 오류남)
-    // document.getElementById('clickStart')?.addEventListener('click', () => this.startGame());
-
     // 트로피 팝업 열기 + 효과음 재생
     document.getElementById('trophyIcon')?.addEventListener('click', () => {
       this.playEffect('/sounds/smash-trophy-bgm.mp3'); // 효과음 추가!
@@ -394,11 +391,6 @@ class MoleGame {
     if (bat) bat.style.display = 'none';
   }
 }
-
-// 페이지 로딩 후 게임 인스턴스 생성
-// window.addEventListener('DOMContentLoaded', () => {
-//   new MoleGame();
-// });
 
 function showToast(message: string, _shouldReset: boolean = true) {
   const toast = document.getElementById('toast');
