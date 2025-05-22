@@ -2,11 +2,11 @@ import '../../style.css';
 import './tomato-box.css';
 
 // 이미지 import
-import tomatoImg from '../../assets/images/tomato-img/tomato-empty.png';
-import tomatoSelectedSrc from '../../assets/images/tomato-img/select-tomato.png';
+import tomatoImg from '../../assets/images/tomato-img/tomato-empty.webp';
+import tomatoSelectedSrc from '../../assets/images/tomato-img/select-tomato.webp';
 
-import bgmOnImg from '../../assets/images/tomato-img/bgmon.png';
-import bgmOffImg from '../../assets/images/tomato-img/bgmoff.png';
+import bgmOnImg from '../../assets/images/tomato-img/bgmon.webp';
+import bgmOffImg from '../../assets/images/tomato-img/bgmoff.webp';
 
 // 파이어베이스 컬렉션 import
 import { fireScore, getTopScores } from '../../utilits/scoreService';
