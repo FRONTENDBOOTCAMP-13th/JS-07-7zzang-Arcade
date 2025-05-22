@@ -50,11 +50,11 @@
 
 ### 👨‍👩‍👧‍👦 7lenge를 소개합니다
 
-|                                                이호정                                                 |                                              황유빈                                               |                                             배동초                                             |                                               김지수                                                |
-| :---------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------: |
-| [<img src="./public/images/animal-profile.webp" width="100"><br>Github](https://github.com/jeong0403) | [<img src="./public/images/space-profile.webp" width="100"><br>Github](https://github.com/YouVin) | [<img src="public/images/smash-profile.webp" width="100"><br>Github](https://github.com/sua17) | [<img src="public/images/tomato-profile.webp" width="100"><br>Github](https://github.com/kimlog126) |
-|                                            Team Leader/PM                                             |                                                PL                                                 |                                         Content Writer                                         |                                          Content Designer                                           |
-|                                    🕹️ 계속 도전하시겠습니까? → YES                                    |                             💪 ‘열심히’ 말고 ‘잘’ 하는 개발자가 되자                              |                                    🚀시간을 잘 쓰면 개발업!                                    |                                         👩‍💻'뚝딱뚝딱 개발자'                                         |
+| <img src="./public/images/animal-profile.webp" width="100"><br>**이호정**<br>[Github](https://github.com/jeong0403) | <img src="./public/images/space-profile.webp" width="100"><br>**황유빈**<br>[Github](https://github.com/YouVin) | <img src="./public/images/smash-profile.webp" width="100"><br>**배동초**<br>[Github](https://github.com/sua17) | <img src="./public/images/tomato-profile.webp" width="100"><br>**김지수**<br>[Github](https://github.com/kimlog126) |
+| :--: | :--: | :--: | :--: |
+| **Team Leader / PM** | **PL** | **Content Writer** | **Content Designer** |
+| 🕹️ 계속 도전하시겠습니까? → YES | 💪 ‘열심히’ 말고 ‘잘’ 하는 개발자가 되자 | 🚀 시간을 잘 쓰면 개발업! | 👩‍💻 '뚝딱뚝딱 개발자' |
+
 
 <br>
 <hr>
@@ -84,7 +84,7 @@
 
 |                                   실행 화면                                    |
 | :----------------------------------------------------------------------------: |
-| ![Main 화면](https://user-images.githubusercontent.com/12345678/main-demo.gif) |
+| ![Main 화면](https://github.com/user-images.githubusercontent.com/12345678/main-demo.gif) |
 
 ---
 
@@ -96,7 +96,7 @@
 
 |                                         실행 화면                                         |
 | :---------------------------------------------------------------------------------------: |
-| ![Image](https://github.com/user-attachments/assets/5280e894-3589-476f-967a-22f50bea98cf) |
+| ![출동! 동물특공대](https://github.com/user-attachments/assets/5280e894-3589-476f-967a-22f50bea98cf) |
 
 ---
 
@@ -108,7 +108,7 @@
 
 |                                              실행 화면                                              |
 | :-------------------------------------------------------------------------------------------------: |
-| ![the-seventh-space](https://user-images.githubusercontent.com/12345678/the-seventh-space-demo.gif) |
+| ![제 7우주](https:///github.com/user-images.githubusercontent.com/12345678/the-seventh-space-demo.gif) |
 
 ---
 
@@ -120,8 +120,8 @@
 
 |                                         실행 화면                                         |
 | :---------------------------------------------------------------------------------------: |
-| ![Image](https://github.com/user-attachments/assets/88bb107d-4ce6-4084-abf9-b98e276be74c) |
-| ![Image](https://github.com/user-attachments/assets/e7bf6b1e-5b50-49e8-a0a3-3eb899785130) |
+| ![토마토 박스](https://github.com/user-attachments/assets/e7bf6b1e-5b50-49e8-a0a3-3eb899785130) |
+| ![토마토 박스](https://github.com/user-attachments/assets/88bb107d-4ce6-4084-abf9-b98e276be74c) |
 
 ---
 
@@ -133,7 +133,7 @@
 
 |                                            실행 화면                                            |
 | :---------------------------------------------------------------------------------------------: |
-| ![smash-seven-hit](https://user-images.githubusercontent.com/12345678/smash-seven-hit-demo.gif) |
+| ![뿅뿅 두더지](https://github.com/user-images.githubusercontent.com/12345678/smash-seven-hit-demo.gif) |
 
 ---
 
@@ -154,16 +154,6 @@
     - 미니 게임 4종 (출동! 동물특공대, 제7 우주, 토마토 박스, 뿅뿅 두더지)
     - 게임마다 개별 점수/인터랙션 지원
     - Netlify 배포 및 Firebase API 연동
-
-- **🕹️주요 기능**
-  총 4개의 게임을 포함한 웹 기반 오락실 플랫폼 구성
-
-  - 부연 설명
-  - 🐤 **출동! 동물특공대**: 방향키로 조작하며 장애물을 피하는 반응형 게임
-  - 🎯 **제7 우주**: 방향키와 스페이스 키를 조작하여 적들을 물리치는 슈팅 게임
-  - **🍅 토마토 박스**: 120초 안에 합이 10이 되는 토마토를 찾아 최대한 많이 떨어뜨리는 게임
-  - 🌟 **뿅뿅 두더지 :** 무작위로 나타나는 두더지들 뿅망치를 통해 혼내주는 게임
-  - **🖥️ 메인 오락실 화면**: 코인을 넣을 시 오락기가 켜지며 위 4개 게임을 선택 가능하게 함
 
 ### [출동! 동물특공대]
 
@@ -225,23 +215,15 @@
 │   ├── sounds/
 │   └── fonts/
 ├── src/
-│   └── assets/
-│       ├── icons/
-│           ├── animal-icons/
-│           ├── space-icons/
-│           ├── smash-icons/
-│           └── tomato-icons/
-│       ├── images/
-│           ├── animal-img/
-│           ├── space-img/
-│           ├── smash-img/
-│           └── tomato-img/
+│   ├── assets/
+│   │   ├── icons/
+│   │   └── images/
 │   ├── common/
 │   ├── pages/
-│       ├── animal-patrol/
-│       ├── smash-seven-hit/
-│       ├── the-seventh-space/
-│       └── tomato-box/
+│   │   ├── animal-patrol/
+│   │   ├── smash-seven-hit/
+│   │   ├── the-seventh-space/
+│   │   └── tomato-box/
 │   ├── utils/
 │   ├── main.ts
 │   └── style.css
@@ -257,6 +239,7 @@
 ├── tsconfig.json
 ├── vite.config.js
 └── webp-converter.ts
+
 
 ```
 
@@ -308,4 +291,4 @@
 
 ---
 
-<p align="center"><i>🕹️ **7zzang-Acade © 2025 LikeLion Team 7lenge**</i></p>
+<p align="center"><i>🕹️ 7zzang-Arcade © 2025 LikeLion Team 7lenge</i></p>
