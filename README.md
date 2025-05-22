@@ -1,7 +1,22 @@
 <h1 align="center"><b>🕹️7짱 오락실</b></h1>
-<p align="center">
-<이미지 - 오락실 화면 캡처 넣기>
-</p>
+<p align="center"><i>by Team 7lenge</i></p>
+<br/>
+<div align="center">
+처음이라 서툴렀지만,  
+끝까지 해보자는 마음으로 달렸습니다.
+
+**7ZZANG-ARCADE**는  
+우리의 첫 도전이자, 성장을 시작한 결과물입니다.
+
+**7lenge**는  
+7조에서 시작해 ‘Challenge’를 담아 만든 이름이고,  
+그 이름처럼 도전했고, 끝까지 해냈습니다.
+
+이제, 다음 스테이지로 갑니다. 🚀
+
+</div>
+
+---
 
 <div align="center">
 <img alt="Static Badge" src="https://img.shields.io/badge/%EC%9D%B4%ED%98%B8%EC%A0%95%2C%20%ED%99%A9%EC%9C%A0%EB%B9%88%2C%20%EA%B9%80%EC%A7%80%EC%88%98%2C%20%EB%B0%B0%EB%8F%99%EC%B4%88-EE66A6?style=flat&label=made%20by&labelColor=light%20gray&link=https%3A%2F%2Fgithub.com%2FFRONTENDBOOTCAMP-13th%2FJS-07-7zzang-Arcade%2Fwiki">
@@ -11,12 +26,7 @@
 [![Static Badge](https://img.shields.io/badge/7짱오락실%20게임하러%20가기-FF2929?style=flat&logo=netlify&logoColor=white)](https://7zzang-arcade.netlify.app/)
 [![Static Badge](https://img.shields.io/badge/WIKI-%23181717?style=flat&logo=github&logoColor=white&link=https%3A%2F%2Fgithub.com%2FFRONTENDBOOTCAMP-13th%2FJS-07-7zzang-Arcade%2Fwiki)](https://github.com/FRONTENDBOOTCAMP-13th/JS-07-7zzang-Arcade/wiki)
 
-_가운데 뱃지 추후에 배포 사이트 링크 첨부 필요_
-
-</div>
-
-과거의 **레트로풍 오락실 게임기**를 모티브로 한 웹 기반 미니 게임 플랫폼입니다.  
-사용자가 동전을 넣으면 메인 화면이 작동하고, 이 화면에서 원하는 게임을 선택하여 플레이 할 수 있습니다.
+## </div>
 
 <br>
 
@@ -44,7 +54,7 @@ _가운데 뱃지 추후에 배포 사이트 링크 첨부 필요_
 | :---------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------: |
 | [<img src="./public/images/animal-profile.webp" width="100"><br>Github](https://github.com/jeong0403) | [<img src="./public/images/space-profile.webp" width="100"><br>Github](https://github.com/YouVin) | [<img src="public/images/smash-profile.webp" width="100"><br>Github](https://github.com/sua17) | [<img src="public/images/tomato-profile.webp" width="100"><br>Github](https://github.com/kimlog126) |
 |                                            Team Leader/PM                                             |                                                PL                                                 |                                         Content Writer                                         |                                          Content Designer                                           |
-|                                    🕹️ 계속 도전하시겠습니까? → YES                                    |                               ‘열심히’ 말고 ‘잘’ 하는 개발자가 되자                               |                                    🚀시간을 잘 쓰면 개발업!                                    |                                          '뚝딱뚝딱 개발자'                                          |
+|                                    🕹️ 계속 도전하시겠습니까? → YES                                    |                             💪 ‘열심히’ 말고 ‘잘’ 하는 개발자가 되자                              |                                    🚀시간을 잘 쓰면 개발업!                                    |                                         👩‍💻'뚝딱뚝딱 개발자'                                         |
 
 <br>
 <hr>
@@ -53,12 +63,12 @@ _가운데 뱃지 추후에 배포 사이트 링크 첨부 필요_
 
 ## 👥 팀 구성 및 역할
 
-| 담당자 | 메인 역할           | 개발 참여                               | 주요 기여 요약                                                                                         |
-| ------ | ------------------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| 호정   | Team Leader / PM    | 🐤 출동! 동물특공대 게임 제작           | 🔹 팀 일정/업무/콘텐츠 기획 총괄<br>🔹 출동! 동물특공대 게임 설계 및 UI/로직 구현                      |
-| 유빈   | PL (Project Leader) | 메인 페이지 제작, 🛸 제7 우주 게임 제작 | 🔹 프로젝트 구조 설계, Git 전략 수립<br>🔹 메인 페이지 로직 구현 및 제7 우주 게임 설계 및 UI/로직 구현 |
-| 지수   | Content Designer    | 🍅 토마토 박스 게임 제작                | 🔹 UI 디자인 전반<br>🔹 토마토 박스 게임 설계 및 UI/로직 구현                                          |
-| 동초   | Content Writer      | 🐾🔨 뿡뿡 두더지 게임 제작              | 🔹 프로젝트 회고 및 문서화<br>🔹 뿡뿡 두더지 게임 설계 및 UI/로직 구현                                 |
+| 담당자 | 메인 역할           | 개발 참여                                  | 주요 기여 요약                                                                                         |
+| ------ | ------------------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| 호정   | Team Leader / PM    | 🐤 출동! 동물특공대 게임 제작              | 🔹 팀 일정/업무/콘텐츠 기획 총괄<br>🔹 출동! 동물특공대 게임 설계 및 UI/로직 구현                      |
+| 유빈   | PL (Project Leader) | 🔗 메인 페이지 제작, 🛸 제7 우주 게임 제작 | 🔹 프로젝트 구조 설계, Git 전략 수립<br>🔹 메인 페이지 로직 구현 및 제7 우주 게임 설계 및 UI/로직 구현 |
+| 지수   | Content Designer    | 🍅 토마토 박스 게임 제작                   | 🔹 UI 디자인 전반<br>🔹 토마토 박스 게임 설계 및 UI/로직 구현                                          |
+| 동초   | Content Writer      | 🐾🔨 뿡뿡 두더지 게임 제작                 | 🔹 프로젝트 회고 및 문서화<br>🔹 뿡뿡 두더지 게임 설계 및 UI/로직 구현                                 |
 
 <hr>
 
@@ -75,6 +85,18 @@ _가운데 뱃지 추후에 배포 사이트 링크 첨부 필요_
 |                                   실행 화면                                    |
 | :----------------------------------------------------------------------------: |
 | ![Main 화면](https://user-images.githubusercontent.com/12345678/main-demo.gif) |
+
+---
+
+### 🐤 animal-patrol
+
+- **게임 제목**: animal-patrol
+- **장르**: 2D 피하기
+- **설명**: 귀여운 병아리 캐릭터가 좌우로 움직이며 하늘에서 떨어지는 장애물을 피해 생존하는 2D 피하기 게임입니다.
+
+|                                         실행 화면                                         |
+| :---------------------------------------------------------------------------------------: |
+| ![Image](https://github.com/user-attachments/assets/5280e894-3589-476f-967a-22f50bea98cf) |
 
 ---
 
@@ -103,18 +125,6 @@ _가운데 뱃지 추후에 배포 사이트 링크 첨부 필요_
 
 ---
 
-### 🐤 animal-patrol
-
-- **게임 제목**: animal-patrol
-- **장르**: 2D 피하기
-- **설명**: 귀여운 병아리 캐릭터가 좌우로 움직이며 하늘에서 떨어지는 장애물을 피해 생존하는 2D 피하기 게임입니다.
-
-|                                         실행 화면                                         |
-| :---------------------------------------------------------------------------------------: |
-| ![Image](https://github.com/user-attachments/assets/5280e894-3589-476f-967a-22f50bea98cf) |
-
----
-
 ### 🔨 smash-seven-hit
 
 - **게임 제목**: smash-seven-hit
@@ -124,8 +134,6 @@ _가운데 뱃지 추후에 배포 사이트 링크 첨부 필요_
 |                                            실행 화면                                            |
 | :---------------------------------------------------------------------------------------------: |
 | ![smash-seven-hit](https://user-images.githubusercontent.com/12345678/smash-seven-hit-demo.gif) |
-
----
 
 ---
 
@@ -140,10 +148,10 @@ _가운데 뱃지 추후에 배포 사이트 링크 첨부 필요_
   - 부연 설명
     - 메인 화면에서 **동전 애니메이션**을 클릭하면 오락기 전원이 켜지며 인터랙션이 시작됩니다.
     - 각 게임기의 **버튼을 클릭**하면 해당 게임 페이지로 이동합니다.
-    - 우측 상단의 **음표 아이콘**을 통해 **BGM을 On/Off**할 수 있습니다.
+    - 우측 상단의 **라디오 아이콘**을 통해 **BGM을 On/Off**할 수 있습니다.
     - 게임 종료 후 **점수 확인 → 닉네임 입력 및 저장 or Cancel 시 인트로 화면으로 복귀**됩니다.
     - **픽셀 아트 기반 UI**로 몰입감 있는 오락실 분위기를 연출합니다.
-    - 미니 게임 4종 (우주, 토마토, 동물 특공대, 두더지)
+    - 미니 게임 4종 (출동! 동물특공대, 제7 우주, 토마토 박스, 뿅뿅 두더지)
     - 게임마다 개별 점수/인터랙션 지원
     - Netlify 배포 및 Firebase API 연동
 
@@ -157,7 +165,7 @@ _가운데 뱃지 추후에 배포 사이트 링크 첨부 필요_
   - 🌟 **뿅뿅 두더지 :** 무작위로 나타나는 두더지들 뿅망치를 통해 혼내주는 게임
   - **🖥️ 메인 오락실 화면**: 코인을 넣을 시 오락기가 켜지며 위 4개 게임을 선택 가능하게 함
 
-### [출동! 동물 특공대]
+### [출동! 동물특공대]
 
 - **주 설명**
   귀여운 병아리 캐릭터가 좌우로 움직이며, 하늘에서 떨어지는 장애물을 피해 생존하는 2D 피하기 게임입니다.
@@ -180,6 +188,18 @@ _가운데 뱃지 추후에 배포 사이트 링크 첨부 필요_
     - 점수 시스템, 충돌 판정, 게임 루프는 canvas 기반으로 구현
     - 배경 스크롤, 사운드, sprite 연출 등 확장성 고려 구조
 
+### [토마토 박스]
+
+- **주 설명**
+  숫자가 적힌 귀여운 토마토들을 드래그하여 **숫자의 합이 10**이 되면 제거하는 퍼즐 게임입니다.
+
+  - 부연 설명
+    - 사용자는 마우스로 타일을 드래그하여 사각형 영역 선택
+    - 선택된 토마토 숫자의 합이 정확히 10이면 터지고 점수 획득
+    - **시간 제한(120초)** 내에 최대한 많은 조합을 만들어야 함
+    - 제거한 토마토 수만큼 점수 상승 애니메이션/사운드로 피드백 제공
+    - 향후 특수 토마토, 모바일 대응 등으로 확장 가능
+
 ### [뿅뿅 두더지]
 
 - **주 설명**
@@ -192,18 +212,6 @@ _가운데 뱃지 추후에 배포 사이트 링크 첨부 필요_
     - 클릭 시 ‘반짝’ 애니메이션과 효과 출력
     - **남은 시간이 10초 이하로 줄어들면 두더지 등장 속도 증가**, 더욱 빠른 반응 필요
 
-### [토마토 박스]
-
-- **주 설명**
-  숫자가 적힌 귀여운 토마토들을 드래그하여 **숫자의 합이 10**이 되면 제거하는 퍼즐 게임입니다.
-
-  - 부연 설명
-    - 사용자는 마우스로 타일을 드래그하여 사각형 영역 선택
-    - 선택된 토마토 숫자의 합이 정확히 10이면 터지고 점수 획득
-    - **시간 제한(60초)** 내에 최대한 많은 조합을 만들어야 함
-    - 총합이 클수록 점수 상승, 애니메이션/사운드로 피드백 제공
-    - 향후 특수 토마토, 모바일 대응 등으로 확장 가능
-
 <hr>
 
 ### 📂 프로젝트 구조
@@ -213,37 +221,42 @@ _가운데 뱃지 추후에 배포 사이트 링크 첨부 필요_
 7zzang-arcade/
 │
 ├── public/
-│ ├── images/
-│ ├── sounds/
-│ └── fonts/
+│   ├── images/
+│   ├── sounds/
+│   └── fonts/
 ├── src/
-│ └── assets/
-│ ├── icons/
-│ │ ├── animal-icons/
-│ │ ├── space-icons/
-│ │ ├── smash-icons/
-│ │ └── tomato-icons/
-│ ├── images/
-│ │ ├── animal-img/
-│ │ ├── space-img/
-│ │ ├── smash-img/
-│ │ └── tomato-img/
-│ ├── common/
-│ ├── pages/
-│ │ ├── animal-patrol/
-│ │ ├── smash-seven-hit/
-│ │ ├── the-seventh-space/
-│ │ └── tomato-box/
-│ ├── utils/
-│ ├── main.ts
-│ └── style.css
+│   └── assets/
+│       ├── icons/
+│           ├── animal-icons/
+│           ├── space-icons/
+│           ├── smash-icons/
+│           └── tomato-icons/
+│       ├── images/
+│           ├── animal-img/
+│           ├── space-img/
+│           ├── smash-img/
+│           └── tomato-img/
+│   ├── common/
+│   ├── pages/
+│       ├── animal-patrol/
+│       ├── smash-seven-hit/
+│       ├── the-seventh-space/
+│       └── tomato-box/
+│   ├── utils/
+│   ├── main.ts
+│   └── style.css
+├── .env
+├── .env.example
 ├── .gitignore
 ├── eslint.config.js
 ├── index.html
-├── README.md
+├── package-lock.json
+├── package.json
 ├── prettier.config.js
+├── README.md
 ├── tsconfig.json
-└── vite.config.js
+├── vite.config.js
+└── webp-converter.ts
 
 ```
 
@@ -283,7 +296,7 @@ _가운데 뱃지 추후에 배포 사이트 링크 첨부 필요_
 | 🔗 **배포 링크** | [Netlify 배포 링크](https://your-netlify-link.com)                                    |
 | 📺 **실행 화면** | GIF 또는 시연 영상 링크 삽입                                                          |
 | 📌 **Wiki 안내** | [팀 위키 바로가기](https://github.com/FRONTENDBOOTCAMP-13th/JS-07-7zzang-Arcade/wiki) |
-| 🔐 **라이선스**  | (선택 사항) 적을게 있을까요?                                                          |
+|                  |
 
 ---
 
@@ -295,6 +308,4 @@ _가운데 뱃지 추후에 배포 사이트 링크 첨부 필요_
 
 ---
 
-### ✨ 더 알아보기
-
-더 자세한 내용은 📖👉 [roles.md](./wiki/roles.md)에서 확인해주세요.
+<p align="center"><i>🕹️ **7zzang-Acade © 2025 LikeLion Team 7lenge**</i></p>
