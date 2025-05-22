@@ -7,7 +7,9 @@
 <img alt="Static Badge" src="https://img.shields.io/badge/%EC%9D%B4%ED%98%B8%EC%A0%95%2C%20%ED%99%A9%EC%9C%A0%EB%B9%88%2C%20%EA%B9%80%EC%A7%80%EC%88%98%2C%20%EB%B0%B0%EB%8F%99%EC%B4%88-EE66A6?style=flat&label=made%20by&labelColor=light%20gray&link=https%3A%2F%2Fgithub.com%2FFRONTENDBOOTCAMP-13th%2FJS-07-7zzang-Arcade%2Fwiki">
 <img alt="Static Badge" src="https://img.shields.io/badge/2025.05.09%20~%202025.05.23-0D92F4?style=flat&label=duration&labelColor=light%20gray&link=https%3A%2F%2Fgithub.com%2FFRONTENDBOOTCAMP-13th%2FJS-07-7zzang-Arcade%2Fwiki">
 
-[![Static Badge](https://img.shields.io/badge/NOTION-black?style=flat&logo=notion&logoColor=white&link=https%3A%2F%2Fwww.notion.so%2F7lenge-1ed73873401a80339678cb9ca4d1fe82)](https://www.notion.so/7lenge-1ed73873401a80339678cb9ca4d1fe82) ![Static Badge](https://img.shields.io/badge/7%EC%A7%B1%EC%98%A4%EB%9D%BD%EC%8B%A4%20%EA%B2%8C%EC%9E%84%ED%95%98%EB%9F%AC%20%EA%B0%80%EA%B8%B0%20!-FF2929?style=flat&logo=netlify&logoColor=white) [![Static Badge](https://img.shields.io/badge/WIKI-%23181717?style=flat&logo=github&logoColor=white&link=https%3A%2F%2Fgithub.com%2FFRONTENDBOOTCAMP-13th%2FJS-07-7zzang-Arcade%2Fwiki)](https://github.com/FRONTENDBOOTCAMP-13th/JS-07-7zzang-Arcade/wiki)
+[![Static Badge](https://img.shields.io/badge/NOTION-black?style=flat&logo=notion&logoColor=white&link=https%3A%2F%2Fwww.notion.so%2F7lenge-1ed73873401a80339678cb9ca4d1fe82)](https://www.notion.so/7lenge-1ed73873401a80339678cb9ca4d1fe82)
+[![Static Badge](https://img.shields.io/badge/7짱오락실%20게임하러%20가기-FF2929?style=flat&logo=netlify&logoColor=white)](https://7zzang-arcade.netlify.app/)
+[![Static Badge](https://img.shields.io/badge/WIKI-%23181717?style=flat&logo=github&logoColor=white&link=https%3A%2F%2Fgithub.com%2FFRONTENDBOOTCAMP-13th%2FJS-07-7zzang-Arcade%2Fwiki)](https://github.com/FRONTENDBOOTCAMP-13th/JS-07-7zzang-Arcade/wiki)
 
 _가운데 뱃지 추후에 배포 사이트 링크 첨부 필요_
 
@@ -38,11 +40,11 @@ _가운데 뱃지 추후에 배포 사이트 링크 첨부 필요_
 
 ### 👨‍👩‍👧‍👦 7lenge를 소개합니다
 
-|                                                이호정                                                |                                              황유빈                                              |                                            배동초                                             |                                               김지수                                               |
-| :--------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------: |
-| [<img src="./public/images/animal-profile.png" width="100"><br>Github](https://github.com/jeong0403) | [<img src="./public/images/space-profile.png" width="100"><br>Github](https://github.com/YouVin) | [<img src="public/images/smash-profile.png" width="100"><br>Github](https://github.com/sua17) | [<img src="public/images/tomato-profile.png" width="100"><br>Github](https://github.com/kimlog126) |
-|                                            Team Leader/PM                                            |                                                PL                                                |                                        Content Writer                                         |                                          Content Designer                                          |
-|                                               한마디 ~                                               |                                             한마디 ~                                             |                                           한마디 ~                                            |                                              한마디 ~                                              |
+|                                                이호정                                                 |                                              황유빈                                               |                                             배동초                                             |                                               김지수                                                |
+| :---------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------: |
+| [<img src="./public/images/animal-profile.webp" width="100"><br>Github](https://github.com/jeong0403) | [<img src="./public/images/space-profile.webp" width="100"><br>Github](https://github.com/YouVin) | [<img src="public/images/smash-profile.webp" width="100"><br>Github](https://github.com/sua17) | [<img src="public/images/tomato-profile.webp" width="100"><br>Github](https://github.com/kimlog126) |
+|                                            Team Leader/PM                                             |                                                PL                                                 |                                         Content Writer                                         |                                          Content Designer                                           |
+|                                    🕹️ 계속 도전하시겠습니까? → YES                                    |                               ‘열심히’ 말고 ‘잘’ 하는 개발자가 되자                               |                                    🚀시간을 잘 쓰면 개발업!                                    |                                          '뚝딱뚝딱 개발자'                                          |
 
 <br>
 <hr>
@@ -62,21 +64,68 @@ _가운데 뱃지 추후에 배포 사이트 링크 첨부 필요_
 
 ## 💻 실행 화면
 
-> 1.  실행하는 화면 캡처 (영상 캡처 -> gif 변환)해서 넣어주세요.
+### 🎮 Main
 
-> 2.  캡처 이미지 디렉토리에 넣지 마시고, 깃허브 이슈 생성 창에서 생성한 gif 붙여넣기 해서 나오는 링크 붙여 넣으면 됩니다.
+- **게임 제목**: Main
+- **주 설명**: 레트로 오락실 느낌의 메인 화면. 동전 애니메이션을 누르면 게임 선택이 가능합니다.
+- **부연 설명**:
+  - 각 게임기로 이동 가능한 선택 UI 제공
+  - 픽셀 아트 기반 UI와 4종 미니게임 제공
 
-> 3. 제목 부분은 실행 페이지가 무엇인지, or 어떤 게임인지 적어주세요. 설명은 프로젝트 개요 참고하셔서 간략히 작성해주세요.
+|                                   실행 화면                                    |
+| :----------------------------------------------------------------------------: |
+| ![Main 화면](https://user-images.githubusercontent.com/12345678/main-demo.gif) |
 
-> 4. 표 이전 부분 해당 페이지 or 게임에 대한 간단한 설명을 리스트로 작성해주세요.
+---
 
-```
-# 표 양식
+### 🚀 the-seventh-space
 
-|  제목  |
-| :----: |
-| (캡처) |
-```
+- **게임 제목**: the-seventh-space
+- **장르**: 우주 슈팅
+- **설명**: 우주선이 장애물을 피하고 적을 처치하며 최대한 오래 생존하는 게임입니다.
+
+|                                              실행 화면                                              |
+| :-------------------------------------------------------------------------------------------------: |
+| ![the-seventh-space](https://user-images.githubusercontent.com/12345678/the-seventh-space-demo.gif) |
+
+---
+
+### 🍅 tomato-box
+
+- **게임 제목**: tomato-box
+- **장르**: 퍼즐
+- **설명**: 숫자가 적힌 귀여운 토마토들을 드래그하여 **숫자의 합이 10**이 되면 제거하는 게임입니다.
+
+|                                         실행 화면                                         |
+| :---------------------------------------------------------------------------------------: |
+| ![Image](https://github.com/user-attachments/assets/88bb107d-4ce6-4084-abf9-b98e276be74c) |
+| ![Image](https://github.com/user-attachments/assets/e7bf6b1e-5b50-49e8-a0a3-3eb899785130) |
+
+---
+
+### 🐤 animal-patrol
+
+- **게임 제목**: animal-patrol
+- **장르**: 2D 피하기
+- **설명**: 귀여운 병아리 캐릭터가 좌우로 움직이며 하늘에서 떨어지는 장애물을 피해 생존하는 2D 피하기 게임입니다.
+
+|                                         실행 화면                                         |
+| :---------------------------------------------------------------------------------------: |
+| ![Image](https://github.com/user-attachments/assets/5280e894-3589-476f-967a-22f50bea98cf) |
+
+---
+
+### 🔨 smash-seven-hit
+
+- **게임 제목**: smash-seven-hit
+- **장르**: 두더지 게임
+- **설명**: 등장하는 두더지를 클릭해 점수를 획득하는 레트로 감성 타이머 게임입니다.
+
+|                                            실행 화면                                            |
+| :---------------------------------------------------------------------------------------------: |
+| ![smash-seven-hit](https://user-images.githubusercontent.com/12345678/smash-seven-hit-demo.gif) |
+
+---
 
 ---
 
@@ -84,8 +133,8 @@ _가운데 뱃지 추후에 배포 사이트 링크 첨부 필요_
 
 ### [메인]
 
-- **주 설명**  
-  과거 오락실의 느낌을 살린 레트로풍 메인 화면으로,  
+- **🕹️주요 설명**
+  과거 오락실의 느낌을 살린 레트로풍 메인 화면으로,
   유저가 동전을 투입하면 게임 선택 화면이 활성화됩니다.
 
   - 부연 설명
@@ -98,9 +147,19 @@ _가운데 뱃지 추후에 배포 사이트 링크 첨부 필요_
     - 게임마다 개별 점수/인터랙션 지원
     - Netlify 배포 및 Firebase API 연동
 
+- **🕹️주요 기능**
+  총 4개의 게임을 포함한 웹 기반 오락실 플랫폼 구성
+
+  - 부연 설명
+  - 🐤 **출동! 동물특공대**: 방향키로 조작하며 장애물을 피하는 반응형 게임
+  - 🎯 **제7 우주**: 방향키와 스페이스 키를 조작하여 적들을 물리치는 슈팅 게임
+  - **🍅 토마토 박스**: 120초 안에 합이 10이 되는 토마토를 찾아 최대한 많이 떨어뜨리는 게임
+  - 🌟 **뿅뿅 두더지 :** 무작위로 나타나는 두더지들 뿅망치를 통해 혼내주는 게임
+  - **🖥️ 메인 오락실 화면**: 코인을 넣을 시 오락기가 켜지며 위 4개 게임을 선택 가능하게 함
+
 ### [출동! 동물 특공대]
 
-- **주 설명**  
+- **주 설명**
   귀여운 병아리 캐릭터가 좌우로 움직이며, 하늘에서 떨어지는 장애물을 피해 생존하는 2D 피하기 게임입니다.
 
   - 부연 설명
@@ -111,7 +170,7 @@ _가운데 뱃지 추후에 배포 사이트 링크 첨부 필요_
 
 ### [제 7우주]
 
-- **주 설명**  
+- **주 설명**
   ‘스페이스 인베이더’를 오마주한 고전풍 슈팅 게임으로, 적을 제거하며 다음 라운드로 진입하는 구조입니다.
 
   - 부연 설명
@@ -123,7 +182,7 @@ _가운데 뱃지 추후에 배포 사이트 링크 첨부 필요_
 
 ### [뿅뿅 두더지]
 
-- **주 설명**  
+- **주 설명**
   구멍에서 무작위로 튀어나오는 두더지를 뿅망치로 빠르게 클릭하여 점수를 올리는 반응형 게임입니다.
 
   - 부연 설명
@@ -135,7 +194,7 @@ _가운데 뱃지 추후에 배포 사이트 링크 첨부 필요_
 
 ### [토마토 박스]
 
-- **주 설명**  
+- **주 설명**
   숫자가 적힌 귀여운 토마토들을 드래그하여 **숫자의 합이 10**이 되면 제거하는 퍼즐 게임입니다.
 
   - 부연 설명
@@ -149,9 +208,44 @@ _가운데 뱃지 추후에 배포 사이트 링크 첨부 필요_
 
 ### 📂 프로젝트 구조
 
-_트리 구조 만들어서 코드블럭으로_
+```
 
----
+7zzang-arcade/
+│
+├── public/
+│ ├── images/
+│ ├── sounds/
+│ └── fonts/
+├── src/
+│ └── assets/
+│ ├── icons/
+│ │ ├── animal-icons/
+│ │ ├── space-icons/
+│ │ ├── smash-icons/
+│ │ └── tomato-icons/
+│ ├── images/
+│ │ ├── animal-img/
+│ │ ├── space-img/
+│ │ ├── smash-img/
+│ │ └── tomato-img/
+│ ├── common/
+│ ├── pages/
+│ │ ├── animal-patrol/
+│ │ ├── smash-seven-hit/
+│ │ ├── the-seventh-space/
+│ │ └── tomato-box/
+│ ├── utils/
+│ ├── main.ts
+│ └── style.css
+├── .gitignore
+├── eslint.config.js
+├── index.html
+├── README.md
+├── prettier.config.js
+├── tsconfig.json
+└── vite.config.js
+
+```
 
 ### ⚙️ 기술 스택 / 개발 환경
 
@@ -168,16 +262,16 @@ _트리 구조 만들어서 코드블럭으로_
 
 ## 🌟 기대 효과
 
-- ✅ **개별 게임 구현 능력 향상**  
+- ✅ **개별 게임 구현 능력 향상**
   각자 하나의 게임을 기획부터 구현까지 맡아보며, JS/TS 기반의 실전 게임 개발 경험을 축적합니다.
 
-- ✅ **Git 협업 및 충돌 해결 경험**  
+- ✅ **Git 협업 및 충돌 해결 경험**
   Git/GitHub을 이용한 협업 과정을 통해 브랜치 전략, PR 관리, 충돌 해결 역량을 체득합니다.
 
-- ✅ **완성형 게임 플랫폼을 통한 실전 배포**  
+- ✅ **완성형 게임 플랫폼을 통한 실전 배포**
   독립 실행 가능한 오락실 플랫폼 형태로 배포해보며, 실제 사용자 경험을 고려한 마무리 작업까지 경험합니다.
 
-- ✅ **게임 기획 및 팀 간 커뮤니케이션 역량 향상**  
+- ✅ **게임 기획 및 팀 간 커뮤니케이션 역량 향상**
   게임 컨셉 회의, UI 설계, 기능 정의 등 전 과정을 함께하며 팀 내 소통과 협업 능력을 강화합니다.
 
 ---
